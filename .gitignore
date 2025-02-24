@@ -1,0 +1,51 @@
+# Ignore build and temp files
+bin/
+obj/
+.vs/
+.vscode/
+*.suo
+*.user
+*.sln.cache
+*.csproj.user
+
+# Ignore dependencies
+node_modules/
+packages/
+wwwroot/lib/
+bower_components/
+
+# Ignore system-specific files
+Thumbs.db
+.DS_Store
+
+# Ignore logs and database files
+logs/
+*.log
+*.bak
+*.mdf
+*.ldf
+App_Data/
+
+# Ignore secrets (DO NOT COMMIT)
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+
+# Ignore testing artifacts
+TestResults/
+Coverage/
+*.coverage
+*.trx
+
+# Ignore compiled files
+*.dll
+*.exe
+*.pdb
+*.out
+*.cache
+*.nupkg
+
+# Ignore temporary files
+*.tmp
+*.swp
+*.lock
