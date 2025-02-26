@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using static Eventflow.Common.ValidationConstants.PersonalEvent;
 
-namespace Eventflow.Models
+namespace Eventflow.Models.Models
 {
-    [Table("PersonalEvent")]
     public class PersonalEvent
     {
         [Key]
@@ -24,11 +22,5 @@ namespace Eventflow.Models
 
         [Required]
         public int UserId { get; set; }
-
-        [ForeignKey("UserId")]
-        public User User { get; set; } = null!;
-
-        [ForeignKey("CategoryId")]
-        public Category? Category { get; set; }
     }
 }

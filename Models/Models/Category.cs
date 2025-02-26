@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using static Eventflow.Common.ValidationConstants.Category;
 
-namespace Eventflow.Models
+namespace Eventflow.Models.Models
 {
-    [Table("Category")]
     public class Category
     {
         [Key]

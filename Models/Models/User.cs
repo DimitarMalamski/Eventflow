@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using static Eventflow.Common.ValidationConstants.User;
 
-namespace Eventflow.Models
+namespace Eventflow.Models.Models
 {
-    [Table("User")]
     public class User
     {
         [Key]
@@ -32,8 +30,5 @@ namespace Eventflow.Models
 
         [Required]
         public int RoleId { get; set; }
-
-        [ForeignKey("RoleId")]
-        public Role Role { get; set; } = null!;
     }
 }

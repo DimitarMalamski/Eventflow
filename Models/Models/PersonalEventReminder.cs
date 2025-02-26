@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using static Eventflow.Common.ValidationConstants.PersonalEventReminder;
 
-namespace Eventflow.Models
+namespace Eventflow.Models.Models
 {
-    [Table("PersonalEventReminder")]
     public class PersonalEventReminder
     {
         [Key]
@@ -23,8 +21,5 @@ namespace Eventflow.Models
 
         [Required]
         public int PersonalEventId { get; set; }
-
-        [ForeignKey("PersonalEventId")]
-        public PersonalEvent PersonalEvent { get; set; } = null!;
     }
 }

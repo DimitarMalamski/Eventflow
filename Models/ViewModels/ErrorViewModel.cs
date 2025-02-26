@@ -1,4 +1,4 @@
-namespace Eventflow.Models;
+namespace Eventflow.Models.ViewModels;
 
 public class ErrorViewModel
 {

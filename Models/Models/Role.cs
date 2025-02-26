@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using static Eventflow.Common.ValidationConstants.Role;
 
-namespace Eventflow.Models
+namespace Eventflow.Models.Models
 {
-    [Table("Role")]
     public class Role
     {
         [Key]

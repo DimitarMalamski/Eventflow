@@ -28,5 +28,27 @@
             public const int PersonalEventReminderTitleMaxLength = 50;
             public const int PersonalEventReminderDescriptionMaxLength = 256;
         }
+        public static class Status
+        {
+            public const int statusNameMaxLength = 50;
+        }
+        public static class Continent
+        {
+            public const int continentNameMaxLength = 50;
+        }
+        public static class Country
+        {
+            public const int countryNameMaxLength = 50;
+        }
+        public static class NationalEvent
+        {
+            public const int nationalEventTitleMaxLength = 50;
+            public const int nationalEventDescriptionMaxLength = 256;
+        }
+        public static class NationalEventReminder
+        {
+            public const int nationalEventReminderTitleMaxLength = 50;
+            public const int nationalEventReminderDesriptionMaxLength = 256;
+        }
     }
 }
