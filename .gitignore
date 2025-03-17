@@ -30,6 +30,7 @@ App_Data/
 appsettings.Development.json
 appsettings.Local.json
 secrets.json
+appsettings.json
 
 # Ignore testing artifacts
 TestResults/

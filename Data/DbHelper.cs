@@ -33,19 +33,36 @@ namespace Eventflow.Data
         public int ExecuteNonQuery(string query, Dictionary<string, object>? parameters = null)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = new SqlCommand(query, connection))
             {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand(query, connection))
+                if (parameters != null)
                 {
-                    if (parameters != null)
+                    foreach (var param in parameters)
                     {
-                        foreach (var param in parameters)
-                        {
-                            command.Parameters.AddWithValue(param.Key, param.Value);
-                        }
+                        command.Parameters.AddWithValue(param.Key, param.Value);
                     }
-                    return command.ExecuteNonQuery();
                 }
+
+                connection.Open();
+                return command.ExecuteNonQuery();
+            }
+        }
+
+        public object? ExecuteScalar(string query, Dictionary<string, object>? parameters = null)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                if (parameters != null)
+                {
+                    foreach (var param in parameters)
+                    {
+                        command.Parameters.AddWithValue(param.Key, param.Value);
+                    }
+                }
+
+                connection.Open();
+                return command.ExecuteScalar();
             }
         }
     }
