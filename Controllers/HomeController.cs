@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Eventflow.Models;
+using Eventflow.Models.ViewModels;
 
 namespace Eventflow.Controllers;
 

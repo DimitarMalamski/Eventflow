@@ -1,10 +1,11 @@
 ﻿using Eventflow.Data;
 using Eventflow.Models.Models;
+using Eventflow.Repositories.Interfaces;
 using System.Data;
 
 namespace Eventflow.Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly DbHelper _dbHelper;
         public UserRepository(DbHelper dbHelper)
