@@ -12,9 +12,10 @@ namespace Eventflow.Services
         {
             _userRepository = userRepository;
         }
-        public User? Login(string username, string password)
+        public User? Login(string loginInput, string password)
         {
-            User? user = _userRepository.GetUserByUsername(username);
+            User? user = _userRepository.GetUserByInput(loginInput);
+
             if (user == null)
             {
                 return null;

@@ -20,9 +20,9 @@ namespace Eventflow.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string username, string password)
+        public IActionResult Login(string loginInput, string password)
         {
-            User? user = _userService.Login(username, password);
+            User? user = _userService.Login(loginInput, password);
             
             if (user != null)
             {

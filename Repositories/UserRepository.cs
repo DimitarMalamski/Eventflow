@@ -12,25 +12,24 @@ namespace Eventflow.Repositories
         {
             _dbHelper = dbHelper;
         }
-        public User? GetUserByUsername(string username)
+        public User? GetUserByInput(string input)
         {
-            string getuserQuery = @"
-            SELECT Id, Username, PasswordHash, Firstname, Lastname, Email, RoleId 
-            FROM [User] 
-            WHERE Username = @Username";
+            string getuserQuery = @"SELECT * FROM [User] WHERE [Username] = @Input OR [Email] = @Input";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>
             {
-                { "@Username", username }
+                { "@Input", input }
             };
 
             DataTable dt = _dbHelper.ExecuteQuery(getuserQuery, parameters);
+
             if (dt.Rows.Count == 0)
             {
                 return null;
             }
 
             DataRow row = dt.Rows[0];
+
             return new User
             {
                 Id = Convert.ToInt32(row["Id"]),
