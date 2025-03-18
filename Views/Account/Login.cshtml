@@ -1,30 +1,36 @@
 ﻿@{
+    Layout = "_PublicLayout";
     ViewData["Title"] = "Login";
 }
 
-<h2>Login</h2>
+<div class="container d-flex flex-column justify-content-center align-items-center text-center w-100">
+    <div class="w-100" style="max-width: 400px;">
+        <h2 class="mb-4">Login</h2>
 
-<form method="post">
-    <div class="form-group">
-        <label>Username/Email</label>
-        <input type="text" name="loginInput" placeholder="Username or Email" class="form-control" required />
+        <form method="post">
+            <div class="mb-3 text-start">
+                <label class="form-label">Username / Email</label>
+                <input type="text" name="loginInput" placeholder="Username or Email" class="form-control" required />
+            </div>
+
+            <div class="mb-3 text-start">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required />
+            </div>
+
+            <div class="d-flex w-100 gap-2 justify-content-center mb-3">
+                <button type="submit" class="btn btn-primary w-50 text-center py-2">Login</button>
+                <a class="btn btn-secondary w-50 text-center py-2" href="@Url.Action("GuestLogin", "Account")">Continue as Guest</a>
+            </div>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="text-danger">@Html.ValidationSummary()</div>
+            }
+        </form>
+
+        <p class="mt-3">Don't have an account? 
+            <a href="@Url.Action("Register", "Account")">Register here</a>
+        </p>
     </div>
-
-    <div class="form-group">
-        <label>Password</label>
-        <input type="password" name="password" class="form-control" required />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Login</button>
-
-    <p>
-        <a class="btn btn-secondary" href="@Url.Action("GuestLogin", "Account")">Continue as Guest</a>
-    </p>
-
-    @if (!ViewData.ModelState.IsValid)
-    {
-        <div class="text-danger">@Html.ValidationSummary()</div>
-    }
-</form>
-
-<p>Don't have an account? <a href="@Url.Action("Register", "Account")">Register here</a></p>
+</div>

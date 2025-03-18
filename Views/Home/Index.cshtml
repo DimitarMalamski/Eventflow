@@ -3,15 +3,11 @@
     ViewData["Title"] = "Welcome";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/index.css" />
-}
+<div class="container d-flex flex-column justify-content-center align-items-center text-center flex-grow-1">
+    <h1 class="mb-4">Welcome to EventFlow</h1>
 
-<div class="container">
-    <h1>Welcome to EventFlow</h1>
-
-    <div class="btn-group">
-        <a asp-controller="Account" asp-action="Login" class="btn">Login</a>
-        <a asp-controller="Account" asp-action="Register" class="btn">Register</a>
+    <div class="d-flex justify-content-center gap-3">
+        <a asp-controller="Account" asp-action="Login" class="btn btn-primary">Login</a>
+        <a asp-controller="Account" asp-action="Register" class="btn btn-primary">Register</a>
     </div>
 </div>
