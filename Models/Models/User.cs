@@ -5,7 +5,7 @@ namespace Eventflow.Models.Models
 {
     public class User
     {
-        //[Key]
+        [Key]
         public int Id { get; set; }
 
         [Required]
@@ -15,6 +15,10 @@ namespace Eventflow.Models.Models
         [Required]
         [StringLength(userPasswordHashMaxLength)]
         public string PasswordHash { get; set; } = null!;
+
+        [Required]
+        [StringLength(userPasswordSaltMaxLength)]
+        public string Salt { get; set; } = null!;
 
         [Required]
         [StringLength(userFirstnameMaxLength)]

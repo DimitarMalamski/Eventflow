@@ -1,11 +1,11 @@
 ﻿using Eventflow.Models.Models;
 using Eventflow.Repositories.Interfaces;
 using Eventflow.Services.Interfaces;
-using Eventflow.Utilities;
+using static Eventflow.Utilities.PasswordHasher;
 
 namespace Eventflow.Services
 {
-    public class UserService : IUserService
+    public class UserService : IAuthService
     {
         private readonly IUserRepository _userRepository;
         public UserService(IUserRepository userRepository)
@@ -21,7 +21,7 @@ namespace Eventflow.Services
                 return null;
             }
 
-            if (PasswordHasher.VerifyPassword(password, user.PasswordHash))
+            if (VerifyPassword(password, user.PasswordHash, user.Salt))
             {
                 return user;
             }
@@ -43,12 +43,14 @@ namespace Eventflow.Services
                 return false;
             }
 
-            string hashedPassword = PasswordHasher.HashPassword(password);
+            string passwordSalt = GenerateRandomSalt();
+            string hashedPassword = HashPassword(password, passwordSalt);
 
             User newUser = new User
             {
                 Username = username,
                 PasswordHash = hashedPassword,
+                Salt = passwordSalt,
                 Firstname = firstname,
                 Lastname = lastname,
                 Email = email,

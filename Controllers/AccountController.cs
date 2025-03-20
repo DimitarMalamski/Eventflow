@@ -7,10 +7,10 @@ namespace Eventflow.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IUserService _userService;
-        public AccountController(IUserService userService)
+        private readonly IAuthService _authService;
+        public AccountController(IAuthService authService)
         {
-            _userService = userService;
+            _authService = authService;
         }
 
         [HttpGet]
@@ -22,7 +22,7 @@ namespace Eventflow.Controllers
         [HttpPost]
         public IActionResult Login(string loginInput, string password)
         {
-            User? user = _userService.Login(loginInput, password);
+            User? user = _authService.Login(loginInput, password);
             
             if (user != null)
             {
@@ -44,7 +44,7 @@ namespace Eventflow.Controllers
         [HttpPost]
         public IActionResult Register(string username, string password, string firstname, string? lastname, string email)
         {
-            if (_userService.Register(username, password, firstname, lastname ?? null, email))
+            if (_authService.Register(username, password, firstname, lastname ?? null, email))
             {
                 return RedirectToAction("Login");
             }
@@ -61,7 +61,7 @@ namespace Eventflow.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult Logout()
         {
             SessionHelper.ClearUserSession(HttpContext.Session);

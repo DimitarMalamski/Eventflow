@@ -35,6 +35,7 @@ namespace Eventflow.Repositories
                 Id = Convert.ToInt32(row["Id"]),
                 Username = row["Username"].ToString()!,
                 PasswordHash = row["PasswordHash"].ToString()!,
+                Salt = row["Salt"].ToString()!,
                 Firstname = row["Firstname"].ToString()!,
                 Lastname = row["Lastname"].ToString() ?? "",
                 Email = row["Email"].ToString()!,
@@ -56,13 +57,14 @@ namespace Eventflow.Repositories
         public int RegisterUser(User user)
         {
             string registerUserQuery = @"
-            INSERT INTO [User] (Username, PasswordHash, Firstname, Lastname, Email, RoleId) 
-            VALUES (@Username, @PasswordHash, @Firstname, @Lastname, @Email, @RoleId)";
+            INSERT INTO [User] (Username, PasswordHash, Salt, Firstname, Lastname, Email, RoleId) 
+            VALUES (@Username, @PasswordHash, @Salt, @Firstname, @Lastname, @Email, @RoleId)";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>
             {
                 { "@Username", user.Username },
                 { "@PasswordHash", user.PasswordHash },
+                { "@Salt", user.Salt },
                 { "@Firstname", user.Firstname },
                 { "@Lastname", user.Lastname! },
                 { "@Email", user.Email },

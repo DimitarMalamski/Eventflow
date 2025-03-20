@@ -19,7 +19,7 @@ builder.Services.AddSession(option =>
 
 builder.Services.AddSingleton<DbHelper>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthService, UserService>();
 
 var app = builder.Build();
 

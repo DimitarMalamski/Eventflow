@@ -8,7 +8,8 @@
             public const int userFirstnameMaxLength = 50;
             public const int userLastnameMaxLength = 50;
             public const int userEmailMaxLength = 256;
-            public const int userPasswordHashMaxLength = 256;
+            public const int userPasswordHashMaxLength = 255;
+            public const int userPasswordSaltMaxLength = 255;
         }
         public static class Role
         {
