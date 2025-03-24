@@ -1,3 +1,4 @@
+using Eventflow.Configurations;
 using Eventflow.Data;
 using Eventflow.Repositories;
 using Eventflow.Repositories.Interfaces;
@@ -17,9 +18,7 @@ builder.Services.AddSession(option =>
     option.Cookie.IsEssential = true;
 });
 
-builder.Services.AddSingleton<DbHelper>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IAuthService, UserService>();
+builder.Services.RegisterServices();
 
 var app = builder.Build();
 
@@ -37,7 +36,7 @@ app.UseRouting();
 app.UseSession();
 app.UseAuthorization();
 
-app.MapStaticAssets();
+app.UseStaticFiles();
 
 app.MapControllerRoute(
     name: "default",

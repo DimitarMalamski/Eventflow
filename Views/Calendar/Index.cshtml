@@ -1,0 +1,9 @@
+﻿@{
+    Layout = "~/Views/Shared/_CalendarLayout.cshtml";
+}
+
+<div class="w-100" style="max-width: 1100px;">
+    <h2 class="text-center mb-4">Your Calendar - @DateTime.Now.ToString("MMMM yyyy")</h2>
+    @Html.Raw(ViewBag.CalendarHtml)
+</div>
+

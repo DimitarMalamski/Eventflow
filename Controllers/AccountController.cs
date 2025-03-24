@@ -28,7 +28,7 @@ namespace Eventflow.Controllers
             {
                 SessionHelper.SetUserSession(HttpContext.Session, user.Id, user.Username, user.RoleId);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Calendar");
             }
 
             ModelState.AddModelError("", "Invalid username or password.");
