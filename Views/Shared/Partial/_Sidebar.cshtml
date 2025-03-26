@@ -1,6 +1,8 @@
 ﻿@model List<Eventflow.Models.Models.Continent>
 @using Eventflow.Utilities
 
+<script src="~/js/country_dropdown_select.js"></script>
+
 <div class="d-flex flex-column h-100">
 
     <div class="mb-4 text-center">
@@ -26,8 +28,6 @@
             <label for="countrySelect" class="form-label">Country</label>
             <select class="form-select" id="countrySelect" name="country">
                 <option selected disabled>Select Country</option>
-                <option>Bulgaria</option>
-                <option>Germany</option>
             </select>
         </div>
 

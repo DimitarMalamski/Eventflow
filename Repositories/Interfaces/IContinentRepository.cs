@@ -4,6 +4,7 @@ namespace Eventflow.Repositories.Interfaces
 {
     public interface IContinentRepository
     {
-        List<Continent> GetAllContinents();
+        int GetOrInsertContinent(string continentName);
+        public List<Continent> GetAllContinents();
     }
 }

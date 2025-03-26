@@ -1,7 +1,5 @@
 using Eventflow.Configurations;
-using Eventflow.Data;
 using Eventflow.Repositories;
-using Eventflow.Repositories.Interfaces;
 using Eventflow.Services;
 using Eventflow.Services.Interfaces;
 
@@ -17,6 +15,8 @@ builder.Services.AddSession(option =>
     option.Cookie.HttpOnly = true;
     option.Cookie.IsEssential = true;
 });
+
+Console.WriteLine("Countries and Continents populated successfully!");
 
 builder.Services.RegisterServices();
 
@@ -42,6 +42,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();
