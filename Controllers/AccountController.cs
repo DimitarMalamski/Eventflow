@@ -71,7 +71,7 @@ namespace Eventflow.Controllers
         {
             SessionHelper.SetUserSession(HttpContext.Session, 0, "Guest", 0);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Calendar");
         }
 
         [HttpPost]
@@ -79,7 +79,7 @@ namespace Eventflow.Controllers
         public IActionResult Logout()
         {
             SessionHelper.ClearUserSession(HttpContext.Session);
-            return RedirectToAction("Login");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

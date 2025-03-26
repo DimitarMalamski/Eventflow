@@ -22,7 +22,7 @@ namespace Eventflow.Controllers
 
             List<Continent> continents = await _continentService.OrderContinentByNameAsync();
 
-            ViewBag.CalendarHtml = await _calendarService.GenerateCalendarHtmlAsync(DateTime.Now.Year, DateTime.Now.Month);
+            ViewBag.CalendarHtml = _calendarService.GenerateCalendarHtml(DateTime.Now.Year, DateTime.Now.Month);
 
             return View(continents);
         }

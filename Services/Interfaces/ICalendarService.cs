@@ -2,6 +2,6 @@
 {
     public interface ICalendarService
     {
-        public Task<string> GenerateCalendarHtmlAsync(int year, int month);
+        public string GenerateCalendarHtml(int year, int month);
     }
 }

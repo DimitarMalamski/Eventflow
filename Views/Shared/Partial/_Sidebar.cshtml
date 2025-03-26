@@ -39,8 +39,10 @@
         <a href="/Settings" class="d-block text-decoration-none text-dark mb-2">
             ⚙️ Settings
         </a>
-        <a href="/Account/Logout" class="d-block text-decoration-none text-danger">
-            🚪 Logout
-        </a>
+        <form asp-controller="Account" asp-action="Logout" method="post" class="d-block">
+            <button type="submit" class="d-block text-decoration-none text-danger bg-transparent border-0 p-0">
+                🚪 Logout
+            </button>
+        </form>
     </div>
 </div>
