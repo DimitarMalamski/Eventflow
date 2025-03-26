@@ -1,9 +1,9 @@
-﻿using Eventflow.Models.DTOs;
+﻿using Eventflow.Models.Models;
 
 namespace Eventflow.Services.Interfaces
 {
     public interface ICountryService
     {
-        List<CountryDto> GetCountriesByContinentId(int continentId);
+        public Task<List<Country>> GetCountriesByContinentIdAsync(int continentId);
     }
 }

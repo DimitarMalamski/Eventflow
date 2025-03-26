@@ -9,31 +9,40 @@ namespace Eventflow.Services
     {
         private readonly IContinentRepository _continentRepository;
         private readonly ICountryRepository _countryRepository;
-        public CountryPopulationService(IContinentRepository continentRepository, ICountryRepository countryRepository)
+        private readonly HttpClient _httpClient;
+        public CountryPopulationService(IContinentRepository continentRepository, ICountryRepository countryRepository, IHttpClientFactory httpClientFactory)
         {
             _continentRepository = continentRepository;
             _countryRepository = countryRepository;
+            _httpClient = httpClientFactory.CreateClient();
+            _httpClient.Timeout = TimeSpan.FromSeconds(30);
         }
-        public async Task PopulateCountriesAndContinents()
+        public async Task PopulateCountriesAndContinentsAsync()
         {
             string apiUrl = "https://restcountries.com/v3.1/all";
-            using (HttpClient client = new HttpClient())
+
+            string json = await _httpClient.GetStringAsync(apiUrl);
+
+            var countries = JsonSerializer.Deserialize<List<CountryApiModel>>(json, new JsonSerializerOptions
             {
-                string json = await client.GetStringAsync(apiUrl);
+                PropertyNameCaseInsensitive = true
+            });
 
-                var countries = JsonSerializer.Deserialize<List<CountryApiModel>>(json);
+            if (countries == null)
+            {
+                return;
+            }
 
-                foreach (var country in countries)
+            foreach (var country in countries)
+            {
+                if (string.IsNullOrEmpty(country.region) || string.IsNullOrEmpty(country.name?.common))
+                    continue;
+
+                int continentId = await _continentRepository.GetOrInsertContinentAsync(country.region.Trim());
+
+                if (!await _countryRepository.CountryExistsAsync(country.name.common))
                 {
-                    if (string.IsNullOrEmpty(country.region) || string.IsNullOrEmpty(country.name?.common))
-                        continue;
-
-                    int continentId = _continentRepository.GetOrInsertContinent(country.region.Trim());
-
-                    if (!_countryRepository.CountryExists(country.name.common))
-                    {
-                        _countryRepository.InsertCountry(country.name.common, continentId);
-                    }
+                    await _countryRepository.InsertCountryAsync(country.name.common, continentId);
                 }
             }
         }

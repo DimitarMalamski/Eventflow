@@ -4,7 +4,7 @@ namespace Eventflow.Services.Interfaces
 {
     public interface IAuthService
     {
-        User? Login(string username, string password);
-        bool Register(string username, string password, string firstname, string? lastname, string email);
+        public Task<User?> LoginAsync(string loginInput, string password);
+        public Task<bool> RegisterAsync(string username, string password, string firstname, string? lastname, string email);
     }
 }

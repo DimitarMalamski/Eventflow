@@ -4,8 +4,8 @@ namespace Eventflow.Repositories.Interfaces
 {
     public interface IUserRepository
     {
-        User? GetUserByInput(string username);
-        bool UserExists(string username, string email);
-        int RegisterUser(User user);
+        public Task<User?> GetUserByInputAsync(string username);
+        public Task<bool> UserExistsAsync(string username, string email);
+        public Task<int> RegisterUserAsync(User user);
     }
 }

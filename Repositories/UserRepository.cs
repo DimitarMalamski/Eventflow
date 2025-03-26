@@ -1,4 +1,4 @@
-﻿using Eventflow.Data;
+﻿using Eventflow.Data.Interfaces;
 using Eventflow.Models.Models;
 using Eventflow.Repositories.Interfaces;
 using System.Data;
@@ -7,12 +7,12 @@ namespace Eventflow.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly DbHelper _dbHelper;
-        public UserRepository(DbHelper dbHelper)
+        private readonly IDbHelper _dbHelper;
+        public UserRepository(IDbHelper dbHelper)
         {
             _dbHelper = dbHelper;
         }
-        public User? GetUserByInput(string input)
+        public async Task<User?> GetUserByInputAsync(string input)
         {
             string getuserQuery = @"SELECT * FROM [User] WHERE [Username] = @Input OR [Email] = @Input";
 
@@ -21,7 +21,7 @@ namespace Eventflow.Repositories
                 { "@Input", input }
             };
 
-            DataTable dt = _dbHelper.ExecuteQuery(getuserQuery, parameters);
+            DataTable dt = await _dbHelper.ExecuteQueryAsync(getuserQuery, parameters);
 
             if (dt.Rows.Count == 0)
             {
@@ -42,7 +42,7 @@ namespace Eventflow.Repositories
                 RoleId = Convert.ToInt32(row["RoleId"])
             };
         }
-        public bool UserExists(string username, string email)
+        public async Task<bool> UserExistsAsync(string username, string email)
         {
             string userExistsQuery = "SELECT COUNT(*) FROM [User] WHERE Username = @Username OR Email = @Email";
             Dictionary<string, object> parameters = new Dictionary<string, object>
@@ -51,10 +51,10 @@ namespace Eventflow.Repositories
                 { "@Email", email }
             };
 
-            int count = Convert.ToInt32(_dbHelper.ExecuteScalar(userExistsQuery, parameters));
+            int count = Convert.ToInt32(await _dbHelper.ExecuteScalarAsync(userExistsQuery, parameters));
             return count > 0;
         }
-        public int RegisterUser(User user)
+        public async Task<int> RegisterUserAsync(User user)
         {
             string registerUserQuery = @"
             INSERT INTO [User] (Username, PasswordHash, Salt, Firstname, Lastname, Email, RoleId) 
@@ -71,7 +71,7 @@ namespace Eventflow.Repositories
                 { "@RoleId", user.RoleId }
             };
 
-            return _dbHelper.ExecuteNonQuery(registerUserQuery, parameters);
+            return await _dbHelper.ExecuteNonQueryAsync(registerUserQuery, parameters);
         }
     }
 }

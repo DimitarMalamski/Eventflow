@@ -1,4 +1,6 @@
-﻿@{
+﻿@model Eventflow.Models.ViewModels.LoginViewModel
+
+@{
     Layout = "_PublicLayout";
     ViewData["Title"] = "Login";
 }
@@ -7,30 +9,30 @@
     <div class="w-100" style="max-width: 400px;">
         <h2 class="mb-4">Login</h2>
 
-        <form method="post">
+        <form asp-action="Login" method="post">
+            @Html.AntiForgeryToken()
+
             <div class="mb-3 text-start">
-                <label class="form-label">Username / Email</label>
-                <input type="text" name="loginInput" placeholder="Username or Email" class="form-control" required />
+                <label class="form-label" asp-for="LoginInput"></label>
+                <input asp-for="LoginInput" class="form-control" placeholder="Username or Email" />
+                <span asp-validation-for="LoginInput" class="text-danger"></span>
             </div>
 
             <div class="mb-3 text-start">
-                <label class="form-label">Password</label>
-                <input type="password" name="password" class="form-control" required />
+                <label class="form-label" asp-for="Password"></label>
+                <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
             <div class="d-flex w-100 gap-2 justify-content-center mb-3">
                 <button type="submit" class="btn btn-primary w-50 text-center py-2">Login</button>
-                <a class="btn btn-secondary w-50 text-center py-2" href="@Url.Action("GuestLogin", "Account")">Continue as Guest</a>
+                <a class="btn btn-secondary w-50 text-center py-2" asp-action="GuestLogin" asp-controller="Account">Continue as Guest</a>
             </div>
-
-            @if (!ViewData.ModelState.IsValid)
-            {
-                <div class="text-danger">@Html.ValidationSummary()</div>
-            }
         </form>
 
-        <p class="mt-3">Don't have an account? 
-            <a href="@Url.Action("Register", "Account")">Register here</a>
+        <p class="mt-3">
+            Don't have an account?
+            <a asp-action="Register" asp-controller="Account">Register here</a>
         </p>
     </div>
 </div>

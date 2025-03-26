@@ -2,6 +2,6 @@
 {
     public interface ICountryPopulationService
     {
-        public Task PopulateCountriesAndContinents();
+        public Task PopulateCountriesAndContinentsAsync();
     }
 }

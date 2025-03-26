@@ -5,9 +5,13 @@
         public static class User
         {
             public const int userUsernameMaxLength = 50;
+            public const int userUsernameMinLength = 4;
             public const int userFirstnameMaxLength = 50;
+            public const int userFirstnameMinLength = 4;
             public const int userLastnameMaxLength = 50;
             public const int userEmailMaxLength = 256;
+            public const int userPasswordMaxLength = 50;
+            public const int userPasswordMinLength = 8;
             public const int userPasswordHashMaxLength = 255;
             public const int userPasswordSaltMaxLength = 255;
         }

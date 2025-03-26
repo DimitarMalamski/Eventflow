@@ -3,6 +3,7 @@ using Eventflow.Repositories.Interfaces;
 using Eventflow.Repositories;
 using Eventflow.Services.Interfaces;
 using Eventflow.Services;
+using Eventflow.Data.Interfaces;
 
 namespace Eventflow.Configurations
 {
@@ -23,7 +24,7 @@ namespace Eventflow.Configurations
             services.AddScoped<ICountryPopulationService, CountryPopulationService>();
 
             // DB Helper
-            services.AddSingleton<DbHelper>();
+            services.AddScoped<IDbHelper, DbHelper>();
         }
     }
 }

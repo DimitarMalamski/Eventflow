@@ -1,11 +1,11 @@
-﻿using Eventflow.Models.DTOs;
+﻿using Eventflow.Models.Models;
 
 namespace Eventflow.Repositories.Interfaces
 {
     public interface ICountryRepository
     {
-        bool CountryExists(string countryName);
-        void InsertCountry(string countryName, int continentId);
-        public List<CountryDto> GetAllCountriesByContinentId(int continentId);
+        public Task<bool> CountryExistsAsync(string countryName);
+        public Task InsertCountryAsync(string countryName, int continentId);
+        public Task<List<Country>> GetAllCountriesByContinentIdAsync(int continentId);
     }
 }

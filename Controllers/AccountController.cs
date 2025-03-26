@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Eventflow.Models.Models;
 using Eventflow.Utilities;
+using Eventflow.Models.ViewModels;
 
 namespace Eventflow.Controllers
 {
@@ -20,9 +21,15 @@ namespace Eventflow.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string loginInput, string password)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            User? user = _authService.Login(loginInput, password);
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            User? user = await _authService.LoginAsync(model.LoginInput, model.Password);
             
             if (user != null)
             {
@@ -31,8 +38,8 @@ namespace Eventflow.Controllers
                 return RedirectToAction("Index", "Calendar");
             }
 
-            ModelState.AddModelError("", "Invalid username or password.");
-            return View();
+            ModelState.AddModelError("Password", "Invalid username or password.");
+            return View(model);
         }
 
         [HttpGet]
@@ -42,15 +49,21 @@ namespace Eventflow.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(string username, string password, string firstname, string? lastname, string email)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (_authService.Register(username, password, firstname, lastname ?? null, email))
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (await _authService.RegisterAsync(model.Username, model.Password, model.Firstname, model.Lastname, model.Email))
             {
                 return RedirectToAction("Login");
             }
 
             ModelState.AddModelError("", "Registration failed. Username or email may already be taken.");
-            return View();
+            return View(model);
         }
 
         [HttpGet]
@@ -62,6 +75,7 @@ namespace Eventflow.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Logout()
         {
             SessionHelper.ClearUserSession(HttpContext.Session);

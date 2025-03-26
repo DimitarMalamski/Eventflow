@@ -11,9 +11,9 @@ namespace Eventflow.Services
         {
             _continentRepository = continentRepository;
         }
-        public List<Continent> GetAllContinents() => _continentRepository.GetAllContinents();
-        public List<Continent> OrderContinentByName()
-            => _continentRepository.GetAllContinents()
-                    .OrderBy(c => c.Name).ToList();
+        public async Task<List<Continent>> GetAllContinentsAsync() => await _continentRepository.GetAllContinentsAsync();
+        public async Task<List<Continent>> OrderContinentByNameAsync()
+            => (await _continentRepository.GetAllContinentsAsync()
+                ).OrderBy(c => c.Name).ToList();
     }
 }

@@ -13,16 +13,16 @@ namespace Eventflow.Controllers
             _continentService = continentService;
             _calendarService = calendarService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             if (HttpContext.Session.GetString("UserId") == null)
             {
                 return RedirectToAction("Login", "Account");
             }
 
-            List<Continent> continents = _continentService.OrderContinentByName();
+            List<Continent> continents = await _continentService.OrderContinentByNameAsync();
 
-            ViewBag.CalendarHtml = _calendarService.GenerateCalendarHtml(DateTime.Now.Year, DateTime.Now.Month);
+            ViewBag.CalendarHtml = await _calendarService.GenerateCalendarHtmlAsync(DateTime.Now.Year, DateTime.Now.Month);
 
             return View(continents);
         }

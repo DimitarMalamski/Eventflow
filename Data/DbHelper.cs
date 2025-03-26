@@ -1,16 +1,17 @@
 ﻿using System.Data;
+using Eventflow.Data.Interfaces;
 using Microsoft.Data.SqlClient;
 
 namespace Eventflow.Data
 {
-    public class DbHelper
+    public class DbHelper : IDbHelper
     {
         private readonly string? _connectionString;
         public DbHelper(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
-        public DataTable ExecuteQuery(string query, Dictionary<string, object>? parameters = null)
+        public async Task<DataTable> ExecuteQueryAsync(string query, Dictionary<string, object>? parameters = null)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -23,14 +24,18 @@ namespace Eventflow.Data
                     }
                 }
 
-                DataTable dataTable = new DataTable();
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                adapter.Fill(dataTable);
-                return dataTable;
+                await connection.OpenAsync();
+
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    DataTable dataTable = new DataTable();
+                    dataTable.Load(reader);
+                    return dataTable;
+                }
             }
         }
 
-        public int ExecuteNonQuery(string query, Dictionary<string, object>? parameters = null)
+        public async Task<int> ExecuteNonQueryAsync(string query, Dictionary<string, object>? parameters = null)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -43,12 +48,13 @@ namespace Eventflow.Data
                     }
                 }
 
-                connection.Open();
-                return command.ExecuteNonQuery();
+                await connection.OpenAsync();
+
+                return await command.ExecuteNonQueryAsync();
             }
         }
 
-        public object? ExecuteScalar(string query, Dictionary<string, object>? parameters = null)
+        public async Task<object?> ExecuteScalarAsync(string query, Dictionary<string, object>? parameters = null)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -61,8 +67,8 @@ namespace Eventflow.Data
                     }
                 }
 
-                connection.Open();
-                return command.ExecuteScalar();
+                await connection.OpenAsync();
+                return await command.ExecuteScalarAsync();
             }
         }
     }

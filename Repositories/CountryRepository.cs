@@ -1,5 +1,5 @@
-﻿using Eventflow.Data;
-using Eventflow.Models.DTOs;
+﻿using Eventflow.Data.Interfaces;
+using Eventflow.Models.Models;
 using Eventflow.Repositories.Interfaces;
 using System.Data;
 
@@ -7,12 +7,12 @@ namespace Eventflow.Repositories
 {
     public class CountryRepository : ICountryRepository
     {
-        private readonly DbHelper _dbHelper;
-        public CountryRepository(DbHelper dbHelper)
+        private readonly IDbHelper _dbHelper;
+        public CountryRepository(IDbHelper dbHelper)
         {
             _dbHelper = dbHelper;
         }
-        public bool CountryExists(string countryName)
+        public async Task<bool> CountryExistsAsync(string countryName)
         {
             string checkIfCountryExistsQuery = "SELECT 1 FROM Country WHERE Name = @Name";
             var parameters = new Dictionary<string, object> 
@@ -20,14 +20,14 @@ namespace Eventflow.Repositories
                 { "@Name", countryName }
             };
 
-            var result = _dbHelper.ExecuteScalar(checkIfCountryExistsQuery, parameters);
+            var result = await _dbHelper.ExecuteScalarAsync(checkIfCountryExistsQuery, parameters);
 
             return result != null;
         }
 
-        public List<CountryDto> GetAllCountriesByContinentId(int continentId)
+        public async Task<List<Country>> GetAllCountriesByContinentIdAsync(int continentId)
         {
-            string query = @"SELECT Id, Name 
+            string query = @"SELECT Id, Name, FlagPath, ContinentId 
                      FROM Country 
                      WHERE ContinentId = @ContinentId";
 
@@ -36,35 +36,36 @@ namespace Eventflow.Repositories
                 { "@ContinentId", continentId }
             };
 
-            var dt = _dbHelper.ExecuteQuery(query, parameters);
+            var dt = await _dbHelper.ExecuteQueryAsync(query, parameters);
 
-            List<CountryDto> countries = new List<CountryDto>();
+            List<Country> countries = new List<Country>();
 
             foreach (DataRow row in dt.Rows)
             {
-                countries.Add(new CountryDto
+                countries.Add(new Country
                 {
                     Id = Convert.ToInt32(row["Id"]),
                     Name = row["Name"].ToString()!,
-                    Base64Flag = null              
+                    FlagPath = null!,
+                    ContinentId = Convert.ToInt32(row["ContinentId"])
                 });
             }
 
             return countries;
         }
 
-        public void InsertCountry(string countryName, int continentId)
+        public async Task InsertCountryAsync(string countryName, int continentId)
         {
             string insertCountryQuery = @"INSERT INTO Country (Name, ContinentId)
                                      VALUES (@Name, @ContinentId)";
 
             var countryParams = new Dictionary<string, object>
             {
-                {"@Name", countryName},
-                {"@ContinentId", continentId}
+                { "@Name", countryName },
+                { "@ContinentId", continentId },
             };
 
-            _dbHelper.ExecuteNonQuery(insertCountryQuery, countryParams);
+            await _dbHelper.ExecuteNonQueryAsync(insertCountryQuery, countryParams);
         }
     }
 }

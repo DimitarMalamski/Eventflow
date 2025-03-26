@@ -4,7 +4,7 @@ namespace Eventflow.Services
 {
     public class CalendarService : ICalendarService
     {
-        public string GenerateCalendarHtml(int year, int month)
+        public async Task<string> GenerateCalendarHtmlAsync(int year, int month)
         {
             var firstDay = new DateTime(year, month, 1);
             int daysInMonth = DateTime.DaysInMonth(year, month);

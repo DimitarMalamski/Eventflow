@@ -4,8 +4,8 @@ namespace Eventflow.Services.Interfaces
 {
     public interface IContinentService
     {
-        List<Continent> GetAllContinents();
+        public Task<List<Continent>> GetAllContinentsAsync();
 
-        List<Continent> OrderContinentByName();
+        public Task<List<Continent>> OrderContinentByNameAsync();
     }
 }

@@ -12,9 +12,9 @@ namespace Eventflow.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetCountriesByContinent(int continentId)
+        public async Task<JsonResult> GetCountriesByContinent(int continentId)
         {
-            var countries = _countryService.GetCountriesByContinentId(continentId);
+            var countries = await _countryService.GetCountriesByContinentIdAsync(continentId);
             return Json(countries);
         }
     }

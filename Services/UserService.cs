@@ -12,9 +12,9 @@ namespace Eventflow.Services
         {
             _userRepository = userRepository;
         }
-        public User? Login(string loginInput, string password)
+        public async Task<User?> LoginAsync(string loginInput, string password)
         {
-            User? user = _userRepository.GetUserByInput(loginInput);
+            User? user = await _userRepository.GetUserByInputAsync(loginInput);
 
             if (user == null)
             {
@@ -28,7 +28,7 @@ namespace Eventflow.Services
 
             return null;
         }
-        public bool Register(string username, string password, string firstname, string? lastname, string email)
+        public async Task<bool> RegisterAsync(string username, string password, string firstname, string? lastname, string email)
         {
             if (string.IsNullOrWhiteSpace(username) ||
                 string.IsNullOrWhiteSpace(password) ||
@@ -38,7 +38,7 @@ namespace Eventflow.Services
                 return false;
             }
 
-            if (_userRepository.UserExists(username, email))
+            if (await _userRepository.UserExistsAsync(username, email))
             {
                 return false;
             }
@@ -57,7 +57,7 @@ namespace Eventflow.Services
                 RoleId = 2
             };
 
-            int rowsAffected = _userRepository.RegisterUser(newUser);
+            int rowsAffected = await _userRepository.RegisterUserAsync(newUser);
             return rowsAffected > 0;
         }
     }

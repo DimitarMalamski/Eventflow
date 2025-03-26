@@ -13,7 +13,7 @@ namespace Eventflow.Models.Models
         public string Name { get; set; } = null!;
 
         [Required]
-        public byte[] Flag { get; set; } = null!;
+        public string FlagPath { get; set; } = null!;
 
         [Required]
         public int ContinentId { get; set; }

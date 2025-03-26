@@ -1,4 +1,4 @@
-﻿using Eventflow.Models.DTOs;
+﻿using Eventflow.Models.Models;
 using Eventflow.Repositories.Interfaces;
 using Eventflow.Services.Interfaces;
 
@@ -12,7 +12,7 @@ namespace Eventflow.Services
             _countryRepository = countryRepository;
         }
 
-        public List<CountryDto> GetCountriesByContinentId(int continentId)
-            => _countryRepository.GetAllCountriesByContinentId(continentId);
+        public async Task<List<Country>> GetCountriesByContinentIdAsync(int continentId)
+            => await _countryRepository.GetAllCountriesByContinentIdAsync(continentId);
     }
 }
