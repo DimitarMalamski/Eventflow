@@ -15,8 +15,6 @@ builder.Services.AddSession(option =>
     option.Cookie.IsEssential = true;
 });
 
-Console.WriteLine("Countries and Continents populated successfully!");
-
 builder.Services.RegisterServices();
 
 var app = builder.Build();
