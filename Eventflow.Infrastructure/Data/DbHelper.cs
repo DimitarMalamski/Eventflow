@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using Eventflow.Data.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
 
 namespace Eventflow.Data

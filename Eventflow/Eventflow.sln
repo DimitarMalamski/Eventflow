@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35506.116 d17.12
+VisualStudioVersion = 17.12.35506.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eventflow", "Eventflow.csproj", "{BBD861FC-264F-4EE5-808F-F33FA3E31351}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eventflow.Domain", "..\Eventflow.Domain\Eventflow.Domain.csproj", "{C6AD4523-DF7C-4A00-AEE3-2B70BDE3CA62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eventflow.Application", "..\Eventflow.Application\Eventflow.Application.csproj", "{6348A107-B293-4E17-A82E-247E45F489E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eventflow.Infrastructure", "..\Eventflow.Infrastructure\Eventflow.Infrastructure.csproj", "{54D296E3-D3E4-47B1-BFA7-E874FF64D62B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{BBD861FC-264F-4EE5-808F-F33FA3E31351}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBD861FC-264F-4EE5-808F-F33FA3E31351}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBD861FC-264F-4EE5-808F-F33FA3E31351}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6AD4523-DF7C-4A00-AEE3-2B70BDE3CA62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6AD4523-DF7C-4A00-AEE3-2B70BDE3CA62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6AD4523-DF7C-4A00-AEE3-2B70BDE3CA62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6AD4523-DF7C-4A00-AEE3-2B70BDE3CA62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6348A107-B293-4E17-A82E-247E45F489E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6348A107-B293-4E17-A82E-247E45F489E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6348A107-B293-4E17-A82E-247E45F489E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6348A107-B293-4E17-A82E-247E45F489E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54D296E3-D3E4-47B1-BFA7-E874FF64D62B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54D296E3-D3E4-47B1-BFA7-E874FF64D62B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54D296E3-D3E4-47B1-BFA7-E874FF64D62B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54D296E3-D3E4-47B1-BFA7-E874FF64D62B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

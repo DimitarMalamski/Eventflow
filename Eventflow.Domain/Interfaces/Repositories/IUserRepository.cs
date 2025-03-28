@@ -1,6 +1,6 @@
 ﻿using Eventflow.Models.Models;
 
-namespace Eventflow.Repositories.Interfaces
+namespace Eventflow.Domain.Interfaces.Repositories
 {
     public interface IUserRepository
     {

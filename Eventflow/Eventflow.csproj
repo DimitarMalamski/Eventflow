@@ -12,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\DTOs\" />
+    <ProjectReference Include="..\Eventflow.Application\Eventflow.Application.csproj" />
+    <ProjectReference Include="..\Eventflow.Infrastructure\Eventflow.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

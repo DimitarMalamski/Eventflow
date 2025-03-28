@@ -1,9 +1,9 @@
 ﻿using Eventflow.Data;
-using Eventflow.Repositories.Interfaces;
 using Eventflow.Repositories;
 using Eventflow.Services.Interfaces;
 using Eventflow.Services;
 using Eventflow.Data.Interfaces;
+using Eventflow.Domain.Interfaces.Repositories;
 
 namespace Eventflow.Configurations
 {

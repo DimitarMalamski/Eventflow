@@ -1,5 +1,5 @@
-﻿using Eventflow.Models.ApiModels;
-using Eventflow.Repositories.Interfaces;
+﻿using Eventflow.Domain.Interfaces.Repositories;
+using Eventflow.Models.ApiModels;
 using Eventflow.Services.Interfaces;
 using System.Text.Json;
 
