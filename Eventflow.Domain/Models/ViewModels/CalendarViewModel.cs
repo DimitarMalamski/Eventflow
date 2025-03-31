@@ -10,5 +10,7 @@
     public class CalendarDay
     {
         public int? DayNumber { get; set; } = null!;
+
+        public bool IsToday { get; set; } = false;
     }
 }

@@ -19,14 +19,22 @@ namespace Eventflow.Services
 
             for (int i = 0; i < startDayWeek; i++)
             {
-                model.Days.Add(new CalendarDay { DayNumber = null });
+                model.Days.Add(new CalendarDay 
+                { 
+                    DayNumber = null 
+                });
             }
 
             for (int day = 1; day <= daysInMonth; day++)
             {
+                bool isToday = day == DateTime.Today.Day &&
+                                month == DateTime.Today.Month &&
+                                year == DateTime.Today.Year;
+
                 model.Days.Add(new CalendarDay
                 {
-                    DayNumber = day
+                    DayNumber = day,
+                    IsToday = isToday
                 });
             }
 

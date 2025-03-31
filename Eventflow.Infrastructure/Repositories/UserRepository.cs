@@ -1,6 +1,6 @@
 ﻿using Eventflow.Data.Interfaces;
 using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Models.Models;
+using Eventflow.Domain.Models.Models;
 using System.Data;
 
 namespace Eventflow.Repositories

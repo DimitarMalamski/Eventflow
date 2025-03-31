@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static Eventflow.Common.ValidationConstants.Role;
 
-namespace Eventflow.Models.Models
+namespace Eventflow.Domain.Models.Models
 {
     public class Role
     {

@@ -4,6 +4,8 @@ using Eventflow.Services.Interfaces;
 using Eventflow.Services;
 using Eventflow.Data.Interfaces;
 using Eventflow.Domain.Interfaces.Repositories;
+using Eventflow.Application.Services.Interfaces;
+using Eventflow.Application.Services;
 
 namespace Eventflow.Configurations
 {
@@ -22,6 +24,7 @@ namespace Eventflow.Configurations
             services.AddScoped<ICalendarService, CalendarService>();
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<ICountryPopulationService, CountryPopulationService>();
+            services.AddScoped<ICalendarNavigationService, CalendarNavigationService>();
 
             // DB Helper
             services.AddScoped<IDbHelper, DbHelper>();

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Eventflow.Models.Models
+namespace Eventflow.Domain.Models.Models
 {
     public class SharedEvent
     {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static Eventflow.Common.ValidationConstants.NationalEventReminder;
 
-namespace Eventflow.Models.Models
+namespace Eventflow.Domain.Models.Models
 {
     public class NationalEventReminder
     {

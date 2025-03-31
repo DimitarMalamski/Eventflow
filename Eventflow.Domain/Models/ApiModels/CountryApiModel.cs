@@ -1,4 +1,4 @@
-﻿namespace Eventflow.Models.ApiModels
+﻿namespace Eventflow.Domain.Models.ApiModels
 {
     public class CountryApiModel
     {

@@ -1,4 +1,4 @@
-﻿using Eventflow.Models.Models;
+﻿using Eventflow.Domain.Models.Models;
 
 namespace Eventflow.Domain.Models.ViewModels
 {
@@ -6,5 +6,6 @@ namespace Eventflow.Domain.Models.ViewModels
     {
         public List<Continent> Continents { get; set; } = new List<Continent>();
         public CalendarViewModel Calendar { get; set; } = new CalendarViewModel();
+        public CalendarNavigationViewModel Navigation { get; set; } = new CalendarNavigationViewModel();
     }
 }

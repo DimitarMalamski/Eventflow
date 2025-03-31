@@ -1,12 +1,13 @@
 ﻿@model Eventflow.Domain.Models.ViewModels.CalendarViewModel;
 
-<table class="table table-bordered text-center align-middle">
-    <thead class="table-primary">
-        <tr>
-            <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
-        </tr>
-    </thead>
-    <tbody>
+<div style="min-height: 300px">
+    <table class="table table-bordered text-center align-middle">
+        <thead class="table-primary">
+            <tr>
+                <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
+            </tr>
+        </thead>
+        <tbody>
         @{
             int col = 0;
         }
@@ -18,16 +19,22 @@
                 @:<tr>
             }
 
-                <td class="align-top p-2" style="min-height: 100px;">
+            bool isToday = day.DayNumber.HasValue && day.IsToday;
+
+            string tdClass = isToday
+                ? "align-top p-2 bg-success-subtle border border-success text-success"
+                : "align-top p-2";
+
+            <td class="@tdClass" style="min-height: 100px;">
                 @if (day.DayNumber.HasValue)
                 {
-                            <div class="fw-bold">@day.DayNumber</div>
+                    <div class="fw-bold">@day.DayNumber</div>
                 }
                 else
                 {
-                            <div class="invisible">0</div> <!-- keeps cell height -->
+                    <div class="invisible">0</div>
                 }
-                </td>
+            </td>
 
             col++;
             if (col == 7)
@@ -36,5 +43,7 @@
                 col = 0;
             }
         }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
+

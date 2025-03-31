@@ -1,4 +1,4 @@
-﻿using Eventflow.Models.Models;
+﻿using Eventflow.Domain.Models.Models;
 
 namespace Eventflow.Domain.Interfaces.Repositories
 {

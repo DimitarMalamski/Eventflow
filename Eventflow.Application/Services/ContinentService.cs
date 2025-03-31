@@ -1,5 +1,5 @@
 ﻿using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Models.Models;
+using Eventflow.Domain.Models.Models;
 using Eventflow.Services.Interfaces;
 
 namespace Eventflow.Services

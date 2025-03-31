@@ -1,7 +1,9 @@
 ﻿@using Eventflow.Domain.Models.ViewModels
+@using Eventflow.Domain.Models.Models
 @{
     Layout = null;
-    var continents = ((CalendarPageViewModel)Model).Continents;
+    var pageModel = Model as CalendarPageViewModel;
+    var continents = pageModel?.Continents ?? new List<Continent>();
 }
 
 <!DOCTYPE html>
