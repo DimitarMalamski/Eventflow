@@ -13,6 +13,7 @@ namespace Eventflow.Services
         }
 
         public async Task<List<Country>> GetCountriesByContinentIdAsync(int continentId)
-            => await _countryRepository.GetAllCountriesByContinentIdAsync(continentId);
+            => (await _countryRepository.GetAllCountriesByContinentIdAsync(continentId))
+                .OrderBy(c => c.Name).ToList();
     }
 }

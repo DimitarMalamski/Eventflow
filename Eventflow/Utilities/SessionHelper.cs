@@ -25,5 +25,9 @@
         {
             return int.TryParse(session.GetString("UserRoleId"), out int roleId) ? roleId : 0;
         }
+        public static bool IsLoggedIn(ISession session)
+        {
+            return GetUserRoleId(session) != 0;
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿@model List<Eventflow.Models.Models.Continent>
-@using Eventflow.Utilities
+@using static Eventflow.Utilities.SessionHelper;
 
 <script src="~/js/country_dropdown_select.js"></script>
 
@@ -7,7 +7,7 @@
 
     <div class="mb-4 text-center">
         <img src="/images/profile-placeholder.png" class="rounded-circle mb-2" alt="Profile" width="80" height="80">
-        <h5 class="mb-2">@SessionHelper.GetUsername(Context.Session)</h5>
+        <h5 class="mb-2">@GetUsername(Context.Session)</h5>
         <a href="/Account/Profile" class="btn btn-outline-primary btn-sm">View Profile</a>
     </div>
 
@@ -31,7 +31,9 @@
             </select>
         </div>
 
-        <a href="/Events/MyEvents" class="btn btn-primary w-100">My Events</a>
+        @if (IsLoggedIn(Context.Session)) {
+            <a href="/Event/MyEvents" class="btn btn-primary w-100">My Events</a>
+        }     
     </form>
 </div>
 
