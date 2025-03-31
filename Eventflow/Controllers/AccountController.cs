@@ -1,8 +1,8 @@
 ﻿using Eventflow.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Eventflow.Models.Models;
-using Eventflow.Utilities;
-using Eventflow.Models.ViewModels;
+using static Eventflow.Utilities.SessionHelper;
+using Eventflow.Domain.Models.ViewModels;
 
 namespace Eventflow.Controllers
 {
@@ -33,7 +33,7 @@ namespace Eventflow.Controllers
             
             if (user != null)
             {
-                SessionHelper.SetUserSession(HttpContext.Session, user.Id, user.Username, user.RoleId);
+                SetUserSession(HttpContext.Session, user.Id, user.Username, user.RoleId);
 
                 return RedirectToAction("Index", "Calendar");
             }
@@ -69,7 +69,7 @@ namespace Eventflow.Controllers
         [HttpGet]
         public IActionResult GuestLogin()
         {
-            SessionHelper.SetUserSession(HttpContext.Session, 0, "Guest", 0);
+            SetUserSession(HttpContext.Session, 0, "Guest", 0);
 
             return RedirectToAction("Index", "Calendar");
         }
@@ -78,7 +78,7 @@ namespace Eventflow.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Logout()
         {
-            SessionHelper.ClearUserSession(HttpContext.Session);
+            ClearUserSession(HttpContext.Session);
             return RedirectToAction("Index", "Home");
         }
     }

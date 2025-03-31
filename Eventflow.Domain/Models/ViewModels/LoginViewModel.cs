@@ -2,7 +2,7 @@
 using static Eventflow.Common.CustomErrorMessages.Login;
 using static Eventflow.Common.ValidationConstants.User;
 
-namespace Eventflow.Models.ViewModels
+namespace Eventflow.Domain.Models.ViewModels
 {
     public class LoginViewModel
     {

@@ -1,0 +1,40 @@
+﻿@model Eventflow.Domain.Models.ViewModels.CalendarViewModel;
+
+<table class="table table-bordered text-center align-middle">
+    <thead class="table-primary">
+        <tr>
+            <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int col = 0;
+        }
+
+        @foreach (var day in Model.Days)
+        {
+            if (col == 0)
+            {
+                @:<tr>
+            }
+
+                <td class="align-top p-2" style="min-height: 100px;">
+                @if (day.DayNumber.HasValue)
+                {
+                            <div class="fw-bold">@day.DayNumber</div>
+                }
+                else
+                {
+                            <div class="invisible">0</div> <!-- keeps cell height -->
+                }
+                </td>
+
+            col++;
+            if (col == 7)
+            {
+                @:</tr>
+                col = 0;
+            }
+        }
+    </tbody>
+</table>

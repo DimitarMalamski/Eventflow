@@ -1,7 +1,9 @@
-﻿namespace Eventflow.Services.Interfaces
+﻿using Eventflow.Domain.Models.ViewModels;
+
+namespace Eventflow.Services.Interfaces
 {
     public interface ICalendarService
     {
-        public string GenerateCalendarHtml(int year, int month);
+        public CalendarViewModel GenerateCalendar(int year, int month);
     }
 }

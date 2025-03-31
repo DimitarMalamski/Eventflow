@@ -1,4 +1,5 @@
-﻿using Eventflow.Models.Models;
+﻿using Eventflow.Domain.Models.ViewModels;
+using Eventflow.Models.Models;
 using Eventflow.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,11 +21,13 @@ namespace Eventflow.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            List<Continent> continents = await _continentService.OrderContinentByNameAsync();
+            var model = new CalendarPageViewModel
+            {
+                Continents = await _continentService.OrderContinentByNameAsync(),
+                Calendar = _calendarService.GenerateCalendar(DateTime.Now.Year, DateTime.Now.Month)
+            };
 
-            ViewBag.CalendarHtml = _calendarService.GenerateCalendarHtml(DateTime.Now.Year, DateTime.Now.Month);
-
-            return View(continents);
+            return View(model);
         }
     }
 }
