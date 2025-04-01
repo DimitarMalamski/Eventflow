@@ -1,6 +1,6 @@
 ﻿using Eventflow.Domain.Models.ViewModels;
 
-namespace Eventflow.Services.Interfaces
+namespace Eventflow.Application.Services.Interfaces
 {
     public interface ICalendarService
     {

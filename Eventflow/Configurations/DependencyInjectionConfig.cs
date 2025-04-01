@@ -1,11 +1,10 @@
-﻿using Eventflow.Data;
-using Eventflow.Repositories;
-using Eventflow.Services.Interfaces;
-using Eventflow.Services;
-using Eventflow.Data.Interfaces;
-using Eventflow.Domain.Interfaces.Repositories;
+﻿using Eventflow.Application.Services;
 using Eventflow.Application.Services.Interfaces;
-using Eventflow.Application.Services;
+using Eventflow.Domain.Interfaces.Repositories;
+using Eventflow.infrastructure.Repositories;
+using Eventflow.Infrastructure.Data;
+using Eventflow.Infrastructure.Data.Interfaces;
+using Eventflow.Infrastructure.Repositories;
 
 namespace Eventflow.Configurations
 {
@@ -17,6 +16,8 @@ namespace Eventflow.Configurations
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IContinentRepository, ContinentRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
+            services.AddScoped<IPersonalEventRepository, PersonalEventRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             // Services
             services.AddScoped<IAuthService, UserService>();
@@ -25,6 +26,8 @@ namespace Eventflow.Configurations
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<ICountryPopulationService, CountryPopulationService>();
             services.AddScoped<ICalendarNavigationService, CalendarNavigationService>();
+            services.AddScoped<IPersonalEventService, PersonalEventService>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             // DB Helper
             services.AddScoped<IDbHelper, DbHelper>();

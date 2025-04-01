@@ -1,9 +1,9 @@
-﻿using Eventflow.Domain.Interfaces.Repositories;
+﻿using Eventflow.Application.Services.Interfaces;
+using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.ApiModels;
-using Eventflow.Services.Interfaces;
 using System.Text.Json;
 
-namespace Eventflow.Services
+namespace Eventflow.Application.Services
 {
     public class CountryPopulationService : ICountryPopulationService
     {

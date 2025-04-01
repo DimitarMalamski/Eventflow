@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Eventflow.Utilities
+namespace Eventflow.Application.Security
 {
     public static class PasswordHasher
     {

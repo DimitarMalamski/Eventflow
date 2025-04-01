@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static Eventflow.Common.ValidationConstants.PersonalEventReminder;
+using static Eventflow.Domain.Common.ValidationConstants.PersonalEventReminder;
 
 namespace Eventflow.Domain.Models.Models
 {

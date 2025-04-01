@@ -1,9 +1,9 @@
-﻿using Eventflow.Data.Interfaces;
-using Eventflow.Domain.Interfaces.Repositories;
+﻿using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
+using Eventflow.Infrastructure.Data.Interfaces;
 using System.Data;
 
-namespace Eventflow.Repositories
+namespace Eventflow.Infrastructure.Repositories
 {
     public class CountryRepository : ICountryRepository
     {
@@ -15,8 +15,8 @@ namespace Eventflow.Repositories
         public async Task<bool> CountryExistsAsync(string countryName)
         {
             string checkIfCountryExistsQuery = "SELECT 1 FROM Country WHERE Name = @Name";
-            var parameters = new Dictionary<string, object> 
-            { 
+            var parameters = new Dictionary<string, object>
+            {
                 { "@Name", countryName }
             };
 

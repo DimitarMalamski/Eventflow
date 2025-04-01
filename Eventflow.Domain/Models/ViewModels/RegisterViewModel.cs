@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static Eventflow.Common.ValidationConstants.User;
-using static Eventflow.Common.CustomErrorMessages.Register;
-using static Eventflow.Common.CustomErrorMessages.Login;
+using static Eventflow.Domain.Common.ValidationConstants.User;
+using static Eventflow.Domain.Common.CustomErrorMessages.Register;
+using static Eventflow.Domain.Common.CustomErrorMessages.Login;
 
 namespace Eventflow.Domain.Models.ViewModels
 {

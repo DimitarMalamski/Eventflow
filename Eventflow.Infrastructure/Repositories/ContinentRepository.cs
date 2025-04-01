@@ -1,9 +1,9 @@
-﻿using Eventflow.Data.Interfaces;
-using Eventflow.Domain.Interfaces.Repositories;
+﻿using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
+using Eventflow.Infrastructure.Data.Interfaces;
 using System.Data;
 
-namespace Eventflow.Repositories
+namespace Eventflow.Infrastructure.Repositories
 {
     public class ContinentRepository : IContinentRepository
     {
@@ -37,9 +37,9 @@ namespace Eventflow.Repositories
         {
             string checkIfContinentExistsQuery = "SELECT Id FROM Continent WHERE Name = @Name";
 
-            var parameters = new Dictionary<string, object> 
-            { 
-                { "@Name", continentName } 
+            var parameters = new Dictionary<string, object>
+            {
+                { "@Name", continentName }
             };
 
             object? result = await _dbHelper.ExecuteScalarAsync(checkIfContinentExistsQuery, parameters);
@@ -47,7 +47,7 @@ namespace Eventflow.Repositories
             if (result != null && int.TryParse(result.ToString(), out int existingId))
             {
                 return existingId;
-            }            
+            }
 
             string insertContinentQuery = "INSERT INTO Continent (Name) VALUES (@Name); SELECT SCOPE_IDENTITY();";
 

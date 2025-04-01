@@ -1,8 +1,8 @@
-﻿using Eventflow.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Eventflow.Domain.Models.Models;
 using static Eventflow.Utilities.SessionHelper;
 using Eventflow.Domain.Models.ViewModels;
+using Eventflow.Application.Services.Interfaces;
 
 namespace Eventflow.Controllers
 {

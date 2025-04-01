@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static Eventflow.Common.ValidationConstants.NationalEvent;
+using static Eventflow.Domain.Common.ValidationConstants.NationalEvent;
 
 namespace Eventflow.Domain.Models.Models
 {

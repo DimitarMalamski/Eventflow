@@ -1,6 +1,5 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Domain.Models.ViewModels;
-using Eventflow.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Eventflow.Controllers

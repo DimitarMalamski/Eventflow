@@ -1,4 +1,4 @@
-﻿namespace Eventflow.Services.Interfaces
+﻿namespace Eventflow.Application.Services.Interfaces
 {
     public interface ICountryPopulationService
     {

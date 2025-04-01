@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace Eventflow.Data.Interfaces
+namespace Eventflow.Infrastructure.Data.Interfaces
 {
     public interface IDbHelper
     {

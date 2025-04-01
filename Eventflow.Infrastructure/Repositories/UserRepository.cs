@@ -1,9 +1,9 @@
-﻿using Eventflow.Data.Interfaces;
-using Eventflow.Domain.Interfaces.Repositories;
+﻿using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
+using Eventflow.Infrastructure.Data.Interfaces;
 using System.Data;
 
-namespace Eventflow.Repositories
+namespace Eventflow.infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {

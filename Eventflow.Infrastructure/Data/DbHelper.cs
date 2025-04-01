@@ -1,9 +1,9 @@
 ﻿using System.Data;
-using Eventflow.Data.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
+using Eventflow.Infrastructure.Data.Interfaces;
 
-namespace Eventflow.Data
+namespace Eventflow.Infrastructure.Data
 {
     public class DbHelper : IDbHelper
     {

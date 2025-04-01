@@ -1,8 +1,8 @@
-﻿using Eventflow.Domain.Interfaces.Repositories;
+﻿using Eventflow.Application.Services.Interfaces;
+using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
-using Eventflow.Services.Interfaces;
 
-namespace Eventflow.Services
+namespace Eventflow.Application.Services
 {
     public class ContinentService : IContinentService
     {

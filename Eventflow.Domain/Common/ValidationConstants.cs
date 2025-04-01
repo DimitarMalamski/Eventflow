@@ -1,4 +1,4 @@
-﻿namespace Eventflow.Common
+﻿namespace Eventflow.Domain.Common
 {
     public static class ValidationConstants
     {

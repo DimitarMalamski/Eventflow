@@ -1,9 +1,9 @@
-﻿using Eventflow.Domain.Interfaces.Repositories;
+﻿using Eventflow.Application.Services.Interfaces;
+using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
-using Eventflow.Services.Interfaces;
-using static Eventflow.Utilities.PasswordHasher;
+using static Eventflow.Application.Security.PasswordHasher;
 
-namespace Eventflow.Services
+namespace Eventflow.Application.Services
 {
     public class UserService : IAuthService
     {

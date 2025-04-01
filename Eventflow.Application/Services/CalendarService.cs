@@ -1,7 +1,7 @@
-﻿using Eventflow.Domain.Models.ViewModels;
-using Eventflow.Services.Interfaces;
+﻿using Eventflow.Application.Services.Interfaces;
+using Eventflow.Domain.Models.ViewModels;
 
-namespace Eventflow.Services
+namespace Eventflow.Application.Services
 {
     public class CalendarService : ICalendarService
     {
@@ -9,7 +9,7 @@ namespace Eventflow.Services
         {
             var firstDay = new DateTime(year, month, 1);
             int daysInMonth = DateTime.DaysInMonth(year, month);
-            int startDayWeek = ((int)firstDay.DayOfWeek == 0) ? 6 : ((int)firstDay.DayOfWeek - 1);
+            int startDayWeek = firstDay.DayOfWeek == 0 ? 6 : (int)firstDay.DayOfWeek - 1;
 
             var model = new CalendarViewModel
             {
@@ -19,9 +19,9 @@ namespace Eventflow.Services
 
             for (int i = 0; i < startDayWeek; i++)
             {
-                model.Days.Add(new CalendarDay 
-                { 
-                    DayNumber = null 
+                model.Days.Add(new CalendarDay
+                {
+                    DayNumber = null
                 });
             }
 
@@ -44,7 +44,7 @@ namespace Eventflow.Services
                 {
                     DayNumber = null
                 });
-            }           
+            }
 
             return model;
         }

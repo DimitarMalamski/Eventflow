@@ -1,4 +1,4 @@
-﻿using Eventflow.Services.Interfaces;
+﻿using Eventflow.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Eventflow.Controllers

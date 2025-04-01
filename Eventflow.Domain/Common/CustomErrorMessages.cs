@@ -1,4 +1,4 @@
-﻿namespace Eventflow.Common
+﻿namespace Eventflow.Domain.Common
 {
     public static class CustomErrorMessages
     {
@@ -26,6 +26,14 @@
             public const string registerPasswordInvalid = "Password must be at least 8 characters, contain an uppercase letter, a number, and a special symbol.";
             public const string registerPasswordNoMatch = "Password does not match.";
             public const string registerLastnameInvalid = "Lastname must not be over 50 characters.";
+        }
+        public static class PersonalEvent
+        {
+            public const string personalEventTitleRequired = "Title is required.";
+            public const string personalEventDateRequired = "Date is required.";
+
+            public const string personalEventTitleInvalid = "Title cannot be more than 50 characters long.";
+            public const string personalEventDescriptionInvalid = "Description cannot be more than 256 characters long.";
         }
     }
 }
