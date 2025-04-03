@@ -13,6 +13,8 @@ namespace Eventflow.Application.Services
         }
 
         public async Task<List<Category>> GetAllCategoriesAsync()
-            => await _categoryRepository.GetAllCategoriesAsync();
+            => (await _categoryRepository.GetAllCategoriesAsync())
+                .OrderBy(c => c.Name)
+                .ToList();
     }
 }

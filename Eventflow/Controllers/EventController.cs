@@ -1,4 +1,5 @@
 ﻿using Eventflow.Application.Services.Interfaces;
+using Eventflow.Attributes;
 using Eventflow.Domain.Models.Models;
 using Eventflow.Domain.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,8 @@ namespace Eventflow.Controllers
             _categoryService = categoryService;
             _personalEventService = personalEventService;
         }
+
+        [RequireUserOrAdmin]
         public async Task<IActionResult> MyEvents(int? year, int? month)
         {
             if (GetUserRoleId(HttpContext.Session) == 0)
@@ -51,6 +54,7 @@ namespace Eventflow.Controllers
         }
 
         [HttpGet]
+        [RequireUserOrAdmin]
         public async Task<IActionResult> Create()
         {
             var model = new CreatePersonalEventViewModel
@@ -61,8 +65,12 @@ namespace Eventflow.Controllers
 
             return View(model);
         }
+
+        [HttpPost]
+        [RequireUserOrAdmin]
         public async Task<IActionResult> Create(CreatePersonalEventViewModel model)
         {
+
             if (!ModelState.IsValid)
             {
                 model.Category = await _categoryService.GetAllCategoriesAsync();

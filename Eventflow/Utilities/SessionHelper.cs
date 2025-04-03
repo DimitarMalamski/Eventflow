@@ -7,6 +7,7 @@
             session.SetString("UserId", userId.ToString());
             session.SetString("Username", username);
             session.SetString("UserRoleId", roleId.ToString());
+            session.SetString("Role", GetRoleName(roleId));
         }
 
         public static void ClearUserSession(ISession session)
@@ -28,6 +29,15 @@
         public static bool IsLoggedIn(ISession session)
         {
             return GetUserRoleId(session) != 0;
+        }
+        private static string GetRoleName(int roleId)
+        {
+            return roleId switch
+            {
+                1 => "Admin",
+                2 => "User",
+                _ => "Guest"
+            };
         }
     }
 }
