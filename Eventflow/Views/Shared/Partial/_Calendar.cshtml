@@ -22,7 +22,7 @@
             bool isToday = day.DayNumber.HasValue && day.IsToday;
 
             string tdClass = isToday
-                ? "align-top p-2 bg-success-subtle border border-success text-success"
+                ? "align-top p-2 bg-success-subtle text-success border border-success border-2"
                 : "align-top p-2";
 
             <td class="@tdClass" style="min-height: 100px;">
