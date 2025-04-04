@@ -31,6 +31,8 @@ namespace Eventflow.Controllers
         [RequireUserOrAdmin]
         public async Task<IActionResult> MyEvents(int? year, int? month)
         {
+            int userId = GetUserId(HttpContext.Session);
+
             if (GetUserRoleId(HttpContext.Session) == 0)
             {
                 TempData["Error"] = "You do not have access to this page.";
@@ -39,10 +41,12 @@ namespace Eventflow.Controllers
 
             var (normalizedYear, normalizedMonth) = _calendarNavigationService.Normalize(year, month);
 
+            var events = await _personalEventService.GetEventsByUserAndMonth(userId, normalizedYear, normalizedMonth); ;
+
             var model = new CalendarPageViewModel
             {
                 Continents = await _continentService.OrderContinentByNameAsync(),
-                Calendar = _calendarService.GenerateCalendar(normalizedYear, normalizedMonth),
+                Calendar = _calendarService.GenerateCalendar(normalizedYear, normalizedMonth, events),
                 Navigation = new CalendarNavigationViewModel
                 {
                     CurrentMonth = normalizedMonth,

@@ -1,0 +1,32 @@
+﻿@import url('event_toggle.css');
+.event-dropdown {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: 180px;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    padding: 0.75rem;
+    font-size: 0.85rem;
+    z-index: 10;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+.event-dropdown.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.dropdown-arrow {
+    transition: transform 0.3s ease;
+}
+
+.dropdown-arrow.rotated {
+    transform: rotate(180deg);
+}

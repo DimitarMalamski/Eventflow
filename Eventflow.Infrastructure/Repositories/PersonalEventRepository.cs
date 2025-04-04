@@ -1,6 +1,8 @@
 ﻿using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
 using Eventflow.Infrastructure.Data.Interfaces;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace Eventflow.Infrastructure.Repositories
 {
@@ -28,6 +30,45 @@ namespace Eventflow.Infrastructure.Repositories
             };
 
             await _dbHelper.ExecuteNonQueryAsync(insertPersonalEventQuery, parameters!);
+        }
+        public async Task<List<PersonalEvent>> GetByUserAndMonthAsync(int userId, int year, int month)
+        {
+            var monthStart = new DateTime(year, month, 1);
+            var monthEnd = monthStart.AddMonths(1).AddDays(-1);
+
+            var allEventForThisMonthQuery = @"
+                    SELECT * 
+                    FROM PersonalEvent 
+                    WHERE UserId = @UserId 
+                    AND Date >= @StartDate 
+                    AND Date <= @EndDate";
+
+            var parameters = new Dictionary<string, object?>()
+            {
+                { "@UserId", userId },
+                { "@StartDate", monthStart },
+                { "@EndDate", monthEnd }
+            };
+
+            var dt = await _dbHelper.ExecuteQueryAsync(allEventForThisMonthQuery, parameters!);
+
+            List<PersonalEvent> events = new List<PersonalEvent>();
+
+            foreach (DataRow row in dt.Rows)
+            {
+                events.Add(new PersonalEvent
+                {
+                    Id = Convert.ToInt32(row["Id"]),
+                    Title = row["Title"].ToString()!,
+                    Description = row["Description"] == DBNull.Value ? "None" : row["Description"].ToString()!,
+                    Date = Convert.ToDateTime(row["Date"]),
+                    IsCompleted = Convert.ToBoolean(row["IsCompleted"]),
+                    UserId = Convert.ToInt32(row["UserId"]),
+                    CategoryId = row["CategoryId"] != DBNull.Value ? Convert.ToInt32(row["CategoryId"]) : null
+                });
+            }
+
+            return events;
         }
     }
 }

@@ -14,5 +14,8 @@ namespace Eventflow.Application.Services
 
         public async Task CreateAsync(PersonalEvent personalEvent)
             => await _personalEventRepository.CreateEventAsync(personalEvent);
+
+        public async Task<List<PersonalEvent>> GetEventsByUserAndMonth(int userId, int year, int month)
+            => await _personalEventRepository.GetByUserAndMonthAsync(userId, year, month);
     }
 }

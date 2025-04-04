@@ -8,42 +8,64 @@
             </tr>
         </thead>
         <tbody>
-        @{
-            int col = 0;
-        }
-
-        @foreach (var day in Model.Days)
-        {
-            if (col == 0)
-            {
-                @:<tr>
+            @{
+                int col = 0;
+                int dayIndex = 0;
             }
 
-            bool isToday = day.DayNumber.HasValue && day.IsToday;
-
-            string tdClass = isToday
-                ? "align-top p-2 bg-success-subtle text-success border border-success border-2"
-                : "align-top p-2";
-
-            <td class="@tdClass" style="min-height: 100px;">
-                @if (day.DayNumber.HasValue)
-                {
-                    <div class="fw-bold">@day.DayNumber</div>
-                }
-                else
-                {
-                    <div class="invisible">0</div>
-                }
-            </td>
-
-            col++;
-            if (col == 7)
+            @foreach (var day in Model.Days)
             {
-                @:</tr>
-                col = 0;
+                if (col == 0)
+                {
+                    @:<tr>
+                }
+
+                bool isToday = day.DayNumber.HasValue && day.IsToday;
+                string tdClass = isToday
+                    ? "align-top p-2 bg-success-subtle text-success border border-success border-2"
+                    : "align-top p-2";
+
+                string dropDownId = $"dropdown-{dayIndex}";
+
+                <td class="@tdClass" style="min-height: 100px; position: relative;">
+                    @if (day.DayNumber.HasValue)
+                    {
+                            <div class="fw-bold d-flex justify-content-between align-items-center">
+                                <span>@day.DayNumber</span>
+
+                            @if (day.PersonalEvents.Any())
+                            {
+                                        <i class="bi bi-chevron-down dropdown-arrow text-muted"
+                                           style="cursor: pointer;"
+                                           onclick="toggleDropdown('@dropDownId', this)"></i>
+                            }
+                            </div>
+
+                            <div id="@dropDownId" class="event-dropdown bg-white border rounded p-2 mt-2 shadow-sm text-start"
+                                 style="position: absolute; top: 30px; left: 0; z-index: 10; width: 180px;">
+                                <ul class="list-unstyled mb-0 small">
+                                @foreach (var pe in day.PersonalEvents)
+                                {
+                                            <li class="text-success">📌 @pe.Title</li>
+                                }
+                                </ul>
+                            </div>
+                    }
+                    else
+                    {
+                            <div class="invisible">0</div>
+                    }
+                </td>
+
+                col++;
+                dayIndex++;
+
+                if (col == 7)
+                {
+                    @:</tr>
+                    col = 0;
+                }
             }
-        }
         </tbody>
     </table>
 </div>
-

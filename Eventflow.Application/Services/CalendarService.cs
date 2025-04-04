@@ -1,11 +1,12 @@
 ﻿using Eventflow.Application.Services.Interfaces;
+using Eventflow.Domain.Models.Models;
 using Eventflow.Domain.Models.ViewModels;
 
 namespace Eventflow.Application.Services
 {
     public class CalendarService : ICalendarService
     {
-        public CalendarViewModel GenerateCalendar(int year, int month)
+        public CalendarViewModel GenerateCalendar(int year, int month, List<PersonalEvent> personalEvents)
         {
             var firstDay = new DateTime(year, month, 1);
             int daysInMonth = DateTime.DaysInMonth(year, month);
@@ -27,14 +28,22 @@ namespace Eventflow.Application.Services
 
             for (int day = 1; day <= daysInMonth; day++)
             {
+                var date = new DateTime(year, month, day);
+
                 bool isToday = day == DateTime.Today.Day &&
                                 month == DateTime.Today.Month &&
                                 year == DateTime.Today.Year;
 
+                var eventsForThisDay = personalEvents
+                    .Where(e => e.Date.Date == date.Date)
+                    .ToList();
+
                 model.Days.Add(new CalendarDay
                 {
                     DayNumber = day,
-                    IsToday = isToday
+                    IsToday = isToday,
+                    Date = date,
+                    PersonalEvents = eventsForThisDay
                 });
             }
 
@@ -47,6 +56,10 @@ namespace Eventflow.Application.Services
             }
 
             return model;
+        }
+        public CalendarViewModel GenerateCalendar(int year, int month)
+        {
+            return GenerateCalendar(year, month, new List<PersonalEvent>());
         }
     }
 }

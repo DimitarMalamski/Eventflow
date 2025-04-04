@@ -1,4 +1,6 @@
-﻿namespace Eventflow.Domain.Models.ViewModels
+﻿using Eventflow.Domain.Models.Models;
+
+namespace Eventflow.Domain.Models.ViewModels
 {
     public class CalendarViewModel
     {
@@ -10,7 +12,8 @@
     public class CalendarDay
     {
         public int? DayNumber { get; set; } = null!;
-
         public bool IsToday { get; set; } = false;
+        public DateTime? Date { get; set; }
+        public List<PersonalEvent> PersonalEvents { get; set; } = new List<PersonalEvent>();
     }
 }
