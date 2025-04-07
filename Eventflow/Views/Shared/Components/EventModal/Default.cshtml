@@ -1,0 +1,31 @@
+﻿<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered mx-auto" style="max-width: 900px; width: 40%;">
+        <div class="modal-content custom-modal-content mx-auto">
+            <div class="modal-header custom-modal-header">
+                <h5 class="modal-title" id="eventModalLabel">Event Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <p><strong>Title:</strong> <span id="modal-event-title"></span></p>
+                <p><strong>Description:</strong> <span id="modal-event-description"></span></p>
+                <p><strong>Date:</strong> <span id="modal-event-date"></span></p>
+                <p><strong>Category:</strong> <span id="modal-event-category"></span></p>
+            </div>
+
+            <div class="modal-footer custom-modal-footer">
+                <button type="button" class="btn btn-outline-primary" onclick="editEvent()">
+                    <i class="bi bi-pencil-square me-1"></i> Edit Event
+                </button>
+
+                <button type="button" class="btn btn-outline-warning" onclick="setReminder()">
+                    <i class="bi bi-alarm me-1"></i> Set Reminder
+                </button>
+
+                <button type="button" class="btn btn-outline-success" onclick="invitePeople()">
+                    <i class="bi bi-person-plus me-1"></i> Invite People
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

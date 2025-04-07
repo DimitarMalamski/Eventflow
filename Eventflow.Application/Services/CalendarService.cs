@@ -22,7 +22,8 @@ namespace Eventflow.Application.Services
             {
                 model.Days.Add(new CalendarDay
                 {
-                    DayNumber = null
+                    DayNumber = null,
+                    PersonalEvents = new List<PersonalEvent>()
                 });
             }
 
@@ -51,7 +52,8 @@ namespace Eventflow.Application.Services
             {
                 model.Days.Add(new CalendarDay
                 {
-                    DayNumber = null
+                    DayNumber = null,
+                    PersonalEvents = new List<PersonalEvent>()
                 });
             }
 

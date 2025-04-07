@@ -1,0 +1,34 @@
+﻿@using Eventflow.Domain.Models.ViewModels
+@model CalendarDayCellViewModel
+
+@{
+    bool isToday = Model.Day.DayNumber.HasValue && Model.Day.IsToday;
+    string tdClass = isToday
+        ? "align-top p-2 bg-success-subtle text-success border border-success border-2"
+        : "align-top p-2";
+
+    string dropDownId = $"dropdown-{Model.Index}";
+}
+
+<td class="@tdClass" style="min-height: 100px; position: relative;">
+    @if (Model.Day.DayNumber.HasValue)
+    {
+            <div class="fw-bold d-flex justify-content-between align-items-center">
+                <span>@Model.Day.DayNumber</span>
+
+            @if (Model.Day.PersonalEvents.Any())
+            {
+                @await Component.InvokeAsync("EventDropdown", new
+                    {
+                        index = Model.Index,
+                        date = Model.Day.Date!.Value,
+                        personalEvents = Model.Day.PersonalEvents
+                    })
+            }
+            </div>
+    }
+    else
+    {
+            <div class="invisible">0</div>
+    }
+</td>

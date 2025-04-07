@@ -1,0 +1,20 @@
+﻿.custom-modal-content {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    animation: fadeInScale 0.3s ease;
+}
+
+.custom-modal-footer {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.custom-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
