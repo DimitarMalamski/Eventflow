@@ -13,22 +13,34 @@
 <td class="@tdClass" style="min-height: 100px; position: relative;">
     @if (Model.Day.DayNumber.HasValue)
     {
-            <div class="fw-bold d-flex justify-content-between align-items-center">
-                <span>@Model.Day.DayNumber</span>
+        <div class="fw-bold d-flex justify-content-between align-items-center">
+            <span>@Model.Day.DayNumber</span>
 
             @if (Model.Day.PersonalEvents.Any())
             {
-                @await Component.InvokeAsync("EventDropdown", new
-                    {
-                        index = Model.Index,
-                        date = Model.Day.Date!.Value,
-                        personalEvents = Model.Day.PersonalEvents
-                    })
+
+                <i class="bi bi-chevron-down dropdown-arrow text-muted"
+                style="cursor: pointer;"
+                   onclick="toggleDropdown('@dropDownId', this)">
+                </i>
             }
-            </div>
+            else {
+                <i class="dropdown-arrow invisible"></i>
+            }
+        </div>
+
+        @if (Model.Day.PersonalEvents.Any())
+        {
+            @await Component.InvokeAsync("EventDropdown", new
+            {
+                index = Model.Index,
+                date = Model.Day.Date!.Value,
+                personalEvents = Model.Day.PersonalEvents
+            })
+        }     
     }
     else
     {
-            <div class="invisible">0</div>
+        <div class="dropdown-arrow invisible">0</div>
     }
 </td>

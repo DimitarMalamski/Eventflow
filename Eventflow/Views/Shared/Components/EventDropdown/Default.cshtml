@@ -5,27 +5,20 @@
     string dropDownId = $"dropdown-{Model.Index}";
 }
 
-@if (Model.PersonalEvents.Any()) {
-    <i class="bi bi-chevron-down dropdown-arrow text-muted"
-              style="cursor: pointer;"
-              onclick="toggleDropdown('@dropDownId', this)">
-    </i>
-
-        <div id="@dropDownId" class="event-dropdown bg-white border rounded p-2 mt-2 shadow-sm text-start"
-             style="position: absolute; top: 30px; left: 0; z-index: 10; width: 180px;">
-            <ul class="list-unstyled mb-0 small">
-            @foreach (var pe in Model.PersonalEvents)
-            {
-                        <li class="text-success" style="cursor: pointer;"
-                            onclick="openEventModal({
-                        title: '@pe.Title',
-                        description: '@pe.Description',
-                        date: '@Model.Date.ToString("yyyy-MM-dd")',
-                        category: '@pe.CategoryId'
-                        })">
-                            📌 @pe.Title
-                        </li>
-            }
-            </ul>
-        </div>
-} 
+<div id="@dropDownId" class="event-dropdown bg-white border rounded p-2 mt-2 shadow-sm text-start"
+        style="position: absolute; top: 30px; left: 0; z-index: 10; width: 180px;">
+    <ul class="list-unstyled mb-0 small">
+    @foreach (var pe in Model.PersonalEvents)
+    {
+        <li class="text-success" style="cursor: pointer;"
+            onclick="openEventModal({
+        title: '@pe.Title',
+        description: '@pe.Description',
+        date: '@Model.Date.ToString("yyyy-MM-dd")',
+        category: '@pe.CategoryId'
+        })">
+            📌 @pe.Title
+        </li>
+    }
+    </ul>
+</div>
