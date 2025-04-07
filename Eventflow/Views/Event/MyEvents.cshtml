@@ -2,7 +2,9 @@
 
 @{
     Layout = "~/Views/Shared/_CalendarLayout.cshtml";
-    ViewData["Title"] = "My Events";
+    ViewData["Title"] = Model?.Navigation != null
+                        ? $"Calendar - {new DateTime(Model.Navigation.CurrentYear, Model.Navigation.CurrentMonth, 1):MMMM yyyy}"
+                        : "Calendar";
 }
 
 <div class="w-100" style="max-width: 1100px;">

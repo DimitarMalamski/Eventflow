@@ -1,0 +1,24 @@
+﻿@using Eventflow.Domain.Models.ViewModels
+@model CalendarViewModel
+
+<div style="min-height: 300px">
+    <table class="table table-bordered text-center align-middle">
+
+        @await Component.InvokeAsync("CalendarHeader")
+
+        <tbody>
+            @for (int i = 0; i < Model.Days.Count; i += 7)
+            {
+                var rowDays = Model.Days.Skip(i).Take(7).ToList();
+
+                @await Component.InvokeAsync("CalendarRow", new
+                    {
+                        days = rowDays,
+                        startIndex = i
+                    })
+            }
+        </tbody>
+    </table>
+</div>
+
+@await Component.InvokeAsync("EventModal")
