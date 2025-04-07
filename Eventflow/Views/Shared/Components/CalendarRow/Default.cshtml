@@ -1,0 +1,14 @@
+﻿@using Eventflow.Domain.Models.ViewModels
+@model CalendarRowViewModel
+
+<tr>
+    @for (int i = 0; i < Model.Days.Count; i++) {
+        var day = Model.Days[i];
+        var dayIndex = Model.StartIndex + i;
+
+        @await Component.InvokeAsync("CalendarDayCell", new {
+            day = day,
+            dayIndex = dayIndex
+        })
+    }
+</tr>

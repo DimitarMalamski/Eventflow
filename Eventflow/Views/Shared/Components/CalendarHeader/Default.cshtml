@@ -1,0 +1,11 @@
+﻿@model string[]
+
+<thead class="table-primary">
+    <tr>
+        @foreach (var day in Model) {
+            <th scope="col">
+                @day
+            </th>
+        }
+    </tr>
+</thead>

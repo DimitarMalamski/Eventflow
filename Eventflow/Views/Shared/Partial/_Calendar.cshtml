@@ -2,37 +2,16 @@
 
 <div style="min-height: 300px">
     <table class="table table-bordered text-center align-middle">
-        <thead class="table-primary">
-            <tr>
-                <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
-            </tr>
-        </thead>
+        @await Component.InvokeAsync("CalendarHeader")
         <tbody>
-            @{
-                int col = 0;
-                int dayIndex = 0;
-            }
-
-            @foreach (var day in Model.Days)
+            @for (int i = 0; i < Model.Days.Count; i+= 7)
             {
-                if (col == 0)
-                {
-                    @:<tr>
-                }
+                var rowDays = Model.Days.Skip(i).Take(7).ToList();
 
-                @await Component.InvokeAsync("CalendarDayCell", new {
-                    day = day,
-                    dayIndex = dayIndex
+                @await Component.InvokeAsync("CalendarRow", new {
+                    days = rowDays,
+                    startIndex = i
                 })
-
-                col++;
-                dayIndex++;
-
-                if (col == 7)
-                {
-                    @:</tr>
-                    col = 0;
-                }
             }
         </tbody>
     </table>
