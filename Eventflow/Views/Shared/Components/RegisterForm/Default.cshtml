@@ -1,0 +1,64 @@
+﻿@using Eventflow.Domain.Models.ViewModels
+@model RegisterViewModel
+
+<form asp-action="Register" method="post" class="text-start">
+    @Html.AntiForgeryToken()
+
+<div class="d-flex w-100 gap-1 justify-content-center mb-2">
+    @await Component.InvokeAsync("FormInput", new FormInputModel
+    {
+        Label = "Firstname",
+        Name = nameof(Model.Firstname),
+        Type = "text",
+        Placeholder = "Enter your firstname"
+    })
+    @await Component.InvokeAsync("FormInput", new FormInputModel
+    {
+        Label = "Lastname",
+        Name = nameof(Model.Lastname),
+        Type = "text",
+        Placeholder = "Enter your lastname"
+    })
+</div>
+
+@await Component.InvokeAsync("FormInput", new FormInputModel
+    {
+        Label = "Username",
+        Name = nameof(Model.Username),
+        Type = "text",
+        Placeholder = "Create a username"
+    })
+
+@await Component.InvokeAsync("FormInput", new FormInputModel
+    {
+        Label = "Email",
+        Name = nameof(Model.Email),
+        Type = "email",
+        Placeholder = "Enter your email"
+    })
+
+@await Component.InvokeAsync("FormInput", new FormInputModel
+    {
+        Label = "Passowrd",
+        Name = nameof(Model.Password),
+        Type = "password",
+        Placeholder = "Create a password"
+    })
+
+@await Component.InvokeAsync("FormInput", new FormInputModel
+    {
+        Label = "Confirm Password",
+        Name = nameof(Model.ConfirmPassword),
+        Type = "password",
+        Placeholder = "Confirm your password"
+    })
+
+    <div class="d-grid gap-2 mb-3">
+        <button type="submit" class="btn btn-primary">Register</button>
+    </div>
+</form>
+
+<p class="mt-3">
+    Already have an account?
+    <a asp-action="Login" asp-controller="Account">Login here</a>
+</p>

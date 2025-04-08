@@ -3,7 +3,7 @@
 @model CreatePersonalEventViewModel
 
 <form asp-action="Create" method="post">
-    @await Component.InvokeAsync("CreatePersonalEventFormInput", new CreatePersonalEventFormInputModel
+    @await Component.InvokeAsync("FormInput", new FormInputModel
     {
         Label = "Title",
         Name = nameof(Model.Title),
@@ -18,7 +18,7 @@
         Placeholder = "Enter description*"
     })
 
-    @await Component.InvokeAsync("CreatePersonalEventFormInput", new CreatePersonalEventFormInputModel
+    @await Component.InvokeAsync("FormInput", new FormInputModel
     {
         Label = "Date",
         Name = nameof(Model.Date),

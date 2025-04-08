@@ -2,11 +2,22 @@
 @using Eventflow.Domain.Models.Models
 @{
     Layout = null;
+
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
 
     var isCreateEvent = currentController == "Event" && currentAction == "Create";
     var isMyEvents = currentController == "Event" && currentAction == "MyEvents";
+
+    string sidebarContext = "Calendar";
+
+    if (isCreateEvent) {
+        sidebarContext = "Create";
+    }
+    else if (isMyEvents) {
+        sidebarContext = "MyEvents";
+    }
+
     var pageModel = Model as CalendarPageViewModel;
     var continents = pageModel?.Continents ?? new List<Continent>();
 }
@@ -27,18 +38,10 @@
     <div class="container-fluid">
         <div class="row min-vh-100">
             <div class="col-md-3 bg-white shadow-sm p-4 d-flex flex-column justify-content-between">
-                @if (isCreateEvent)
-                {
-                    @await Html.PartialAsync("Partial/_CreateEventSidebar")
-                }
-                else if (isMyEvents) 
-                {
-                    @await Html.PartialAsync("Partial/_MyEventsSidebar", continents)
-                }
-                else
-                {
-                    @await Html.PartialAsync("Partial/_Sidebar", continents)
-                }
+                @await Component.InvokeAsync("Sidebar", new {
+                    context = sidebarContext,
+                    continents = continents
+                })
                 
             </div>
 

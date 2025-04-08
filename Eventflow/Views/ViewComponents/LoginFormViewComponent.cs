@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Eventflow.Views.ViewComponents
 {
-    public class CreatePersonalEventFormInputViewComponent : ViewComponent
+    public class LoginFormViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke(CreatePersonalEventFormInputModel model)
+        public IViewComponentResult Invoke(LoginViewModel model)
         {
             return View(model);
         }

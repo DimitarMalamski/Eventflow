@@ -1,0 +1,69 @@
+﻿@using Eventflow.Domain.Models.ViewModels
+@model SidebarViewModel
+
+<div class="d-flex flex-column h-100">
+    <div class="mb-4 text-center">
+        <img src="/images/profile-placeholder.png" class="rounded-circle mb-2" alt="Profile" width="80" height="80">
+        <h5 class="mb-2">@Model.Username</h5>
+
+        @if (Model.Context == "Calendar")
+        {
+            <a href="/Account/Profile" class="btn btn-outline-primary btn-sm">View Profile</a>
+        }
+    </div>
+
+    <div class="flex-grow-1 d-flex flex-column justify-content-center gap-3">
+        @if (Model.Context == "Calendar")
+        {
+            <form method="post">
+                <div class="mb-3">
+                    <label for="continentSelect" class="form-label">Continent</label>
+                    <select class="form-select" id="continentSelect" name="continent">
+                        <option selected disabled>Select Continent</option>
+                        @foreach (var continent in Model.Continents)
+                        {
+                            <option value="@continent.Id">@continent.Name</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="countrySelect" class="form-label">Country</label>
+                    <select class="form-select" id="countrySelect" name="country">
+                        <option selected disabled>Select Country</option>
+                    </select>
+                </div>
+
+                @if (Model.IsLoggedin)
+                {
+                    <a href="/Event/MyEvents" class="btn btn-primary w-100">My Events</a>
+                }
+            </form>
+            }
+        else if (Model.Context == "Create")
+        {
+            <a href="/Calendar/Index" class="btn btn-primary w-100">Back to Calendar</a>
+        }
+        else if (Model.Context == "MyEvents")
+        {
+            <a href="/Event/Create" class="btn btn-primary w-100">Create Event</a>
+            <a href="/Calendar/Index" class="btn btn-primary w-100">Back to Calendar</a>
+        }
+    </div>
+
+    <div class="border-top pt-3 mt-4">
+        <a href="/Settings" class="d-block text-decoration-none text-dark mb-2">
+            ⚙️ Settings
+        </a>
+        <form asp-controller="Account" asp-action="Logout" method="post" class="d-block">
+            <button type="submit" class="d-block text-decoration-none text-danger bg-transparent border-0 p-0">
+                🚪 Logout
+            </button>
+        </form>
+    </div>
+</div>
+
+@if (Model.Context == "Calendar")
+{
+        <script src="~/js/country_dropdown_select.js"></script>
+}
