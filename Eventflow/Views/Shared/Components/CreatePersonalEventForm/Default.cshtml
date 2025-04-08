@@ -1,0 +1,37 @@
+﻿@using Eventflow.Domain.Models.Models
+@using Eventflow.Domain.Models.ViewModels
+@model CreatePersonalEventViewModel
+
+<form asp-action="Create" method="post">
+    @await Component.InvokeAsync("CreatePersonalEventFormInput", new CreatePersonalEventFormInputModel
+    {
+        Label = "Title",
+        Name = nameof(Model.Title),
+        Type = "text",
+        Placeholder = "Enter event title"
+    })
+
+    @await Component.InvokeAsync("CreatePersonalEventTextarea", new CreatePersonalEventTextareaModel
+    {
+        Label = "Description",
+        Name = nameof(Model.Description),
+        Placeholder = "Enter description*"
+    })
+
+    @await Component.InvokeAsync("CreatePersonalEventFormInput", new CreatePersonalEventFormInputModel
+    {
+        Label = "Date",
+        Name = nameof(Model.Date),
+        Type = "date"
+    })
+
+    @await Component.InvokeAsync("CreatePersonalEventSelect", new CreatePersonalEventSelectModel
+    {
+        Label = "Category",
+        Name = nameof(Model.CategoryId),
+        CategoryOptionLabel = "Select",
+        CategoryOptions = Model.Category ?? new List<Category>()
+    })
+
+    <button type="submit" class="btn btn-success w-100">Create</button>
+</form>
