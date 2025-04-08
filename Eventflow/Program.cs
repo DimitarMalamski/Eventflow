@@ -1,3 +1,4 @@
+using Eventflow.Application.Services.Interfaces;
 using Eventflow.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);

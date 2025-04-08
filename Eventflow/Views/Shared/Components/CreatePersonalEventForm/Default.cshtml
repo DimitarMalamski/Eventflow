@@ -3,6 +3,8 @@
 @model CreatePersonalEventViewModel
 
 <form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
     @await Component.InvokeAsync("FormInput", new FormInputModel
     {
         Label = "Title",

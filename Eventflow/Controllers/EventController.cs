@@ -72,6 +72,7 @@ namespace Eventflow.Controllers
 
         [HttpPost]
         [RequireUserOrAdmin]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreatePersonalEventViewModel model)
         {
 

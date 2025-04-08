@@ -53,7 +53,6 @@ namespace Eventflow.Infrastructure.Repositories
 
             return countries;
         }
-
         public async Task InsertCountryAsync(string countryName, int continentId)
         {
             string insertCountryQuery = @"INSERT INTO Country (Name, ContinentId)

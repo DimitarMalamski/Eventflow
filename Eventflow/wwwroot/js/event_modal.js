@@ -8,17 +8,14 @@
     modal.show();
 }
 function editEvent() {
-    console.log("Edit button clicked");
-    // TODO: Show edit form, redirect to edit page, etc.
+    // TODO
 }
 
 function setReminder() {
-    console.log("Set reminder clicked");
-    // TODO: Open reminder popup or scheduler
+    // TODO
 }
 
 function invitePeople() {
-    console.log("Invite people clicked");
-    // TODO: Open invite form/modal
+    // TODO
 }
 
