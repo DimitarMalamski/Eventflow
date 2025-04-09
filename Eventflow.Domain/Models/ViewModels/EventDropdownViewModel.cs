@@ -6,6 +6,6 @@ namespace Eventflow.Domain.Models.ViewModels
     {
         public int Index { get; set; }
         public DateTime Date { get; set; }
-        public List<PersonalEvent> PersonalEvents { get; set; } = new List<PersonalEvent>();
+        public List<PersonalEventWithCategoryNameViewModel> PersonalEvents { get; set; } = new List<PersonalEventWithCategoryNameViewModel>();
     }
 }

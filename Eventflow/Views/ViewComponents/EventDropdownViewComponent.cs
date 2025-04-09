@@ -6,7 +6,7 @@ namespace Eventflow.Views.ViewComponents
 {
     public class EventDropdownViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke(int index, DateTime date, List<PersonalEvent> personalEvents)
+        public IViewComponentResult Invoke(int index, DateTime date, List<PersonalEventWithCategoryNameViewModel> personalEvents)
         {
             var model = new EventDropdownViewModel
             {

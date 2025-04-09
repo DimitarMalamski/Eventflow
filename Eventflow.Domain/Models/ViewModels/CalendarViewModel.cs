@@ -14,6 +14,6 @@ namespace Eventflow.Domain.Models.ViewModels
         public int? DayNumber { get; set; } = null!;
         public bool IsToday { get; set; } = false;
         public DateTime? Date { get; set; }
-        public List<PersonalEvent> PersonalEvents { get; set; } = new List<PersonalEvent>();
+        public List<PersonalEventWithCategoryNameViewModel> PersonalEvents { get; set; } = new List<PersonalEventWithCategoryNameViewModel>();
     }
 }

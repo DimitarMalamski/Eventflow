@@ -41,7 +41,7 @@ namespace Eventflow.Controllers
 
             var (normalizedYear, normalizedMonth) = _calendarNavigationService.Normalize(year, month);
 
-            var events = await _personalEventService.GetEventsByUserAndMonth(userId, normalizedYear, normalizedMonth); ;
+            var events = await _personalEventService.GetEventsWithCategoryNamesAsync(userId, normalizedYear, normalizedMonth); ;
 
             var model = new CalendarPageViewModel
             {
