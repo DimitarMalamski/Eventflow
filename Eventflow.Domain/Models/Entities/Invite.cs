@@ -18,5 +18,8 @@ namespace Eventflow.Domain.Models.Models
 
         [Required]
         public DateTime CreatedAt { get; set; }
+
+        // Navigation property
+        public PersonalEvent? PersonalEvent { get; set; }
     }
 }

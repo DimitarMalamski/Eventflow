@@ -5,13 +5,16 @@ using static Eventflow.Application.Security.PasswordHasher;
 
 namespace Eventflow.Application.Services
 {
-    public class UserService : IAuthService
+    public class UserService : IAuthService, IUserService
     {
         private readonly IUserRepository _userRepository;
         public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
+        public async Task<User?> GetUserByUsernameAsync(string username)
+            => await _userRepository.GetUserByInputAsync(username);
+
         public async Task<User?> LoginAsync(string loginInput, string password)
         {
             User? user = await _userRepository.GetUserByInputAsync(loginInput);

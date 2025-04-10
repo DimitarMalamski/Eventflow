@@ -1,0 +1,110 @@
+﻿using Eventflow.Application.Services.Interfaces;
+using Eventflow.Attributes;
+using Eventflow.Domain.Models.Models;
+using Eventflow.Domain.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using static Eventflow.Utilities.SessionHelper;
+
+namespace Eventflow.Controllers
+{
+    public class InviteController : Controller
+    {
+        private readonly IUserService _userService;
+        private readonly IInviteService _inviteService;
+        public InviteController(IUserService userService,
+            IInviteService inviteService)
+        {
+            _inviteService = inviteService;
+            _userService = userService;
+        }
+
+        [HttpPost]
+        [Route("Invite/Send")]
+        [RequireUserOrAdmin]
+        public async Task<IActionResult> Send([FromBody] InviteRequestModel model)
+        {
+            if (string.IsNullOrEmpty(model.Username) || model.EventId <= 0)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Invalid invite data."
+                });
+            }
+
+            var invitedUser = await _userService.GetUserByUsernameAsync(model.Username);
+
+            if (invitedUser == null)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "User does not exist!"
+                });
+            }
+
+            int currentUserId = GetUserId(HttpContext.Session);
+
+            if (invitedUser.Id == currentUserId)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "You cannot invite yourself!"
+                });
+            }
+
+            bool alreadyInvited = await _inviteService.InviteExistsAsync(model.EventId, invitedUser.Id);
+            if (alreadyInvited)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "This user has already been invited!"
+                });
+            }
+
+            var invite = new Invite
+            {
+                PersonalEventId = model.EventId,
+                InvitedUserId = invitedUser.Id,
+                StatusId = 1,
+                CreatedAt = DateTime.Now
+            };
+
+            await _inviteService.CreateInviteAsync(invite);
+
+            return Json(new
+            {
+                success = true,
+                message = "Invite sent successfully!"
+            });
+        }
+
+        [HttpGet]
+        [RequireUserOrAdmin]
+        public async Task<IActionResult> Index(int statusId = 1)
+        {
+            int userId = GetUserId(HttpContext.Session);
+
+            var invites = await _inviteService.GetInvitesByUserAndStatusAsync(userId, statusId);
+
+            var model = new InvitePageViewModel
+            {
+                CurrentStatusId = statusId,
+                Invites = invites.Select(invite => new InviteBoxViewModel
+                {
+                    InviteId = invite.Id,
+                    EventTitle = invite.PersonalEvent?.Title ?? "[No Title]",
+                    InvitedByUsername = invite.PersonalEvent?.User?.Username ?? "[Unknown User]",
+                    EventDescription = invite.PersonalEvent?.Description ?? "No description.",
+                    EventDate = invite.PersonalEvent?.Date ?? DateTime.MinValue,
+                    StatusId = invite.StatusId,
+                    CreatedAt = invite.CreatedAt
+                }).ToList()
+            };
+
+            return View(model);
+        }
+    }
+}

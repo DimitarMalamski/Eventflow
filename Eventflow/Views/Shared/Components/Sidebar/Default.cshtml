@@ -42,12 +42,21 @@
             }
         else if (Model.Context == "Create" || Model.Context == "Edit")
         {
-            <a href="/Calendar/Index" class="btn btn-primary w-100">Back to Calendar</a>
+            <a href="/Event/MyEvents" class="btn btn-primary w-100">Back To My Events</a>
         }
         else if (Model.Context == "MyEvents")
         {
             <a href="/Event/Create" class="btn btn-primary w-100">Create Event</a>
+            <a href="/Messages/Index" class="btn btn-primary w-100">My messages</a>
             <a href="/Calendar/Index" class="btn btn-primary w-100">Back to Calendar</a>
+        }
+        else if (Model.Context == "Invite") {
+            <a href="/Messages/Index" class="btn btn-primary w-100">Back to Messages</a>
+        }
+        else if (Model.Context == "Messages") {
+            <a href="/Invite/Index" class="btn btn-primary w-100">Invites</a>
+            <a href="/Reminders/Index" class="btn btn-primary w-100">Reminders</a>
+            <a href="/Event/MyEvents" class="btn btn-primary w-100">Back To My Events</a>
         }
     </div>
 

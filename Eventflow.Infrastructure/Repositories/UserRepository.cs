@@ -73,5 +73,35 @@ namespace Eventflow.infrastructure.Repositories
 
             return await _dbHelper.ExecuteNonQueryAsync(registerUserQuery, parameters);
         }
+        public async Task<User?> GetByUsernameAsync(string username)
+        {
+            string getUserByUsernameQuery = "SELECT * FROM [User] WHERE Username = @Username";
+
+            var parameters = new Dictionary<string, object>()
+            {
+                { "@Username", username }
+            };
+
+            var dt = await _dbHelper.ExecuteQueryAsync(getUserByUsernameQuery, parameters);
+
+            if (dt.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            var row = dt.Rows[0];
+
+            return new User
+            {
+                Id = Convert.ToInt32(row["Id"]),
+                Username = row["Username"].ToString()!,
+                PasswordHash = row["PasswordHash"].ToString()!,
+                Salt = row["Salt"].ToString()!,
+                Firstname = row["Firstname"].ToString()!,
+                Lastname = row["Lastname"].ToString() ?? "",
+                Email = row["Email"].ToString()!,
+                RoleId = Convert.ToInt32(row["RoleId"])
+            };
+        }
     }
 }

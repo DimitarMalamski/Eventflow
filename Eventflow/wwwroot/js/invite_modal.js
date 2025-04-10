@@ -38,14 +38,31 @@ document.addEventListener("DOMContentLoaded", function () {
                 const result = await response.json();
 
                 if (result.success) {
-                    alert("✅ Invite sent!");
                     bootstrap.Modal.getInstance(document.getElementById("inviteModal")).hide();
-                } else {
-                    alert(result.message || "Something went wrong.");
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Invite Sent!',
+                        text: `Your invitation has been sent successfully.`,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                    inviteForm.reset();
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invite Failed',
+                        text: result.message || 'Something went wrong.'
+                    });
                 }
             } catch (err) {
-                console.error(err);
-                alert("Failed to send invite.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invite Failed',
+                    text: 'Failed to send invite. Please try again.'
+                });
             }
         });
     }

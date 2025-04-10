@@ -22,5 +22,8 @@ namespace Eventflow.Domain.Models.Models
 
         [Required]
         public int UserId { get; set; }
+
+        // Navigation property
+        public User? User { get; set; }
     }
 }

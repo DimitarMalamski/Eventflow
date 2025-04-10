@@ -57,6 +57,71 @@ namespace Eventflow.Infrastructure.Repositories
             return invites;
         }
 
+        public async Task<List<Invite>> GetInvitesByUserAndStatusAsync(int userId, int statusId)
+        {
+            string getInvitesByUserAndStatusQuery = @"
+                                        SELECT 
+                                            i.Id AS InviteId, 
+                                            i.PersonalEventId, 
+                                            i.InvitedUserId, 
+                                            i.StatusId, 
+                                            i.CreatedAt,
+
+                                            e.Id AS EventId,
+                                            e.Title AS EventTitle,
+                                            e.Description AS EventDescription,
+                                            e.Date AS EventDate,
+                                            e.CategoryId,
+                                            e.UserId AS CreatorUserId,
+
+                                            u.Id AS UserId,
+                                            u.Username AS CreatorUsername
+                                        FROM Invite i
+                                        INNER JOIN PersonalEvent e ON i.PersonalEventId = e.Id
+                                        INNER JOIN [User] u ON e.UserId = u.Id
+                                        WHERE i.InvitedUserId = @UserId AND i.StatusId = @StatusId";
+
+            var parameters = new Dictionary<string, object>()
+            {
+                { "@UserId", userId },
+                { "@StatusId", statusId }
+            };
+
+            var dt = await _dbHelper.ExecuteQueryAsync(getInvitesByUserAndStatusQuery, parameters);
+
+            var invites = new List<Invite>();
+
+            foreach (DataRow row in dt.Rows)
+            {
+                var personalEvent = new PersonalEvent
+                {
+                    Id = Convert.ToInt32(row["EventId"]),
+                    Title = row["EventTitle"].ToString()!,
+                    Description = row["EventDescription"]?.ToString(),
+                    Date = Convert.ToDateTime(row["EventDate"]),
+                    CategoryId = row["CategoryId"] != DBNull.Value ? Convert.ToInt32(row["CategoryId"]) : null,
+                    UserId = Convert.ToInt32(row["CreatorUserId"]),
+                    User = new User
+                    {
+                        Id = Convert.ToInt32(row["UserId"]),
+                        Username = row["CreatorUsername"].ToString()!
+                    }
+                };
+
+                invites.Add(new Invite
+                {
+                    Id = Convert.ToInt32(row["InviteId"]),
+                    PersonalEventId = Convert.ToInt32(row["PersonalEventId"]),
+                    InvitedUserId = Convert.ToInt32(row["InvitedUserId"]),
+                    StatusId = Convert.ToInt32(row["StatusId"]),
+                    CreatedAt = Convert.ToDateTime(row["CreatedAt"]),
+                    PersonalEvent = personalEvent
+                });
+            }
+
+            return invites;
+        }
+
         public async Task<bool> InviteExistsAsync(int eventId, int invitedUserId)
         {
             string query = "SELECT COUNT(*) FROM Invite WHERE PersonalEventId = @EventId AND InvitedUserId = @UserId";

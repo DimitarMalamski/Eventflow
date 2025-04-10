@@ -18,6 +18,9 @@ namespace Eventflow.Application.Services
         public async Task<List<Invite>> GetAllInvitesByUserIdAsync(int userId)
             => await _inviteRepository.GetAllInvitesByUserIdAsync(userId);
 
+        public async Task<List<Invite>> GetInvitesByUserAndStatusAsync(int userId, int statusId)
+            => await _inviteRepository.GetInvitesByUserAndStatusAsync(userId, statusId);
+
         public async Task<bool> InviteExistsAsync(int eventId, int invitedUserId)
             => await _inviteRepository.InviteExistsAsync(eventId, invitedUserId);
 
