@@ -106,5 +106,21 @@ namespace Eventflow.Controllers
 
             return View(model);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Respond(int inviteId, int statusId)
+        {
+            if (inviteId <= 0 || (statusId != 2 && statusId != 3))
+            {
+                TempData["Error"] = "Invalid response.";
+                return RedirectToAction("Index", new { statusId = 1 });
+            }
+
+            await _inviteService.UpdateInviteStatusAsync(inviteId, statusId);
+
+            TempData["Success"] = statusId == 2 ? "Invite accepted!" : "Invite declined.";
+            return RedirectToAction("Index", new { statusId = 1 });
+        }
     }
 }

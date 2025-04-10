@@ -16,7 +16,8 @@
         title: '@pe.Title',
         description: '@pe.Description',
         date: '@Model.Date.ToString("yyyy-MM-dd")',
-        category: '@pe.CategoryName'
+        category: '@pe.CategoryName',
+        isInvited: @pe.IsInvited.ToString().ToLower()
         })">
             📌 @pe.Title
         </li>

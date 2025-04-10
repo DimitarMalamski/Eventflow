@@ -8,5 +8,6 @@ namespace Eventflow.Domain.Interfaces.Repositories
         public Task<List<PersonalEvent>> GetByUserAndMonthAsync(int userId, int year, int month);
         public Task<PersonalEvent?> GetByIdAsync(int id);
         public Task UpdatePersonalEventAsync(PersonalEvent personalEvent);
+        public Task<List<PersonalEvent>> GetAcceptedInvitedEventsAsync(int userId);
     }
 }

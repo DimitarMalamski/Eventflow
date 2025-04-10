@@ -41,12 +41,15 @@ namespace Eventflow.Controllers
 
             var (normalizedYear, normalizedMonth) = _calendarNavigationService.Normalize(year, month);
 
-            var events = await _personalEventService.GetEventsWithCategoryNamesAsync(userId, normalizedYear, normalizedMonth); ;
+            var ownEvents = await _personalEventService.GetEventsWithCategoryNamesAsync(userId, normalizedYear, normalizedMonth);
+            var invitedEvents = await _personalEventService.GetAcceptedInvitedEventsAsync(userId, normalizedYear, normalizedMonth);
+
+            var combinedEvents = ownEvents.Concat(invitedEvents).ToList();
 
             var model = new CalendarPageViewModel
             {
                 Continents = await _continentService.OrderContinentByNameAsync(),
-                Calendar = _calendarService.GenerateCalendar(normalizedYear, normalizedMonth, events),
+                Calendar = _calendarService.GenerateCalendar(normalizedYear, normalizedMonth, combinedEvents),
                 Navigation = new CalendarNavigationViewModel
                 {
                     CurrentMonth = normalizedMonth,

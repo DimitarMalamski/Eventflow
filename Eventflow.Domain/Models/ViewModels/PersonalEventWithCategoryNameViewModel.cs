@@ -10,5 +10,6 @@
         public int? CategoryId { get; set; }
         public string CategoryName { get; set; } = "Uncategorized";
         public int UserId { get; set; }
+        public bool IsInvited { get; set; } = false;
     }
 }

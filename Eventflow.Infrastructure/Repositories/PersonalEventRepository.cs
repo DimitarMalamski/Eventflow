@@ -31,6 +31,38 @@ namespace Eventflow.Infrastructure.Repositories
 
             await _dbHelper.ExecuteNonQueryAsync(insertPersonalEventQuery, parameters!);
         }
+        public async Task<List<PersonalEvent>> GetAcceptedInvitedEventsAsync(int userId)
+        {
+            string getAllAcceptedInvitedEventsQuery = @"
+                    SELECT e.*
+                    FROM Invite i
+                    INNER JOIN PersonalEvent e ON i.PersonalEventId = e.Id
+                    WHERE i.InvitedUserId = @UserId AND i.StatusId = 2";
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "@UserId", userId }
+            };
+
+            var dt = await _dbHelper.ExecuteQueryAsync(getAllAcceptedInvitedEventsQuery, parameters);
+
+            var events = new List<PersonalEvent>();
+
+            foreach (DataRow row in dt.Rows)
+            {
+                events.Add(new PersonalEvent
+                {
+                    Id = Convert.ToInt32(row["Id"]),
+                    Title = row["Title"].ToString()!,
+                    Description = row["Description"]?.ToString(),
+                    Date = Convert.ToDateTime(row["Date"]),
+                    CategoryId = row["CategoryId"] != DBNull.Value ? Convert.ToInt32(row["CategoryId"]) : null,
+                    UserId = Convert.ToInt32(row["UserId"])
+                });
+            }
+
+            return events;
+        }
         public async Task<PersonalEvent?> GetByIdAsync(int id)
         {
             string getPersonalEventQuery = "SELECT * FROM PersonalEvent WHERE Id = @Id";
