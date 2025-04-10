@@ -1,4 +1,6 @@
 ﻿function openEventModal(event) {
+    window.currentEventId = event.id;
+
     document.getElementById("modal-event-title").innerText = event.title;
     document.getElementById("modal-event-description").innerText = event.description;
     document.getElementById("modal-event-date").innerText = event.date;
@@ -8,7 +10,15 @@
     modal.show();
 }
 function editEvent() {
-    // TODO
+    const eventId = window.currentEventId;
+
+    if (eventId) {
+        window.location.href = `/Event/Edit/${eventId}`
+    }
+    else {
+        alert("Event ID is missing.");
+    }
+    
 }
 
 function setReminder() {
@@ -16,6 +26,6 @@ function setReminder() {
 }
 
 function invitePeople() {
-    // TODO
+    openInviteModal()
 }
 

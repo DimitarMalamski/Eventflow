@@ -3,21 +3,23 @@
 
 @{
     var name = Model?.Name ?? "";
-    var selectedValue = "";
+    var selectedValue = Model?.SelectedValue?.ToString() ?? "";
+
     var error = "";
-    var showError = false;
+    bool showError = false;
 
-    if (!string.IsNullOrEmpty(name) && ViewContext.ViewData.Model != null)
+    if (string.IsNullOrEmpty(selectedValue) && !string.IsNullOrEmpty(name) && ViewContext.ViewData.Model != null)
     {
-        var prop = ViewContext.ViewData.Model.GetType().GetProperty(name);
-        var valueObj = prop?.GetValue(ViewContext.ViewData.Model);
-        selectedValue = valueObj?.ToString() ?? "";
+        selectedValue = ViewContext.ViewData.Model.GetType()
+            .GetProperty(name)?
+            .GetValue(ViewContext.ViewData.Model)?
+            .ToString() ?? "";
+    }
 
-        if (ViewContext.ViewData.ModelState.TryGetValue(name, out var state))
-        {
-            showError = state.Errors.Any() && state.RawValue != null;
-            error = showError ? state.Errors.First().ErrorMessage : "";
-        }
+    if (!string.IsNullOrEmpty(name) && ViewContext.ViewData.ModelState.TryGetValue(name, out var state))
+    {
+        showError = state.Errors.Any() && state.RawValue != null;
+        error = showError ? state.Errors.First().ErrorMessage : "";
     }
 }
 
@@ -27,14 +29,11 @@
     name="@name"
     class="form-select @(showError ? "is-invalid" : "")">
         <option value="">@Model.CategoryOptionLabel</option>
-        @foreach (var option in Model.CategoryOptions)
+        @foreach (var category in Model.CategoryOptions)
         {
-            if (option.Id.ToString() == selectedValue) {
-                <option value="@option.Id" selected>@option.Name</option>
-            }
-            else {
-                <option value="@option.Id">@option.Name</option>
-            }
+            <option value="@category.Id" selected="@(category.Id.ToString() == selectedValue)">
+                @category.Name
+            </option>
         }
     </select>
 

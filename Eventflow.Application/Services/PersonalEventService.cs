@@ -15,10 +15,10 @@ namespace Eventflow.Application.Services
             _personalEventRepository = personalEventRepository;
             _categoryRepository = categoryRepository;
         }
-
         public async Task CreateAsync(PersonalEvent personalEvent)
             => await _personalEventRepository.CreateEventAsync(personalEvent);
-
+        public async Task<PersonalEvent?> GetByIdAsync(int id)
+            => await _personalEventRepository.GetByIdAsync(id);
         public async Task<List<PersonalEventWithCategoryNameViewModel>> GetEventsWithCategoryNamesAsync(int userId, int year, int month)
         {
             var personalEvents = await _personalEventRepository.GetByUserAndMonthAsync(userId, year, month);
@@ -42,5 +42,7 @@ namespace Eventflow.Application.Services
 
             return personalEventsWithCategoryName;
         }
+        public async Task UpdatePersonalEventAsync(PersonalEvent personalEvent)
+            => await _personalEventRepository.UpdatePersonalEventAsync(personalEvent);
     }
 }

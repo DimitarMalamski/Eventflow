@@ -18,6 +18,7 @@ namespace Eventflow.Configurations
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IPersonalEventRepository, PersonalEventRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IInviteRepository, InviteRepository>();
 
             // Services
             services.AddScoped<IAuthService, UserService>();
@@ -28,6 +29,7 @@ namespace Eventflow.Configurations
             services.AddScoped<ICalendarNavigationService, CalendarNavigationService>();
             services.AddScoped<IPersonalEventService, PersonalEventService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IInviteService, InviteService>();
 
             // DB Helper
             services.AddScoped<IDbHelper, DbHelper>();

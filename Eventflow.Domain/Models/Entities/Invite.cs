@@ -2,8 +2,11 @@
 
 namespace Eventflow.Domain.Models.Models
 {
-    public class SharedEvent
+    public class Invite
     {
+        [Key]
+        public int Id { get; set; }
+
         [Required]
         public int PersonalEventId { get; set; }
 
@@ -12,5 +15,8 @@ namespace Eventflow.Domain.Models.Models
 
         [Required]
         public int StatusId { get; set; }
+
+        [Required]
+        public DateTime CreatedAt { get; set; }
     }
 }

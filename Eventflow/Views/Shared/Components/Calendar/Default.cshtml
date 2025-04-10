@@ -22,3 +22,6 @@
 </div>
 
 @await Component.InvokeAsync("EventModal")
+@await Component.InvokeAsync("InviteUserModal", new {
+    eventId = 0
+})

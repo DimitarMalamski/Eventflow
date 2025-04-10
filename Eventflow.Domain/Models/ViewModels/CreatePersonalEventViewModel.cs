@@ -7,6 +7,8 @@ namespace Eventflow.Domain.Models.ViewModels
 {
     public class CreatePersonalEventViewModel
     {
+        public int? Id { get; set; }
+
         [Required(ErrorMessage = personalEventTitleRequired)]
         [StringLength(personalEventTitleMaxLength,
             ErrorMessage = personalEventTitleInvalid)]
@@ -20,6 +22,6 @@ namespace Eventflow.Domain.Models.ViewModels
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
         public int? CategoryId { get; set; }
-        public List<Category>? Category { get; set; }
+        public List<Category>? Categories { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿.custom-modal-content {
+﻿@import url('event_modal.css');
+.custom-modal-content {
     background: #fff;
     border-radius: 1rem;
     padding: 1.5rem;

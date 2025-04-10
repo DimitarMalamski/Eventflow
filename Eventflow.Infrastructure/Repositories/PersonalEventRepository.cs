@@ -31,6 +31,35 @@ namespace Eventflow.Infrastructure.Repositories
 
             await _dbHelper.ExecuteNonQueryAsync(insertPersonalEventQuery, parameters!);
         }
+        public async Task<PersonalEvent?> GetByIdAsync(int id)
+        {
+            string getPersonalEventQuery = "SELECT * FROM PersonalEvent WHERE Id = @Id";
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "@Id", id },
+            };
+
+            var dt = await _dbHelper.ExecuteQueryAsync(getPersonalEventQuery, parameters);
+
+            if (dt.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            var row = dt.Rows[0];
+
+            return new PersonalEvent
+            {
+                Id = Convert.ToInt32(row["Id"]),
+                Title = row["Title"].ToString()!,
+                Description = row["Description"].ToString(),
+                Date = Convert.ToDateTime(row["Date"]),
+                CategoryId = row["CategoryId"] != DBNull.Value ? Convert.ToInt32(row["CategoryId"]) : (int?)null,
+                UserId = Convert.ToInt32(row["UserId"]),
+                IsCompleted = Convert.ToBoolean(row["IsCompleted"])
+            };
+        }
         public async Task<List<PersonalEvent>> GetByUserAndMonthAsync(int userId, int year, int month)
         {
             var monthStart = new DateTime(year, month, 1);
@@ -69,6 +98,28 @@ namespace Eventflow.Infrastructure.Repositories
             }
 
             return events;
+        }
+        public async Task UpdatePersonalEventAsync(PersonalEvent personalEvent)
+        {
+            string updatePersonalEventQuery = @"
+                    UPDATE PersonalEvent
+                    SET
+                        Title = @Title,
+                        Description = @Description,
+                        Date = @Date,
+                        CategoryId = @CategoryId
+                    WHERE Id = @Id";
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "@Id", personalEvent.Id },
+                { "@Title", personalEvent.Title },
+                { "@Description", personalEvent.Description ?? string.Empty },
+                { "@Date", personalEvent.Date },
+                { "@CategoryId", personalEvent.CategoryId ?? (object)DBNull.Value }
+            };
+
+            await _dbHelper.ExecuteNonQueryAsync(updatePersonalEventQuery, parameters);
         }
     }
 }

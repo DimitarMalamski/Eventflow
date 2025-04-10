@@ -64,7 +64,7 @@ namespace Eventflow.Controllers
             var model = new CreatePersonalEventViewModel
             {
                 Date = DateTime.Now,
-                Category = await _categoryService.GetAllCategoriesAsync()
+                Categories = await _categoryService.GetAllCategoriesAsync()
             };
 
             return View(model);
@@ -78,7 +78,7 @@ namespace Eventflow.Controllers
 
             if (!ModelState.IsValid)
             {
-                model.Category = await _categoryService.GetAllCategoriesAsync();
+                model.Categories = await _categoryService.GetAllCategoriesAsync();
                 return View(model);
             }
 
@@ -95,6 +95,58 @@ namespace Eventflow.Controllers
             };
 
             await _personalEventService.CreateAsync(newEvent);
+
+            return RedirectToAction("MyEvents");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var personalEvent = await _personalEventService.GetByIdAsync(id);
+
+            if (personalEvent == null)
+            {
+                return NotFound();
+            }
+
+            var model = new CreatePersonalEventViewModel
+            {
+                Id = personalEvent.Id,
+                Title = personalEvent.Title,
+                Description = personalEvent.Description,
+                Date = personalEvent.Date,
+                CategoryId = personalEvent.CategoryId,
+                Categories = await _categoryService.GetAllCategoriesAsync()
+            };
+
+            return View("Edit", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(CreatePersonalEventViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Categories = await _categoryService.GetAllCategoriesAsync();
+                return View("Create", model);
+            }
+
+            int userId = GetUserId(HttpContext.Session);
+
+            var existingPersonalEvent = await _personalEventService.GetByIdAsync(model.Id!.Value);
+
+            if (existingPersonalEvent == null || existingPersonalEvent.UserId != userId)
+            {
+                return Unauthorized();
+            }
+
+            existingPersonalEvent.Title = model.Title;
+            existingPersonalEvent.Description = model.Description;
+            existingPersonalEvent.Date = model.Date;
+            existingPersonalEvent.CategoryId = model.CategoryId;
+
+            await _personalEventService.UpdatePersonalEventAsync(existingPersonalEvent);
 
             return RedirectToAction("MyEvents");
         }

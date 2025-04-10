@@ -3,22 +3,22 @@
 
 @{
     var name = Model?.Name ?? "";
-    var value = "";
+    var value = Model?.Value ?? "";
     var error = "";
-    var showError = false;
+    bool showError = false;
 
-    if (!string.IsNullOrEmpty(name) && ViewContext.ViewData.Model != null)
+    if (string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(name) && ViewContext.ViewData.Model != null)
     {
         value = ViewContext.ViewData.Model.GetType()
             .GetProperty(name)?
             .GetValue(ViewContext.ViewData.Model)?
             .ToString() ?? "";
+    }
 
-        if (ViewContext.ViewData.ModelState.TryGetValue(name, out var state))
-        {
-            showError = state.Errors.Any() && state.RawValue != null;
-            error = showError ? state.Errors.First().ErrorMessage : "";
-        }
+    if (!string.IsNullOrEmpty(name) && ViewContext.ViewData.ModelState.TryGetValue(name, out var state))
+    {
+        showError = state.Errors.Any() && state.RawValue != null;
+        error = showError ? state.Errors.First().ErrorMessage : "";
     }
 }
 

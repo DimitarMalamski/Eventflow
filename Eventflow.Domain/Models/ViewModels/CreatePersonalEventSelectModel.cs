@@ -8,5 +8,6 @@ namespace Eventflow.Domain.Models.ViewModels
         public string Name { get; set; } = string.Empty;
         public List<Category> CategoryOptions { get; set; } = new List<Category>();
         public string CategoryOptionLabel { get; set; } = "Select";
+        public int? SelectedValue { get; set; }
     }
 }

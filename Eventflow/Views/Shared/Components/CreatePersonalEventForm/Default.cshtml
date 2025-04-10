@@ -2,7 +2,7 @@
 @using Eventflow.Domain.Models.ViewModels
 @model CreatePersonalEventViewModel
 
-<form asp-action="Create" method="post">
+<form asp-action="@(Model.Id.HasValue ? "Edit" : "Create")" method="post">
     @Html.AntiForgeryToken()
 
     @await Component.InvokeAsync("FormInput", new FormInputModel
@@ -10,21 +10,24 @@
         Label = "Title",
         Name = nameof(Model.Title),
         Type = "text",
-        Placeholder = "Enter event title"
+        Placeholder = "Enter event title",
+        Value = Model.Title
     })
 
     @await Component.InvokeAsync("CreatePersonalEventTextarea", new CreatePersonalEventTextareaModel
     {
         Label = "Description",
         Name = nameof(Model.Description),
-        Placeholder = "Enter description*"
+        Placeholder = "Enter description*",
+        Value = Model.Description
     })
 
     @await Component.InvokeAsync("FormInput", new FormInputModel
     {
         Label = "Date",
         Name = nameof(Model.Date),
-        Type = "date"
+        Type = "date",
+        Value = Model.Date.ToString("yyyy-MM-dd")
     })
 
     @await Component.InvokeAsync("CreatePersonalEventSelect", new CreatePersonalEventSelectModel
@@ -32,8 +35,11 @@
         Label = "Category",
         Name = nameof(Model.CategoryId),
         CategoryOptionLabel = "Select",
-        CategoryOptions = Model.Category ?? new List<Category>()
+        CategoryOptions = Model.Categories ?? new List<Category>(),
+        SelectedValue = Model.CategoryId
     })
 
-    <button type="submit" class="btn btn-success w-100">Create</button>
+    <button type="submit" class="btn btn-success w-100">
+        @(Model.Id.HasValue ? "Save" : "Create")
+    </button>
 </form>

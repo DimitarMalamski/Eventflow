@@ -1,0 +1,26 @@
+﻿@using Eventflow.Domain.Models.ViewModels
+@model InviteUserModalViewModel
+
+<div class="modal fade" id="inviteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content invite-modal-content p-3">
+      <div class="modal-header">
+        <h5 class="modal-title">Invite User</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="inviteForm">
+            <input type="hidden" id="invite-event-id" value="@Model.EventId" />
+
+            <div class="mb-3">
+                <label for="invite-username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="invite-username" placeholder="Enter username" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Send Invite</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
