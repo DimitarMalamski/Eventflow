@@ -102,7 +102,8 @@ namespace Eventflow.Infrastructure.Repositories
                     FROM PersonalEvent 
                     WHERE UserId = @UserId 
                     AND Date >= @StartDate 
-                    AND Date <= @EndDate";
+                    AND Date <= @EndDate
+                    AND CONVERT(date, Date) >= CONVERT(date, GETDATE())";
 
             var parameters = new Dictionary<string, object?>()
             {
@@ -155,7 +156,10 @@ namespace Eventflow.Infrastructure.Repositories
         }
         public async Task<List<PersonalEvent>> GetAllPersonalEventsByUserIdAsync(int userId)
         {
-            string getAllPersonalEventsByUserIdQuery = "SELECT * FROM PersonalEvent WHERE UserId = @UserId";
+            string getAllPersonalEventsByUserIdQuery = @"
+                                    SELECT * FROM PersonalEvent
+                                    WHERE UserId = @UserId
+                                    AND Date >= CAST(GETDATE() AS DATE)";
 
             var parameters = new Dictionary<string, object>
             {

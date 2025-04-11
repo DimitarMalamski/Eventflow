@@ -11,6 +11,15 @@ namespace Eventflow.Application.Services
         {
             _inviteRepository = inviteRepository;
         }
+        public async Task AutoDeclineExpiredInvitesAsync()
+        {
+            var expiredInvites = await _inviteRepository.GetExpiredPendingInvitesAsync();
+
+            foreach(var invite in expiredInvites)
+            {
+                await _inviteRepository.UpdateInviteStatusAsync(invite.Id, 3);
+            }
+        }
 
         public async Task CreateInviteAsync(Invite invite)
             => await _inviteRepository.CreateInviteAsync(invite);

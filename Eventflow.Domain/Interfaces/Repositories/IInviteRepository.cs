@@ -9,5 +9,6 @@ namespace Eventflow.Domain.Interfaces.Repositories
         public Task UpdateInviteStatusAsync(int inviteId, int statusId);
         public Task<bool> InviteExistsAsync(int eventId, int invitedUserId);
         public Task<List<Invite>> GetInvitesByUserAndStatusAsync(int userId, int statusId);
+        public Task<List<Invite>> GetExpiredPendingInvitesAsync();
     }
 }

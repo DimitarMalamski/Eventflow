@@ -28,7 +28,6 @@ namespace Eventflow.Infrastructure.Repositories
 
             await _dbHelper.ExecuteNonQueryAsync(createInviteQuery, parameters);
         }
-
         public async Task<List<Invite>> GetAllInvitesByUserIdAsync(int userId)
         {
             string getAllInvitedByUserQuery = "SELECT * FROM Invite WHERE InvitedUserId = @UserId";
@@ -56,7 +55,32 @@ namespace Eventflow.Infrastructure.Repositories
 
             return invites;
         }
+        public async Task<List<Invite>> GetExpiredPendingInvitesAsync()
+        {
+            string getExpiredPendingInvitesQuery = @"
+                    SELECT i.*
+                    FROM Invite i
+                    INNER JOIN PersonalEvent e ON i.PersonalEventId = e.Id
+                    WHERE i.StatusId = 1 AND CONVERT(date, e.Date) < CONVERT(date, GETDATE())";
 
+            var dt = await _dbHelper.ExecuteQueryAsync(getExpiredPendingInvitesQuery);
+
+            List<Invite> invites = new List<Invite>();
+
+            foreach (DataRow row in dt.Rows)
+            {
+                invites.Add(new Invite
+                {
+                    Id = Convert.ToInt32(row["Id"]),
+                    PersonalEventId = Convert.ToInt32(row["PersonalEventId"]),
+                    InvitedUserId = Convert.ToInt32(row["InvitedUserId"]),
+                    StatusId = Convert.ToInt32(row["StatusId"]),
+                    CreatedAt = Convert.ToDateTime(row["CreatedAt"])
+                });
+            }
+
+            return invites;
+        }
         public async Task<List<Invite>> GetInvitesByUserAndStatusAsync(int userId, int statusId)
         {
             string getInvitesByUserAndStatusQuery = @"
@@ -121,7 +145,6 @@ namespace Eventflow.Infrastructure.Repositories
 
             return invites;
         }
-
         public async Task<bool> InviteExistsAsync(int eventId, int invitedUserId)
         {
             string query = "SELECT COUNT(*) FROM Invite WHERE PersonalEventId = @EventId AND InvitedUserId = @UserId";
@@ -135,7 +158,6 @@ namespace Eventflow.Infrastructure.Repositories
             var result = await _dbHelper.ExecuteScalarAsync(query, parameters);
             return Convert.ToInt32(result) > 0;
         }
-
         public async Task UpdateInviteStatusAsync(int inviteId, int statusId)
         {
             string updateInviteStatusQuery = "UPDATE Invite SET StatusId = @StatusId WHERE Id = @Id";

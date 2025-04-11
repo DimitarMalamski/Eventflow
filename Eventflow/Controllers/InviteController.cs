@@ -87,6 +87,8 @@ namespace Eventflow.Controllers
         {
             int userId = GetUserId(HttpContext.Session);
 
+            await _inviteService.AutoDeclineExpiredInvitesAsync();
+
             var invites = await _inviteService.GetInvitesByUserAndStatusAsync(userId, statusId);
 
             var model = new InvitePageViewModel

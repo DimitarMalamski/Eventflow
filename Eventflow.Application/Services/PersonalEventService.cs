@@ -51,7 +51,10 @@ namespace Eventflow.Application.Services
             => await _personalEventRepository.GetPersonalEventByIdAsync(id);
         public async Task<List<PersonalEventWithCategoryNameViewModel>> GetEventsWithCategoryNamesAsync(int userId, int year, int month)
         {
-            var personalEvents = await _personalEventRepository.GetByUserAndMonthAsync(userId, year, month);
+            var personalEvents = (await _personalEventRepository.GetByUserAndMonthAsync(userId, year, month))
+                .Where(e => e.Date.Date >= DateTime.Today)
+                .ToList();
+
             var categories = await _categoryRepository.GetAllCategoriesAsync();
 
             var categoryMap = categories.ToDictionary(c => c.Id, c => c.Name);
