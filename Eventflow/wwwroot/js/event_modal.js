@@ -38,10 +38,10 @@ function editEvent() {
 }
 
 function setReminder() {
-    // TODO
+    openSetReminderModal();
 }
 
 function invitePeople() {
-    openInviteModal()
+    openInviteModal();
 }
 

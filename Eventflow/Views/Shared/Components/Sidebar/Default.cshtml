@@ -50,12 +50,12 @@
             <a href="/Messages/Index" class="btn btn-primary w-100">My messages</a>
             <a href="/Calendar/Index" class="btn btn-primary w-100">Back to Calendar</a>
         }
-        else if (Model.Context == "Invite") {
+        else if (Model.Context == "Invite" || Model.Context == "Reminder") {
             <a href="/Messages/Index" class="btn btn-primary w-100">Back to Messages</a>
         }
         else if (Model.Context == "Messages") {
             <a href="/Invite/Index" class="btn btn-primary w-100">Invites</a>
-            <a href="/Reminders/Index" class="btn btn-primary w-100">Reminders</a>
+            <a href="/Reminder/Index" class="btn btn-primary w-100">Reminders</a>
             <a href="/Event/MyEvents" class="btn btn-primary w-100">Back To My Events</a>
         }
     </div>

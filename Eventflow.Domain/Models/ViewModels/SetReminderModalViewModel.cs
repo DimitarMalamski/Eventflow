@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static Eventflow.Domain.Common.ValidationConstants.PersonalEventReminder;
 
-namespace Eventflow.Domain.Models.Models
+namespace Eventflow.Domain.Models.ViewModels
 {
-    public class PersonalEventReminder
+    public class SetReminderModalViewModel
     {
-        [Key]
-        public int Id { get; set; }
+        public int PersonalEventId { get; set; }
 
         [Required]
         [StringLength(PersonalEventReminderTitleMaxLength)]
@@ -16,13 +15,8 @@ namespace Eventflow.Domain.Models.Models
         public string? Description { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
-        public bool IsRead { get; set; } = false;
+        public DateTime ReminderDate { get; set; }
 
-        [Required]
-        public int PersonalEventId { get; set; }
 
-        // Navigation property
-        public PersonalEvent? PersonalEvent { get; set; }
     }
 }

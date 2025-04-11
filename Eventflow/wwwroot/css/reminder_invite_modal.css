@@ -1,0 +1,35 @@
+﻿@keyframes zoomFade {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.invite-modal-content {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+#inviteModal.modal.fade .modal-dialog {
+    transform: none !important;
+    animation: zoomFade 0.1s ease-out;
+}
+
+.reminder-modal-content {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+#setReminderModal.modal.fade .modal-dialog {
+    transform: none !important;
+    animation: zoomFade 0.1s ease-out;
+}

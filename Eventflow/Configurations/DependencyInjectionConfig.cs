@@ -19,6 +19,7 @@ namespace Eventflow.Configurations
             services.AddScoped<IPersonalEventRepository, PersonalEventRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IInviteRepository, InviteRepository>();
+            services.AddScoped<IPersonalEventReminderRepository, PersonalEventReminderRepository>();
 
             // Services
             services.AddScoped<IAuthService, UserService>();
@@ -31,6 +32,7 @@ namespace Eventflow.Configurations
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IInviteService, InviteService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPersonalEventReminderService, PersonalEventReminderService>();
 
             // DB Helper
             services.AddScoped<IDbHelper, DbHelper>();

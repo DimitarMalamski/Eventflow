@@ -7,7 +7,7 @@ namespace Eventflow.Application.Services.Interfaces
     {
         public Task CreateAsync(PersonalEvent personalEvent);
         public Task<List<PersonalEventWithCategoryNameViewModel>> GetEventsWithCategoryNamesAsync(int userId, int year, int month);
-        public Task<PersonalEvent?> GetByIdAsync(int id);
+        public Task<PersonalEvent?> GetPersonalEventByIdAsync(int id);
         public Task UpdatePersonalEventAsync(PersonalEvent personalEvent);
         public Task<List<PersonalEventWithCategoryNameViewModel>> GetAcceptedInvitedEventsAsync(int userId, int year, int month);
     }

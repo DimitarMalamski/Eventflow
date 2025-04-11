@@ -47,8 +47,8 @@ namespace Eventflow.Application.Services
             return model;
         }
 
-        public async Task<PersonalEvent?> GetByIdAsync(int id)
-            => await _personalEventRepository.GetByIdAsync(id);
+        public async Task<PersonalEvent?> GetPersonalEventByIdAsync(int id)
+            => await _personalEventRepository.GetPersonalEventByIdAsync(id);
         public async Task<List<PersonalEventWithCategoryNameViewModel>> GetEventsWithCategoryNamesAsync(int userId, int year, int month)
         {
             var personalEvents = await _personalEventRepository.GetByUserAndMonthAsync(userId, year, month);

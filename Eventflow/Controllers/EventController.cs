@@ -105,7 +105,7 @@ namespace Eventflow.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var personalEvent = await _personalEventService.GetByIdAsync(id);
+            var personalEvent = await _personalEventService.GetPersonalEventByIdAsync(id);
 
             if (personalEvent == null)
             {
@@ -137,7 +137,7 @@ namespace Eventflow.Controllers
 
             int userId = GetUserId(HttpContext.Session);
 
-            var existingPersonalEvent = await _personalEventService.GetByIdAsync(model.Id!.Value);
+            var existingPersonalEvent = await _personalEventService.GetPersonalEventByIdAsync(model.Id!.Value);
 
             if (existingPersonalEvent == null || existingPersonalEvent.UserId != userId)
             {

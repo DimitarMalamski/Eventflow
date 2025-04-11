@@ -63,7 +63,7 @@ namespace Eventflow.Infrastructure.Repositories
 
             return events;
         }
-        public async Task<PersonalEvent?> GetByIdAsync(int id)
+        public async Task<PersonalEvent?> GetPersonalEventByIdAsync(int id)
         {
             string getPersonalEventQuery = "SELECT * FROM PersonalEvent WHERE Id = @Id";
 
@@ -152,6 +152,35 @@ namespace Eventflow.Infrastructure.Repositories
             };
 
             await _dbHelper.ExecuteNonQueryAsync(updatePersonalEventQuery, parameters);
+        }
+        public async Task<List<PersonalEvent>> GetAllPersonalEventsByUserIdAsync(int userId)
+        {
+            string getAllPersonalEventsByUserIdQuery = "SELECT * FROM PersonalEvent WHERE UserId = @UserId";
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "@UserId", userId }
+            };
+
+            var dt = await _dbHelper.ExecuteQueryAsync(getAllPersonalEventsByUserIdQuery, parameters);
+
+            List<PersonalEvent> events = new List<PersonalEvent>();
+
+            foreach (DataRow row in dt.Rows)
+            {
+                events.Add(new PersonalEvent
+                {
+                    Id = Convert.ToInt32(row["Id"]),
+                    Title = row["Title"].ToString()!,
+                    Description = row["Description"]?.ToString(),
+                    Date = Convert.ToDateTime(row["Date"]),
+                    IsCompleted = Convert.ToBoolean(row["IsCompleted"]),
+                    CategoryId = row["CategoryId"] != DBNull.Value ? Convert.ToInt32(row["CategoryId"]) : null,
+                    UserId = Convert.ToInt32(row["UserId"])
+                });
+            }
+
+            return events;
         }
     }
 }

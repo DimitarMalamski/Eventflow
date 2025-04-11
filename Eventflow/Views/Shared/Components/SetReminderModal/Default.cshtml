@@ -1,0 +1,40 @@
+﻿@using Eventflow.Domain.Models.ViewModels
+@model SetReminderModalViewModel
+
+<div class="modal fade" id="setReminderModal" tabindex="-1" aria-labelledby="setReminderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content reminder-modal-content p-3">
+            <form id="setReminderForm">
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="setReminderModalLabel">Set Reminder</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" id="reminder-event-id" name="PersonalEventId" value="@Model.PersonalEventId" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Reminder Title</label>
+                        <input type="text" name="Title" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Description (optional)</label>
+                        <textarea name="Description" class="form-control"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Reminder Date</label>
+                        <input type="date" name="ReminderDate" class="form-control" required value="@Model.ReminderDate.ToString("yyyy-MM-dd")" />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-warning w-100">Save Reminder</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
