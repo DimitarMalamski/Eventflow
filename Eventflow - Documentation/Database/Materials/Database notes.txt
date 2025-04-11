@@ -1,0 +1,9 @@
+Database:
+
+- There should be an User role, that each user should login as;
+- There should be an Admin role, that can touch up the site and see information for all the users;
+- There should be a table that represents each Day;
+- There should be a table that represents each Country;
+- We can have a table that represents each Continent, so that there is an easier sorting options for the data;
+- bookmarking each and every country, so there is an option for ;
+- social system;

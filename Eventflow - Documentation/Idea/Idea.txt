@@ -1,0 +1,3 @@
+This is the idea:
+
+The idea is to create a optimal api, that showcases all the dates and the holidays of each country that are happening on this day. You can sort them based on country and potentially add important dates that are just for you. Also you can have reminders for upcoming important for you dates. Basically a smart calendar.

@@ -34,7 +34,6 @@ function editEvent() {
     else {
         alert("Event ID is missing.");
     }
-    
 }
 
 function setReminder() {
