@@ -18,7 +18,6 @@ namespace Eventflow.Application.Services
 
         public async Task CreatePersonalEventReminderAsync(PersonalEventReminder reminder)
             => await _personalEventReminderRepository.CreatePersonalReminderAsync(reminder);
-
         public async Task<List<PersonalEventReminder>> GetAllPersonalEventRemindersByUserIdAsync(int userId)
         {
             var allUserEvents = await _personalEventRepository.GetAllPersonalEventsByUserIdAsync(userId);
@@ -42,7 +41,7 @@ namespace Eventflow.Application.Services
                 .Select(r => new ReminderBoxViewModel
                 {
                     Id = r.Id,
-                    ReminderId = r.Id,
+                    EventId = r.Id,
                     Title = r.Title,
                     Description = r.Description,
                     Date = r.Date,
@@ -52,6 +51,26 @@ namespace Eventflow.Application.Services
                 .ToList();
 
             return filteredReminders;
+        }
+        public async Task<List<ReminderBoxViewModel>> GetTodaysUnreadRemindersAsync(int userId)
+        {
+            var allReminders = await _personalEventReminderRepository.GetRemindersWithEventAndTitleByUserIdAsync(userId);
+
+            var allTodaysUnreadReminders = allReminders
+                .Where(r => !r.IsRead && r.Date.Date == DateTime.Today)
+                .Select(r => new ReminderBoxViewModel
+                {
+                    Id = r.Id,
+                    EventId = r.Id,
+                    Title = r.Title,
+                    Description = r.Description,
+                    Date = r.Date,
+                    IsRead = r.IsRead,
+                    EventTitle = r.PersonalEvent!.Title ?? "Unknown"
+                })
+                .ToList();
+
+            return allTodaysUnreadReminders;
         }
         public async Task MarkPersonalEventReminderAsReadAsync(int reminderId)
             => await _personalEventReminderRepository.MarkPersonalReminderAsReadAsync(reminderId);

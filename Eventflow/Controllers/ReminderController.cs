@@ -22,9 +22,18 @@ namespace Eventflow.Controllers
         {
             int userId = GetUserId(HttpContext.Session);
 
+            List<ReminderBoxViewModel> reminders = new List<ReminderBoxViewModel>();
+
             bool isRead = filter.ToLower() == "read";
 
-            var reminders = await _personalEventReminderService.GetRemindersWithEventTitlesByUserIdAsync(userId, isRead);
+            if (isRead)
+            {
+                reminders = await _personalEventReminderService.GetRemindersWithEventTitlesByUserIdAsync(userId, isRead: true);
+            }
+            else
+            {
+                reminders = await _personalEventReminderService.GetTodaysUnreadRemindersAsync(userId);
+            }
 
             var model = new ReminderPageViewModel
             {
