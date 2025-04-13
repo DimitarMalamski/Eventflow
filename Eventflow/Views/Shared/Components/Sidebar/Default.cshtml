@@ -1,5 +1,17 @@
-﻿@using Eventflow.Domain.Models.ViewModels
+﻿@using Eventflow.Application.Services.Interfaces
+@using Eventflow.Domain.Models.ViewModels
+@using static Eventflow.Utilities.SessionHelper;
 @model SidebarViewModel
+@inject IMessageNotificationService _messageNotificationServicesages
+
+@{
+    int userId = GetUserId(Context.Session);
+
+    bool hasReminders = await _messageNotificationServicesages.HasTodaysUnreadRemindersAsync(userId);
+    bool hasInvites = await _messageNotificationServicesages.HasPendingInvitesAsync(userId);
+
+    bool showNotification = hasReminders || hasInvites;
+}
 
 <div class="d-flex flex-column h-100">
     <div class="mb-4 text-center">
@@ -47,7 +59,15 @@
         else if (Model.Context == "MyEvents")
         {
             <a href="/Event/Create" class="btn btn-primary w-100">Create Event</a>
-            <a href="/Messages/Index" class="btn btn-primary w-100">My messages</a>
+            <a href="/Messages/Index" class="btn btn-primary w-100 position-relative">
+                My messages
+                @if (showNotification)
+                {
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                    <span class="visually-hidden">New alerts</span>
+                </span>
+                }
+            </a>
             <a href="/Calendar/Index" class="btn btn-primary w-100">Back to Calendar</a>
         }
         else if (Model.Context == "Invite" || Model.Context == "Reminder") {

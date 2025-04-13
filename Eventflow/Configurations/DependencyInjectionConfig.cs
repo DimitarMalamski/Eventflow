@@ -33,6 +33,7 @@ namespace Eventflow.Configurations
             services.AddScoped<IInviteService, InviteService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPersonalEventReminderService, PersonalEventReminderService>();
+            services.AddScoped<IMessageNotificationService, MessageNotificationService>();
 
             // DB Helper
             services.AddScoped<IDbHelper, DbHelper>();
