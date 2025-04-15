@@ -5,6 +5,8 @@
 @{
     Layout = null;
 
+    var sidebarState = Context.Request.Cookies["sidebarState"] ?? "expanded";
+
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
 
@@ -46,7 +48,7 @@
 }
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="js-sidebar-loading">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -55,24 +57,26 @@
     <link href="~/css/event_toggle.css" rel="stylesheet" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/event_modal.css" />
     <link rel="stylesheet" href="~/css/reminder_invite_modal.css" />
+    <link rel="stylesheet" href="~/css/sidebar_toggle.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/sidebar_toggle.js"></script>
 </head>
 <body class="bg-light">
-
-    <div class="container-fluid">
-        <div class="row min-vh-100">
-            <div class="col-md-3 bg-white shadow-sm p-4 d-flex flex-column justify-content-between">
-                @await Component.InvokeAsync("Sidebar", new {
+    <div class="d-flex min-vh-100">
+        <div id="sidebarWrapper" class="bg-white shadow-sm position-relative sidebar-@sidebarState">
+            <button id="sidebarToggle" class="sidebar-toggle-btn">
+                <i id="toggleIcon" class="bi bi-chevron-left"></i>
+            </button>
+            @await Component.InvokeAsync("Sidebar", new
+                {
                     context = sidebarContext,
                     continents = continents
                 })
-                
-            </div>
+        </div>
 
-            <div class="col-md-9 p-4 @(needsVerticalCentering ? "d-flex justify-content-center align-items-center min-vh-100" : "")">
-                @RenderBody()
-            </div>
+        <div id="mainContent" class="flex-grow-1 p-4 @(needsVerticalCentering ? "d-flex justify-content-center align-items-center" : "")">
+            @RenderBody()
         </div>
     </div>
 

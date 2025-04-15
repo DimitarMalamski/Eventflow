@@ -13,74 +13,77 @@
     bool showNotification = hasReminders || hasInvites;
 }
 
-<div class="d-flex flex-column h-100">
+<div class="d-flex flex-column h-100 sidebar-inner">
+    <div class="sidebar-content flex-grow-1 d-flex flex-column justify-content-between">
     <div class="mb-4 text-center">
         <img src="/images/profile-placeholder.png" class="rounded-circle mb-2" alt="Profile" width="80" height="80">
         <h5 class="mb-2">@Model.Username</h5>
 
-        @if (Model.Context == "Calendar")
-        {
-            <a href="/Account/Profile" class="btn btn-outline-primary btn-sm">View Profile</a>
-        }
-    </div>
-
-    <div class="flex-grow-1 d-flex flex-column justify-content-center gap-3">
-        @if (Model.Context == "Calendar")
-        {
-            <form method="post">
-                <div class="mb-3">
-                    <label for="continentSelect" class="form-label">Continent</label>
-                    <select class="form-select" id="continentSelect" name="continent">
-                        <option selected disabled>Select Continent</option>
-                        @foreach (var continent in Model.Continents)
-                        {
-                            <option value="@continent.Id">@continent.Name</option>
-                        }
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="countrySelect" class="form-label">Country</label>
-                    <select class="form-select" id="countrySelect" name="country">
-                        <option selected disabled>Select Country</option>
-                    </select>
-                </div>
-
-                @if (Model.IsLoggedin)
-                {
-                    <a href="/Event/MyEvents" class="btn btn-primary w-100">My Events</a>
-                }
-            </form>
+            @if (Model.Context == "Calendar")
+            {
+                <a href="/Account/Profile" class="btn btn-outline-primary btn-sm">View Profile</a>
             }
-        else if (Model.Context == "Create" || Model.Context == "Edit")
-        {
-            <a href="/Event/MyEvents" class="btn btn-primary w-100">Back To My Events</a>
-        }
-        else if (Model.Context == "MyEvents")
-        {
-            <a href="/Event/Create" class="btn btn-primary w-100">Create Event</a>
-            <a href="/Messages/Index" class="btn btn-primary w-100 position-relative">
-                My messages
-                @if (showNotification)
-                {
-                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-                    <span class="visually-hidden">New alerts</span>
-                </span>
-                }
-            </a>
-            <a href="/Calendar/Index" class="btn btn-primary w-100">Back to Calendar</a>
-        }
-        else if (Model.Context == "Invite" || Model.Context == "Reminder") {
-            <a href="/Messages/Index" class="btn btn-primary w-100">Back to Messages</a>
-        }
-        else if (Model.Context == "Messages") {
-            <a href="/Invite/Index" class="btn btn-primary w-100">Invites</a>
-            <a href="/Reminder/Index" class="btn btn-primary w-100">Reminders</a>
-            <a href="/Event/MyEvents" class="btn btn-primary w-100">Back To My Events</a>
-        }
     </div>
 
-    <div class="border-top pt-3 mt-4">
+    <div class="nav-buttons flex-grow-1 d-flex flex-column justify-content-center align-items-center gap-3">
+            @if (Model.Context == "Calendar")
+            {
+                <form method="post">
+                    <div class="w-100 mb-3">
+                        <label for="continentSelect" class="form-label">Continent</label>
+                        <select class="form-select w-100" id="continentSelect" name="continent">
+                            <option selected disabled>Select Continent</option>
+                            @foreach (var continent in Model.Continents)
+                            {
+                                    <option value="@continent.Id">@continent.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="w-100 mb-3">
+                        <label for="countrySelect" class="form-label">Country</label>
+                        <select class="form-select w-100" id="countrySelect" name="country">
+                            <option selected disabled>Select Country</option>
+                        </select>
+                    </div>
+
+                    @if (Model.IsLoggedin)
+                    {
+                        <a href="/Event/MyEvents" class="btn btn-primary w-100">My Events</a>
+                    }
+                </form>
+            }
+            else if (Model.Context == "Create" || Model.Context == "Edit")
+            {
+                <a href="/Event/MyEvents" class="btn btn-primary w-100">Back To My Events</a>
+            }
+            else if (Model.Context == "MyEvents")
+            {
+                <a href="/Event/Create" class="btn btn-primary w-100">Create Event</a>
+                <a href="/Messages/Index" class="btn btn-primary w-100 position-relative">
+                    My messages
+                    @if (showNotification)
+                    {
+                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                            <span class="visually-hidden">New alerts</span>
+                        </span>
+                    }
+                </a>
+                <a href="/Calendar/Index" class="btn btn-primary w-100">Back to Calendar</a>
+            }
+            else if (Model.Context == "Invite" || Model.Context == "Reminder")
+            {
+                <a href="/Messages/Index" class="btn btn-primary w-100">Back to Messages</a>
+            }
+            else if (Model.Context == "Messages")
+            {
+                <a href="/Invite/Index" class="btn btn-primary w-100">Invites</a>
+                <a href="/Reminder/Index" class="btn btn-primary w-100">Reminders</a>
+                <a href="/Event/MyEvents" class="btn btn-primary w-100">Back To My Events</a>
+            }
+    </div>
+
+    <div class="sidebar-footer border-top pt-3 mt-4">
         <a href="/Settings" class="d-block text-decoration-none text-dark mb-2">
             ⚙️ Settings
         </a>
@@ -90,6 +93,7 @@
             </button>
         </form>
     </div>
+</div>
 </div>
 
 @if (Model.Context == "Calendar")
