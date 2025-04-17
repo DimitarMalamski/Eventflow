@@ -7,21 +7,27 @@
     {
         <form method="post" class="w-100">
             <div class="w-100 mb-3">
-                <label for="continentSelect" class="form-label">Continent</label>
-                <select class="form-select w-100" id="continentSelect" name="continent">
-                <option selected disabled>Select Continent</option>
-                    @foreach (var continent in Model.Continents)
-                    {
-                        <option value="@continent.Id">@continent.Name</option>
-                    }
-                </select>
+                @await Component.InvokeAsync("Dropdown", new DropdownViewModel {
+                    Label = "Continent",
+                    Name = "continent",
+                    Id = "continentSelect",
+                    DefaultOptionLabel = "Select Continent",
+                    Options = Model.Continents.Select(c => new DropdownOption {
+                        Id = c.Id.ToString(),
+                        Name = c.Name
+                    })
+                    .ToList()
+                })
             </div>
 
             <div class="w-100 mb-3">
-                <label for="countrySelect" class="form-label">Country</label>
-                <select class="form-select w-100" id="countrySelect" name="country">
-                <option selected disabled>Select Country</option>
-                </select>
+                @await Component.InvokeAsync("Dropdown", new DropdownViewModel {
+                    Label = "Country",
+                    Name = "country",
+                    Id = "countrySelect",
+                    DefaultOptionLabel = "Select Country",
+                    Options = new List<DropdownOption>()
+                })
             </div>
         </form>
     }

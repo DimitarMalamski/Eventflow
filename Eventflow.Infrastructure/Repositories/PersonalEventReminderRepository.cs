@@ -1,4 +1,5 @@
-﻿using Eventflow.Domain.Interfaces.Repositories;
+﻿using Eventflow.Domain.Enums;
+using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
 using Eventflow.Infrastructure.Data.Interfaces;
 using System.Data;
@@ -24,7 +25,7 @@ namespace Eventflow.Infrastructure.Repositories
                 { "@Title", reminder.Title },
                 { "@Description", (object?)reminder.Description ?? DBNull.Value },
                 { "@Date", reminder.Date },
-                { "@IsRead", reminder.IsRead },
+                { "@IsRead", reminder.Status },
                 { "@PersonalEventId", reminder.PersonalEventId }
             };
 
@@ -60,7 +61,7 @@ namespace Eventflow.Infrastructure.Repositories
                     Title = row["Title"].ToString()!,
                     Description = row["Description"]?.ToString(),
                     Date = Convert.ToDateTime(row["Date"]),
-                    IsRead = Convert.ToBoolean(row["IsRead"]),
+                    Status = Convert.ToBoolean(row["IsRead"]) ? ReminderStatus.Read : ReminderStatus.Unread,
                     PersonalEventId = Convert.ToInt32(row["PersonalEventId"])
                 });
             }
@@ -98,7 +99,7 @@ namespace Eventflow.Infrastructure.Repositories
                     Title = row["Title"].ToString()!,
                     Description = row["Description"]?.ToString(),
                     Date = Convert.ToDateTime(row["Date"]),
-                    IsRead = Convert.ToBoolean(row["IsRead"]),
+                    Status = Convert.ToBoolean(row["IsRead"]) ? ReminderStatus.Read : ReminderStatus.Unread,
                     PersonalEventId = Convert.ToInt32(row["PersonalEventId"]),
                     PersonalEvent = new PersonalEvent
                     {

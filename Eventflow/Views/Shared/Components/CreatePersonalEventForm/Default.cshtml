@@ -30,13 +30,18 @@
         Value = Model.Date.ToString("yyyy-MM-dd")
     })
 
-    @await Component.InvokeAsync("CreatePersonalEventSelect", new CreatePersonalEventSelectModel
+    @await Component.InvokeAsync("Dropdown", new DropdownViewModel
     {
         Label = "Category",
         Name = nameof(Model.CategoryId),
-        CategoryOptionLabel = "Select",
-        CategoryOptions = Model.Categories ?? new List<Category>(),
-        SelectedValue = Model.CategoryId
+        DefaultOptionLabel = "Select",        
+        SelectedValue = Model.CategoryId?.ToString(),
+        Options = (Model.Categories ?? new List<Category>())
+                .Select(c => new DropdownOption {
+                    Id = c.Id.ToString(),
+                    Name = c.Name
+                })
+                .ToList()
     })
 
     <button type="submit" class="btn btn-success w-100">

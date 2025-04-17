@@ -1,0 +1,45 @@
+﻿@using Eventflow.Domain.Enums
+@using Eventflow.Domain.Models.ViewModels
+@model ReminderBoxViewModel
+
+@{
+    bool isUnread = Model.Status == ReminderStatus.Unread;
+}
+
+<div class="card mb-4 shadow-sm border">
+    <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="card-title">
+                @Model.Title
+            </h5>
+            <h6 class="card-subtitle mb-2 text-muted">
+                Event: 
+                <strong>
+                    @Model.EventTitle
+                </strong>
+            </h6>
+            <p class="card-text mb-1">
+                @Model.Description
+            </p>
+            <p class="text-secondary mb-2">
+                <i class="bi bi-calendar-event"></i> 
+                @Model.Date.ToString("MMMM dd, yyyy")
+            </p>
+        </div>
+
+        <div class="ms-auto">
+            @if (isUnread)
+            {
+                <form method="post" asp-controller="Reminder" asp-action="MarkAsRead">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-outline-primary btn-sm">Mark as Read</button>
+                </form>
+            }
+            else
+            {
+                <span class="badge bg-secondary">Read</span>
+            }
+        </div>
+    </div>
+</div>

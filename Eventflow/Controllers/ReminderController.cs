@@ -1,6 +1,7 @@
 ﻿using Eventflow.Application.Services;
 using Eventflow.Application.Services.Interfaces;
 using Eventflow.Attributes;
+using Eventflow.Domain.Enums;
 using Eventflow.Domain.Models.Models;
 using Eventflow.Domain.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +29,7 @@ namespace Eventflow.Controllers
 
             if (isRead)
             {
-                reminders = await _personalEventReminderService.GetRemindersWithEventTitlesByUserIdAsync(userId, isRead: true);
+                reminders = await _personalEventReminderService.GetRemindersWithEventTitlesByUserIdAsync(userId, status: ReminderStatus.Unread);
             }
             else
             {
@@ -75,7 +76,7 @@ namespace Eventflow.Controllers
                 Description = model.Description,
                 Date = model.ReminderDate,
                 PersonalEventId = model.PersonalEventId,
-                IsRead = false
+                Status = ReminderStatus.Unread
             };
 
             await _personalEventReminderService.CreatePersonalEventReminderAsync(reminder);

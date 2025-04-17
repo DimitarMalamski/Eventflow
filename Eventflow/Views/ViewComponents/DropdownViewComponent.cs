@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Eventflow.Views.ViewComponents
 {
-    public class CreatePersonalEventSelectViewComponent : ViewComponent
+    public class DropdownViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke(CreatePersonalEventSelectModel model)
+        public IViewComponentResult Invoke(DropdownViewModel model)
         {
             return View(model);
         }

@@ -14,55 +14,32 @@
 
         <div class="col-md-3">
             <form method="get" asp-controller="Reminder" asp-action="Index">
-                <select class="form-select" name="filter" onchange="this.form.submit()">
-                    <option value="unread" selected="@(Model.CurrentFilter == "unread")">Unread</option>
-                    <option value="read" selected="@(Model.CurrentFilter == "read")">Read</option>
-                </select>
+                @await Component.InvokeAsync("Dropdown", new DropdownViewModel {
+                    Label = "State",
+                    Name = "state",
+                    Id = "state",
+                    DefaultOptionLabel = null,
+                    SelectedValue = Model.CurrentFilter,
+                    Options = new List<DropdownOption> {
+                        new DropdownOption { Id = "unread", Name = "Unread" },
+                        new DropdownOption { Id = "read", Name = "Read" }
+                    }
+                })
             </form>
         </div>
     </div>
 
     @if (!Model.Reminders.Any())
     {
-        <p class="text-muted">No reminders found.</p>
+        <div class="d-flex justify-content-center align-items-center" style="height: 60vh;">
+            <p class="text-muted fs-5 mb-0">No reminders for today!</p>
+        </div>
     }
     else
     {
-        @if (!Model.Reminders.Any())
+        @foreach (var reminder in Model.Reminders)
         {
-            <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
-                <p class="text-muted fs-5 mb-0">No reminders for today!</p>
-            </div>
-        }
-        else {
-            foreach (var reminder in Model.Reminders)
-            {
-                                        <div class="card mb-4 shadow-sm border">
-                                        <div class="card-body d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h5 class="card-title">@reminder.Title</h5>
-                                                <h6 class="card-subtitle mb-2 text-muted">Event: <strong>@reminder.EventTitle</strong></h6>
-                                                <p class="card-text mb-1">@reminder.Description</p>
-                                                <p class="text-secondary mb-2">
-                                                    <i class="bi bi-calendar-event"></i> @reminder.Date.ToString("MMMM dd, yyyy")
-                                                </p>
-                                            </div>
-
-                        @if (!reminder.IsRead)
-                        {
-                                                        <form method="post" asp-controller="Reminder" asp-action="MarkAsRead" class="ms-auto">
-                                @Html.AntiForgeryToken()
-                                                            <input type="hidden" name="id" value="@reminder.Id" />
-                                                            <button type="submit" class="btn btn-outline-primary btn-sm">Mark as Read</button>
-                                                        </form>
-                        }
-                        else
-                        {
-                                                        <span class="badge bg-secondary">Read</span>
-                        }
-                            </div>
-                        </div>
-            }
+            @await Html.PartialAsync("~/Views/Shared/Partials/Reminder/_ReminderCardPartial.cshtml", reminder)
         }
     }
 </div>

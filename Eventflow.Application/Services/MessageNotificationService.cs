@@ -1,4 +1,5 @@
 ﻿using Eventflow.Application.Services.Interfaces;
+using Eventflow.Domain.Enums;
 using Eventflow.Domain.Interfaces.Repositories;
 
 namespace Eventflow.Application.Services
@@ -21,7 +22,8 @@ namespace Eventflow.Application.Services
         public async Task<bool> HasTodaysUnreadRemindersAsync(int userId)
         {
             var reminders = await _personalEventReminderRepository.GetRemindersWithEventAndTitleByUserIdAsync(userId);
-            return reminders.Any(r => !r.IsRead && r.Date.Date == DateTime.Today);
+            return reminders.Any(r => r.Status == ReminderStatus.Unread 
+                                && r.Date.Date == DateTime.Today);
         }
     }
 }

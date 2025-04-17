@@ -1,0 +1,50 @@
+﻿@using Eventflow.Domain.Models.ViewModels
+@model DropdownViewModel
+
+@{
+    var name = Model?.Name ?? "";
+    var id = Model?.Id ?? name;
+    var selectedValue = Model?.SelectedValue?.ToString() ?? "";
+
+    var error = "";
+    bool showError = false;
+
+    if (!string.IsNullOrEmpty(name) && ViewContext.ViewData.Model != null)
+    {
+        selectedValue = ViewContext.ViewData.Model
+            .GetType()
+            .GetProperty(name)?
+            .GetValue(ViewContext.ViewData.Model)?
+            .ToString() ?? selectedValue;
+    }
+
+    if (!string.IsNullOrEmpty(name) && ViewContext.ViewData.ModelState.TryGetValue(name, out var state))
+    {
+        showError = state.Errors.Any() && state.RawValue != null;
+        error = showError ? state.Errors.First().ErrorMessage : "";
+    }
+}
+
+<div class="mb-3">
+    <label for="@id" class="form-label">@Model!.Label</label>
+    <select id="@id"
+            name="@name"
+            class="form-select @(showError ? "is-invalid" : "")">
+
+                @if(!string.IsNullOrWhiteSpace(Model.DefaultOptionLabel)) {
+                    <option value="">@Model.DefaultOptionLabel</option>
+                }
+                
+                @foreach (var option in Model.Options)
+                {
+                    <option value="@option.Id" selected="@(option.Id == selectedValue)">
+                        @option.Name
+                    </option>
+                }
+    </select>
+
+    @if (showError)
+    {
+        <span class="text-danger">@error</span>
+    }
+</div>

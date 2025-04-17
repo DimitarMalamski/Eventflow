@@ -1,4 +1,5 @@
 ﻿using Eventflow.Application.Services.Interfaces;
+using Eventflow.Domain.Enums;
 using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
 using Eventflow.Domain.Models.ViewModels;
@@ -32,12 +33,12 @@ namespace Eventflow.Application.Services
 
             return allReminders;
         }
-        public async Task<List<ReminderBoxViewModel>> GetRemindersWithEventTitlesByUserIdAsync(int userId, bool isRead)
+        public async Task<List<ReminderBoxViewModel>> GetRemindersWithEventTitlesByUserIdAsync(int userId, ReminderStatus status)
         {
             var reminders = await _personalEventReminderRepository.GetRemindersWithEventAndTitleByUserIdAsync(userId);
 
             var filteredReminders = reminders
-                .Where(r => r.IsRead == isRead)
+                .Where(r => r.Status == status)
                 .Select(r => new ReminderBoxViewModel
                 {
                     Id = r.Id,
@@ -45,7 +46,7 @@ namespace Eventflow.Application.Services
                     Title = r.Title,
                     Description = r.Description,
                     Date = r.Date,
-                    IsRead = r.IsRead,
+                    Status = r.Status,
                     EventTitle = r.PersonalEvent?.Title ?? "Unknown"
                 })
                 .ToList();
@@ -57,7 +58,7 @@ namespace Eventflow.Application.Services
             var allReminders = await _personalEventReminderRepository.GetRemindersWithEventAndTitleByUserIdAsync(userId);
 
             var allTodaysUnreadReminders = allReminders
-                .Where(r => !r.IsRead && r.Date.Date == DateTime.Today)
+                .Where(r => r.Status == ReminderStatus.Unread && r.Date.Date == DateTime.Today)
                 .Select(r => new ReminderBoxViewModel
                 {
                     Id = r.Id,
@@ -65,7 +66,7 @@ namespace Eventflow.Application.Services
                     Title = r.Title,
                     Description = r.Description,
                     Date = r.Date,
-                    IsRead = r.IsRead,
+                    Status = r.Status,
                     EventTitle = r.PersonalEvent!.Title ?? "Unknown"
                 })
                 .ToList();

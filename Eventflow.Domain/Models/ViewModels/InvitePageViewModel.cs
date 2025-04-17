@@ -6,5 +6,6 @@ namespace Eventflow.Domain.Models.ViewModels
     {
         public List<InviteBoxViewModel> Invites { get; set; } = new List<InviteBoxViewModel>();
         public int CurrentStatusId { get; set; }
+        public List<DropdownOption> StatusOptions { get; set; } = new List<DropdownOption>();
     }
 }

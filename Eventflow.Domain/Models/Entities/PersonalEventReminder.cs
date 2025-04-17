@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Eventflow.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 using static Eventflow.Domain.Common.ValidationConstants.PersonalEventReminder;
 
 namespace Eventflow.Domain.Models.Models
@@ -17,7 +18,7 @@ namespace Eventflow.Domain.Models.Models
 
         [Required]
         public DateTime Date { get; set; }
-        public bool IsRead { get; set; } = false;
+        public ReminderStatus Status { get; set; }
 
         [Required]
         public int PersonalEventId { get; set; }

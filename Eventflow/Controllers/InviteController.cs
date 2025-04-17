@@ -11,11 +11,14 @@ namespace Eventflow.Controllers
     {
         private readonly IUserService _userService;
         private readonly IInviteService _inviteService;
+        private readonly IStatusService _statusService;
         public InviteController(IUserService userService,
-            IInviteService inviteService)
+            IInviteService inviteService,
+            IStatusService statusService)
         {
             _inviteService = inviteService;
             _userService = userService;
+            _statusService = statusService;
         }
 
         [HttpPost]
@@ -90,10 +93,12 @@ namespace Eventflow.Controllers
             await _inviteService.AutoDeclineExpiredInvitesAsync();
 
             var invites = await _inviteService.GetInvitesByUserAndStatusAsync(userId, statusId);
+            var statuses = await _statusService.GetAllStatusOptionsAsync();
 
             var model = new InvitePageViewModel
             {
                 CurrentStatusId = statusId,
+                StatusOptions = statuses,
                 Invites = invites.Select(invite => new InviteBoxViewModel
                 {
                     InviteId = invite.Id,
