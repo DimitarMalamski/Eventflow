@@ -5,9 +5,9 @@ namespace Eventflow.Views.ViewComponents
 {
     public class CalendarViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke(CalendarViewModel calendar)
+        public IViewComponentResult Invoke(CalendarComponentViewModel model)
         {
-            return View(calendar);
+            return View(model);
         }
     }
 }

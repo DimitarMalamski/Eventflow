@@ -1,5 +1,7 @@
-﻿using Eventflow.Domain.Models.Models;
+﻿using Eventflow.Application.Services.Interfaces;
+using Eventflow.Domain.Models.Models;
 using Eventflow.Domain.Models.ViewModels;
+using Eventflow.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using static Eventflow.Utilities.SessionHelper;
 
@@ -7,14 +9,31 @@ namespace Eventflow.Views.ViewComponents
 {
     public class SidebarViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke(string context, List<Continent>? continents =  null)
+        private readonly IMessageNotificationService _messageNotificationService;
+        public SidebarViewComponent(IMessageNotificationService messageNotificationService)
         {
+            _messageNotificationService = messageNotificationService;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync(string context, List<Continent>? continents =  null)
+        {
+            var userId = GetUserId(HttpContext.Session);
+            var isLoggedIn = IsLoggedIn(HttpContext.Session);
+
+            var hasReminders = await _messageNotificationService.HasTodaysUnreadRemindersAsync(userId);
+            var hasInvites = await _messageNotificationService.HasPendingInvitesAsync(userId);
+            var showNotification = hasInvites || hasInvites;
+
+            var buttons = SidebarViewModelBuilder.Build(context, isLoggedIn, showNotification);
+
             var viewModel = new SidebarViewModel
             {
                 Context = context,
                 Continents = continents ?? new List<Continent>(),
                 Username = GetUsername(HttpContext.Session),
-                IsLoggedin = IsLoggedIn(HttpContext.Session)
+                IsLoggedin = IsLoggedIn(HttpContext.Session),
+                ShowNotification = showNotification,
+                Buttons = buttons
             };
 
             return View("Default", viewModel);

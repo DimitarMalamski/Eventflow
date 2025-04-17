@@ -1,5 +1,19 @@
 ﻿@using Eventflow.Domain.Models.ViewModels
-@model CalendarViewModel
+@model CalendarComponentViewModel
+
+@{
+    if (Model?.Calendar == null || Model.Navigation == null)
+    {
+        <div class="alert alert-danger">Calendar data not available.</div>
+        return;
+    }
+
+    var calendar = Model.Calendar;
+    var navigation = Model.Navigation;
+
+    var date = new DateTime(navigation.CurrentYear, navigation.CurrentMonth, 1);
+    ViewData["Title"] = $"Calendar - {date:MMMM yyyy}";
+}
 
 <div style="min-height: 300px">
     <table class="table table-bordered text-center align-middle">
@@ -7,9 +21,9 @@
         @await Component.InvokeAsync("CalendarHeader")
 
         <tbody>
-            @for (int i = 0; i < Model.Days.Count; i += 7)
+            @for (int i = 0; i < calendar.Days.Count; i += 7)
             {
-                var rowDays = Model.Days.Skip(i).Take(7).ToList();
+                var rowDays = calendar.Days.Skip(i).Take(7).ToList();
 
                 @await Component.InvokeAsync("CalendarRow", new
                     {
@@ -22,9 +36,5 @@
 </div>
 
 @await Component.InvokeAsync("EventModal")
-@await Component.InvokeAsync("InviteUserModal", new {
-    eventId = 0
-})
-@await Component.InvokeAsync("SetReminderModal", new {
-    eventId = 0
-})
+@await Component.InvokeAsync("InviteUserModal", new { eventId = 0 })
+@await Component.InvokeAsync("SetReminderModal", new { eventId = 0 })

@@ -18,10 +18,9 @@
 
             @if (Model.Day.PersonalEvents.Any())
             {
-
                 <i class="bi bi-chevron-down dropdown-arrow text-muted"
-                style="cursor: pointer;"
-                   onclick="toggleDropdown('@dropDownId', this)">
+                   data-dropdown-id="@dropDownId"
+                   style="cursor: pointer;">
                 </i>
             }
             else {

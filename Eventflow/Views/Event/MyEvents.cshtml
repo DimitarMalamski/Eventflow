@@ -14,19 +14,13 @@
 }
 
 <div class="w-100" style="max-width: 1100px;">
-    <h2 class="text-center mb-4">
-        Your Calendar - @(date?.ToString("MMMM yyyy") ?? "Unknown")
-    </h2>
-
-    @await Component.InvokeAsync("Calendar", new
-        {
-            calendar = Model!.Calendar
-        })
-
-    @await Component.InvokeAsync("CalendarNavigation", new
-        {
-            navigation = Model!.Navigation
-        })
+    <div id="calendarOuterWrapper">
+        @await Html.PartialAsync("~/Views/Shared/Partials/Calendar/_CalendarWrapper.cshtml", new CalendarComponentViewModel
+           {
+               Calendar = Model!.Calendar,
+               Navigation = Model!.Navigation
+           })
+    </div>
 </div>
 
 @section Scripts {

@@ -1,0 +1,41 @@
+﻿@using Eventflow.Domain.Models.ViewModels
+@model SidebarViewModel
+
+<div class="nav-buttons flex-grow-1 d-flex flex-column justify-content-center align-items-center gap-3">
+
+    @if (Model.Context == "Calendar")
+    {
+        <form method="post" class="w-100">
+            <div class="w-100 mb-3">
+                <label for="continentSelect" class="form-label">Continent</label>
+                <select class="form-select w-100" id="continentSelect" name="continent">
+                <option selected disabled>Select Continent</option>
+                    @foreach (var continent in Model.Continents)
+                    {
+                        <option value="@continent.Id">@continent.Name</option>
+                    }
+                </select>
+            </div>
+
+            <div class="w-100 mb-3">
+                <label for="countrySelect" class="form-label">Country</label>
+                <select class="form-select w-100" id="countrySelect" name="country">
+                <option selected disabled>Select Country</option>
+                </select>
+            </div>
+        </form>
+    }
+
+    @foreach (var btn in Model.Buttons)
+    {
+        <a href="@btn.Url" class="@(btn.CssClass ?? "btn btn-primary w-100")">
+        @btn.Label
+            @if (btn.ShowNotification)
+            {
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                    <span class="visually-hidden">New alerts</span>
+                </span>
+            }
+        </a>
+    }
+</div>

@@ -1,6 +1,7 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Domain.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using static Eventflow.Utilities.SessionHelper;
 
 namespace Eventflow.Controllers
 {
@@ -38,6 +39,29 @@ namespace Eventflow.Controllers
             };
 
             return View(model);
+        }
+        public async Task<IActionResult> LoadCalendarPartial(int? month, int? year)
+        {
+            int userId = GetUserId(HttpContext.Session);
+
+            if (userId == 0)
+            {
+                return Unauthorized();
+            }
+
+            var (normalizedYear, normalizedMonth) = _calendarNavigationService.Normalize(year, month);
+
+            var model = new CalendarComponentViewModel
+            {
+                Calendar = _calendarService.GenerateCalendar(normalizedYear, normalizedMonth),
+                Navigation = new CalendarNavigationViewModel
+                {
+                    CurrentMonth = normalizedMonth,
+                    CurrentYear = normalizedYear
+                }
+            };
+
+            return PartialView("~/Views/Shared/Partials/Calendar/_CalendarWrapper.cshtml", model);
         }
     }
 }

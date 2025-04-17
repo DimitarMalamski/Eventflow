@@ -1,0 +1,17 @@
+﻿@using Eventflow.Domain.Models.ViewModels
+@model CalendarComponentViewModel
+
+@{
+    var date = (Model?.Navigation != null)
+        ? new DateTime(Model.Navigation.CurrentYear, Model.Navigation.CurrentMonth, 1)
+        : (DateTime?)null;
+}
+
+<div id="calendarWrapper">
+    <h2 class="text-center mb-4">
+        Your Calendar - @(date?.ToString("MMMM yyyy") ?? "Unknown")
+    </h2>
+
+    @await Component.InvokeAsync("Calendar", Model)
+    @await Component.InvokeAsync("CalendarNavigation", new { navigation = Model.Navigation })
+</div>

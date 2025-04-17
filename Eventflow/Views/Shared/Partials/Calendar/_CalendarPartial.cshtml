@@ -1,0 +1,12 @@
+﻿@using Eventflow.Domain.Models.ViewModels
+@model CalendarPageViewModel
+
+<div id="calendarWrapper">
+    @await Component.InvokeAsync("Calendar", new {
+        calendar = Model.Calendar
+    })
+
+    @await Component.InvokeAsync("CalendarNavigation", new {
+        navigation = Model.Navigation
+    })
+</div>

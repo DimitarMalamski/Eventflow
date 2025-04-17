@@ -1,0 +1,12 @@
+﻿@using Eventflow.Domain.Models.ViewModels
+@model SidebarViewModel 
+
+<div class="mb-4 text-center">
+    <img src="/images/profile-placeholder.png" class="rounded-circle mb-2" alt="Profile" width="80" height="80">
+    <h5 class="mb-2">@Model.Username</h5>
+
+    @if (Model.Context == "Calendar")
+    {
+        <a href="/Account/Profile" class="btn btn-outline-primary btn-sm">View Profile</a>
+    }
+</div>

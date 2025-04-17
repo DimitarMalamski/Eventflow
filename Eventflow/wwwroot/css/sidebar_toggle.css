@@ -1,28 +1,47 @@
-﻿.sidebar-expanded {
-    width: 300px; /* Wider for better text layout */
-    transition: width 0.3s ease;
+﻿#sidebarWrapper {
+    position: relative;
+    overflow: visible;
+    padding-right: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+#sidebarWrapper.sidebar-collapsed > *:not(#sidebarToggle) {
+    display: none !important;
+}
+
+.sidebar-expanded {
+    width: 300px;
+    transition: width 0.3s ease, opacity 0.3s ease;
+    overflow: hidden;
 }
 
 .sidebar-collapsed {
     width: 50px;
-    transition: width 0.3s ease;
+    transition: width 0.3s ease, opacity 0.3s ease;
+    overflow: hidden;
 }
 
-.nav-buttons form {
-    width: 100%;
+.sidebar-content,
+.sidebar-footer {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    display: block;
 }
 
-/* === SIDEBAR WRAPPER === */
-#sidebarWrapper {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    background-color: #fff;
-    padding: 1.5rem; /* Add spacing inside sidebar */
+.sidebar-collapsed .sidebar-content,
+.sidebar-collapsed .sidebar-footer {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
 }
 
-/* === TOGGLE BUTTON === */
 .sidebar-toggle-btn {
     position: absolute;
     top: 20px;
@@ -33,39 +52,11 @@
     background-color: #0d6efd;
     color: white;
     border: none;
-    z-index: 1000;
+    z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 0 5px rgba(0,0,0,0.2);
-}
-
-    .sidebar-toggle-btn:hover {
-        background-color: #0b5ed7;
-    }
-
-/* === COLLAPSE BEHAVIOR === */
-.sidebar-collapsed .sidebar-content,
-.sidebar-collapsed .sidebar-footer {
-    display: none !important;
-}
-
-/* === BUTTONS === */
-.nav-buttons .btn {
-    width: 100%; /* Force full width */
-}
-
-/* === Dropdowns === */
-.nav-buttons select {
-    width: 100%;
-}
-
-/* === Fix inner layout scroll if needed === */
-.sidebar-inner {
-    overflow-y: auto;
-}
-
-.js-sidebar-loading #sidebarWrapper {
-    transition: none !important;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
 }

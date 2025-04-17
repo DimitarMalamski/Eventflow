@@ -1,50 +1,23 @@
 ﻿@using Eventflow.Application.Services.Interfaces
 @using Eventflow.Domain.Models.ViewModels
 @using Eventflow.Domain.Models.Models
+@using static Eventflow.Utilities.SidebarHelper;
 
 @{
     Layout = null;
 
-    var sidebarState = Context.Request.Cookies["sidebarState"] ?? "expanded";
+    var sidebarState = "expanded";
 
-    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
-    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
 
-    var isCreateEvent = currentController == "Event" && currentAction == "Create";
-    var isEditEvent = currentController == "Event" && currentAction == "Edit";
-    var isMyEvents = currentController == "Event" && currentAction == "MyEvents";
-    var isInvites = currentController == "Invite" && currentAction == "Index";
-    var isReminders = currentController == "Reminder" && currentAction == "Index";
-    var isMessages = currentController == "Messages" && currentAction == "Index";
-
-    string sidebarContext = "Calendar";
-
-    if (isCreateEvent) {
-        sidebarContext = "Create";
-    }
-    else if (isMyEvents) {
-        sidebarContext = "MyEvents";
-    }
-    else if (isEditEvent) {
-        sidebarContext = "Edit";
-    }
-    else if (isInvites)
-    {
-        sidebarContext = "Invite";
-    }
-    else if (isReminders)
-    {
-        sidebarContext = "Reminder";
-    }
-    else if (isMessages) {
-        sidebarContext = "Messages";
-    }
+    var sidebarContext = GetSidebarContext(currentController, currentAction);
+    var needsVerticalCentering = NeedsVerticalCentering(currentController);
 
     var pageModel = Model as CalendarPageViewModel;
     var continents = pageModel?.Continents ?? new List<Continent>();
 
-    var noVerticalCenterPage = new[] { "Invite", "Reminder", "Messages" };
-    var needsVerticalCentering = !noVerticalCenterPage.Contains(currentController);
+    ViewData["Title"] ??= "Eventflow";
 }
 
 <!DOCTYPE html>
@@ -61,6 +34,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/sidebar_toggle.js"></script>
+    <script src="~/js/calendar_init.js"></script>
+    <script src="~/js/calendar_navigation.js"></script>
 </head>
 <body class="bg-light">
     <div class="d-flex min-vh-100">
