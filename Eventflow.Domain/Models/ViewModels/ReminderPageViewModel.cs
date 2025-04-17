@@ -1,8 +1,10 @@
-﻿namespace Eventflow.Domain.Models.ViewModels
+﻿using Eventflow.Domain.Enums;
+
+namespace Eventflow.Domain.Models.ViewModels
 {
     public class ReminderPageViewModel
     {
-        public string CurrentFilter { get; set; } = "unread";
+        public ReminderStatus CurrentStatus { get; set; } = ReminderStatus.Unread;
         public List<ReminderBoxViewModel> Reminders { get; set; } = new List<ReminderBoxViewModel>();
     }
 }

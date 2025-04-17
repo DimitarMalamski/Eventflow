@@ -19,26 +19,30 @@ namespace Eventflow.Controllers
 
         [HttpGet]
         [RequireUserOrAdmin]
-        public async Task<IActionResult> Index(string filter = "unread")
+        public async Task<IActionResult> Index(string state = "unread")
         {
             int userId = GetUserId(HttpContext.Session);
 
-            List<ReminderBoxViewModel> reminders = new List<ReminderBoxViewModel>();
-
-            bool isRead = filter.ToLower() == "read";
-
-            if (isRead)
+            ReminderStatus status = state.ToLower() switch
             {
-                reminders = await _personalEventReminderService.GetRemindersWithEventTitlesByUserIdAsync(userId, status: ReminderStatus.Unread);
-            }
-            else
+                "read" => ReminderStatus.Read,
+                _ => ReminderStatus.Unread
+            };
+
+            List<ReminderBoxViewModel> reminders = status switch
             {
-                reminders = await _personalEventReminderService.GetTodaysUnreadRemindersAsync(userId);
-            }
+                ReminderStatus.Read => await _personalEventReminderService
+                    .GetRemindersWithEventTitlesByUserIdAsync(userId, ReminderStatus.Read),
+
+                ReminderStatus.Unread => await _personalEventReminderService
+                    .GetTodaysUnreadRemindersAsync(userId),
+
+                _ => new List<ReminderBoxViewModel>()
+            };
 
             var model = new ReminderPageViewModel
             {
-                CurrentFilter = filter,
+                CurrentStatus = status,
                 Reminders = reminders
             };
 
@@ -51,7 +55,7 @@ namespace Eventflow.Controllers
         public async Task<IActionResult> MarkAsRead(int id)
         {
             await _personalEventReminderService.MarkPersonalEventReminderAsReadAsync(id);
-            return RedirectToAction("Index", new { filter = "unread" });
+            return Ok();
         }
 
         [HttpPost]
@@ -86,6 +90,21 @@ namespace Eventflow.Controllers
                 success = true,
                 message = "Reminder created successfully!"
             });
+        }
+
+        [HttpGet]
+        [RequireUserOrAdmin]
+        public async Task<IActionResult> GetRemindersPartial(string state = "unread")
+        {
+            int userId = GetUserId(HttpContext.Session);
+
+            ReminderStatus status = state.ToLower() == "read" ? ReminderStatus.Read : ReminderStatus.Unread;
+
+            var reminders = status == ReminderStatus.Read
+                ? await _personalEventReminderService.GetRemindersWithEventTitlesByUserIdAsync(userId, ReminderStatus.Read)
+                : await _personalEventReminderService.GetTodaysUnreadRemindersAsync(userId);
+
+            return PartialView("~/Views/Shared/Partials/Reminder/_ReminderListPartial.cshtml", reminders);
         }
     }
 }

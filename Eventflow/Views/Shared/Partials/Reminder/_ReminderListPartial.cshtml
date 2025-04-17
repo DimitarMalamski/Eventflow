@@ -1,0 +1,16 @@
+﻿@using Eventflow.Domain.Models.ViewModels
+@model List<ReminderBoxViewModel>
+
+@if (!Model.Any())
+{
+    <div class="d-flex justify-content-center align-items-center" style="height: 60vh;">
+        <p class="text-muted fs-5 mb-0">No reminders for today!</p>
+    </div>
+}
+else
+{
+    @foreach (var reminder in Model)
+    {
+        @await Html.PartialAsync("~/Views/Shared/Partials/Reminder/_ReminderCardPartial.cshtml", reminder)
+    }
+}

@@ -19,7 +19,7 @@
                     Name = "state",
                     Id = "state",
                     DefaultOptionLabel = null,
-                    SelectedValue = Model.CurrentFilter,
+                    SelectedValue = Model.CurrentStatus.ToString().ToLower(),
                     Options = new List<DropdownOption> {
                         new DropdownOption { Id = "unread", Name = "Unread" },
                         new DropdownOption { Id = "read", Name = "Read" }
@@ -29,18 +29,22 @@
         </div>
     </div>
 
-    @if (!Model.Reminders.Any())
-    {
-        <div class="d-flex justify-content-center align-items-center" style="height: 60vh;">
-            <p class="text-muted fs-5 mb-0">No reminders for today!</p>
-        </div>
-    }
-    else
-    {
-        @foreach (var reminder in Model.Reminders)
-        {
-            @await Html.PartialAsync("~/Views/Shared/Partials/Reminder/_ReminderCardPartial.cshtml", reminder)
-        }
-    }
+    <div id="reminderListContainer" class="reminder-scrollbox">
+        @await Html.PartialAsync("~/Views/Shared/Partials/Reminder/_ReminderListPartial.cshtml"
+        , Model.Reminders)
+    </div>
+
+    <form id="antiForgeryForm" style="display: none;">
+        @Html.AntiForgeryToken()
+    </form>
 </div>
 
+@section Scripts {
+    <script src="~/js/mark_reminder_read.js" asp-append-version="true"></script>
+    <script src="~/js/reminder_filter.js" asp-append-version="true"></script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/reminder_styles.css" />
+    <link rel="stylesheet" href="~/css/reminder_card.css" />
+}

@@ -1,0 +1,42 @@
+﻿body,
+html {
+    overflow-x: hidden;
+}
+
+.reminder-scrollbox {
+    max-height: 65vh;
+    height: calc(100vh - 100px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    padding-right: 5px;
+    margin-top: 1rem;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.reminder-scrollbox.fade-out {
+    opacity: 0;
+}
+
+.reminder-card {
+    position: relative;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.reminder-card.reminder-slide-out {
+    width: 100%;
+    z-index: 10;
+}
+
+.reminder-scrollbox.fade-in {
+    opacity: 1;
+}
+    
+.reminder-scrollbox::-webkit-scrollbar {
+    width: 8px;
+}
+
+.reminder-scrollbox::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border-radius: 4px;
+}
