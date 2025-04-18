@@ -69,7 +69,13 @@ namespace Eventflow.Infrastructure.Repositories
         }
         public async Task<PersonalEventReminder?> GetPersonalReminderByIdAsync(int reminderId)
         {
-            string getPersonalReminderByIdQuery = "SELECT * FROM PersonalEventReminder WHERE Id = @Id";
+            string getPersonalReminderByIdQuery = @"
+                                        SELECT 
+                                            r.*,
+                                            e.UserId AS EventUserId
+                                        FROM PersonalEventReminder r
+                                        INNER JOIN PersonalEvent e ON r.PersonalEventId = e.Id
+                                        WHERE r.Id = @Id";
 
             var parameters = new Dictionary<string, object>()
             {
@@ -77,6 +83,11 @@ namespace Eventflow.Infrastructure.Repositories
             };
 
             var dt = await _dbHelper.ExecuteQueryAsync(getPersonalReminderByIdQuery, parameters);
+
+            if (dt.Rows.Count == 0)
+            {
+                return null;
+            }
 
             var row = dt.Rows[0];
 
@@ -87,9 +98,15 @@ namespace Eventflow.Infrastructure.Repositories
                 Description = row["Description"]?.ToString(),
                 Date = Convert.ToDateTime(row["Date"]),
                 IsLiked = Convert.ToBoolean(row["IsLiked"]),
-                Status = Convert.ToBoolean(row["IsRead"]) ? ReminderStatus.Read : ReminderStatus.Unread,
+                Status = Convert.ToBoolean(row["IsRead"]) 
+                    ? ReminderStatus.Read 
+                    : ReminderStatus.Unread,
                 PersonalEventId = Convert.ToInt32(row["PersonalEventId"]),
-                ReadAt = row["ReadAt"] != DBNull.Value ? Convert.ToDateTime(row["ReadAt"]) : null
+                ReadAt = row["ReadAt"] != DBNull.Value ? Convert.ToDateTime(row["ReadAt"]) : null,
+                PersonalEvent = new PersonalEvent
+                {
+                    UserId = Convert.ToInt32(row["EventUserId"])
+                }
             };
         }
         public async Task<List<PersonalEventReminder>> GetPersonalRemindersWithEventAndTitleByUserIdAsync(int userId)

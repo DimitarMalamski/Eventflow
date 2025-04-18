@@ -55,11 +55,12 @@
     border: none;
     color: #ccc;
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease !important;
+    outline: none;
 }
 
 .like-star-btn.liked {
-    color: #FFD700;
+    color: #FFD700 !important;
 }
    
 .like-star-btn:not(.liked):hover {

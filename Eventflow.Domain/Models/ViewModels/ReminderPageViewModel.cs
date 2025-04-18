@@ -6,5 +6,7 @@ namespace Eventflow.Domain.Models.ViewModels
     {
         public ReminderStatus CurrentStatus { get; set; } = ReminderStatus.Unread;
         public List<ReminderBoxViewModel> Reminders { get; set; } = new List<ReminderBoxViewModel>();
+        public int TotalPages { get; set; }
+        public int CurrentPage { get; set; }
     }
 }

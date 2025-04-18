@@ -1,8 +1,11 @@
-using Eventflow.Application.Services.Interfaces;
+using Eventflow.Authentication;
 using Eventflow.Configurations;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAuthentication("DummyScheme")
+    .AddScheme<AuthenticationSchemeOptions, DummyAuthHandler>("DummyScheme", null);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -34,8 +37,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 app.UseSession();
+app.UseAuthentication();
 app.UseAuthorization();
-
 
 app.MapControllerRoute(
     name: "default",

@@ -1,19 +1,15 @@
 ﻿document.addEventListener("DOMContentLoaded", () => {
+    const token = document.querySelector("input[name='__RequestVerificationToken']")?.value;
+
     document.body.addEventListener("click", async (e) => {
-        if (e.target.classList.contains("mark-as-read-btn")) {
+        if (e.target.classList.contains("like-star-btn")) {
             const button = e.target;
             const reminderId = button.getAttribute("data-id");
 
-            const card = document.getElementById(`reminder-${reminderId}`);
-            const wrapper = document.getElementById(`reminder-wrapper-${reminderId}`);
-            const token = document.querySelector("input[name='__RequestVerificationToken']")?.value;
-
-            if (!token || !card || !wrapper) return;
-
-            button.disabled = true;
+            if (!token || !reminderId) return;
 
             try {
-                const res = await fetch("/Reminder/MarkAsRead", {
+                const res = await fetch("/Reminder/ToggleLike", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded",
@@ -22,27 +18,16 @@
                     body: `id=${reminderId}`
                 });
 
-                if (!res.ok) {
-                    throw new Error("Failed to mark as read.");
+                const result = await res.json();
+
+                if (result.success) {
+                    button.classList.toggle("liked", result.liked);
+                } else {
+                    alert("Failed to update like state.");
                 }
 
-                card.classList.add("reminder-slide-out");
-
-                card.addEventListener("animationend", () => {
-                    const wrapperHeight = wrapper.scrollHeight + "px";
-                    wrapper.style.height = wrapperHeight;
-
-                    void wrapper.offsetHeight;
-
-                    wrapper.classList.add("collapsing");
-
-                    wrapper.addEventListener("transitionend", () => {
-                        wrapper.remove();
-                    }, { once: true });
-                });
-
-            } catch (error) {
-                console.error("Error marking reminder as read:", error);
+            } catch (err) {
+                console.error("Toggle like failed:", err);
                 alert("Something went wrong.");
             }
         }

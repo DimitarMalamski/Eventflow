@@ -16,6 +16,7 @@ html {
 
 .reminder-scrollbox.fade-out {
     opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .reminder-card {
@@ -30,6 +31,7 @@ html {
 
 .reminder-scrollbox.fade-in {
     opacity: 1;
+    transition: opacity 0.3s ease;
 }
     
 .reminder-scrollbox::-webkit-scrollbar {

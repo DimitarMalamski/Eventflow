@@ -31,7 +31,7 @@
 
     <div id="reminderListContainer" class="reminder-scrollbox">
         @await Html.PartialAsync("~/Views/Shared/Partials/Reminder/_ReminderListPartial.cshtml"
-        , Model.Reminders)
+        , Model)
     </div>
 
     <form id="antiForgeryForm" style="display: none;">

@@ -12,6 +12,7 @@ namespace Eventflow.Controllers
     public class ReminderController : Controller
     {
         private readonly IPersonalEventReminderService _personalEventReminderService;
+        private const int PageSize = 5;
         public ReminderController(IPersonalEventReminderService personalEventReminderService)
         {
             _personalEventReminderService = personalEventReminderService;
@@ -29,21 +30,15 @@ namespace Eventflow.Controllers
                 _ => ReminderStatus.Unread
             };
 
-            List<ReminderBoxViewModel> reminders = status switch
-            {
-                ReminderStatus.Read => await _personalEventReminderService
-                    .GetRemindersWithEventTitlesByUserIdAsync(userId, ReminderStatus.Read),
-
-                ReminderStatus.Unread => await _personalEventReminderService
-                    .GetTodaysUnreadRemindersAsync(userId),
-
-                _ => new List<ReminderBoxViewModel>()
-            };
+            var result = await _personalEventReminderService
+                .GetPaginatedPersonalRemindersAsync(userId, status, page: 1, pageSize: 5);
 
             var model = new ReminderPageViewModel
             {
                 CurrentStatus = status,
-                Reminders = reminders
+                Reminders = result.PersonalReminders,
+                TotalPages = result.TotalPages,
+                CurrentPage = result.CurrentPage,
             };
 
             return View(model);
@@ -54,7 +49,14 @@ namespace Eventflow.Controllers
         [RequireUserOrAdmin]
         public async Task<IActionResult> MarkAsRead(int id)
         {
-            await _personalEventReminderService.MarkPersonalEventReminderAsReadAsync(id);
+            int userId = GetUserId(HttpContext.Session);
+
+            var success = await _personalEventReminderService.MarkPersonalEventReminderAsReadAsync(id, userId);
+
+            if (!success)
+            {
+                return Forbid();
+            }
             return Ok();
         }
 
@@ -94,17 +96,26 @@ namespace Eventflow.Controllers
 
         [HttpGet]
         [RequireUserOrAdmin]
-        public async Task<IActionResult> GetRemindersPartial(string state = "unread")
+        public async Task<IActionResult> GetRemindersPartial(string state = "unread", int page = 1)
         {
             int userId = GetUserId(HttpContext.Session);
 
-            ReminderStatus status = state.ToLower() == "read" ? ReminderStatus.Read : ReminderStatus.Unread;
+            ReminderStatus status = state.ToLower() == "read" 
+                ? ReminderStatus.Read 
+                : ReminderStatus.Unread;
 
-            var reminders = status == ReminderStatus.Read
-                ? await _personalEventReminderService.GetRemindersWithEventTitlesByUserIdAsync(userId, ReminderStatus.Read)
-                : await _personalEventReminderService.GetTodaysUnreadRemindersAsync(userId);
+            var paginatedResult = await _personalEventReminderService
+                    .GetPaginatedPersonalRemindersAsync(userId, status, page, PageSize);
 
-            return PartialView("~/Views/Shared/Partials/Reminder/_ReminderListPartial.cshtml", reminders);
+            var model = new ReminderPageViewModel
+            {
+                CurrentStatus = status,
+                Reminders = paginatedResult.PersonalReminders,
+                TotalPages = paginatedResult.TotalPages,
+                CurrentPage = paginatedResult.CurrentPage
+            };
+
+            return PartialView("~/Views/Shared/Partials/Reminder/_ReminderListPartial.cshtml", model);
         }
 
         [HttpPost]
@@ -112,28 +123,19 @@ namespace Eventflow.Controllers
         [RequireUserOrAdmin]
         public async Task<IActionResult> ToggleLike(int id)
         {
-            var reminder = await _personalEventReminderService.GetPersonalReminderByIdAsync(id);
+            int userId = GetUserId(HttpContext.Session);
 
-            if (reminder == null)
-            {
-                return NotFound();
-            }
+            var result = await _personalEventReminderService.ToggleLikeAsync(id, userId);
 
-            bool likeState = !reminder.IsLiked;
-
-            if (reminder.IsLiked)
+            if (result == null)
             {
-                await _personalEventReminderService.UnlikePersonalReminderAsync(id);
-            }
-            else
-            {
-                await _personalEventReminderService.LikePersonalReminderAsync(id);
+                return Forbid();
             }
 
             return Json(new
             {
                 success = true,
-                liked = likeState
+                liked = result.Value
             });
         }
     }

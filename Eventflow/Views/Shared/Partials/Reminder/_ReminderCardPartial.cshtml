@@ -4,7 +4,6 @@
 
 @{
     bool isUnread = Model.Status == ReminderStatus.Unread;
-    var starColour = Model.IsLiked ? "liked" : "not-liked";
 }
 
 <div class="reminder-wrapper position-relative" id="reminder-wrapper-@Model.Id">
@@ -38,18 +37,7 @@
             </div>
 
             <div class="ms-auto">
-                    @if (isUnread)
-                    {
-                        <button type="button"
-                            class="btn btn-outline-primary btn-sm mark-as-read-btn"
-                            data-id="@Model.Id">
-                            Mark as Read    
-                        </button>
-                    }
-                    else
-                    {
-                        <span class="badge bg-secondary">Read</span>
-                    }
+                @await Html.PartialAsync("~/Views/Shared/Partials/Reminder/_ReminderStatusControl.cshtml", Model)
             </div>
         </div>
     </div>
