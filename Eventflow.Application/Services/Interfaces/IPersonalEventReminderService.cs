@@ -11,5 +11,8 @@ namespace Eventflow.Application.Services.Interfaces
         public Task MarkPersonalEventReminderAsReadAsync(int reminderId);
         public Task<List<ReminderBoxViewModel>> GetRemindersWithEventTitlesByUserIdAsync(int userId, ReminderStatus status);
         public Task<List<ReminderBoxViewModel>> GetTodaysUnreadRemindersAsync(int userId);
+        public Task LikePersonalReminderAsync(int reminderId);
+        public Task UnlikePersonalReminderAsync(int reminderId);
+        public Task<PersonalEventReminder?> GetPersonalReminderByIdAsync(int reminderId);
     }
 }

@@ -21,7 +21,7 @@ namespace Eventflow.Application.Services
         }
         public async Task<bool> HasTodaysUnreadRemindersAsync(int userId)
         {
-            var reminders = await _personalEventReminderRepository.GetRemindersWithEventAndTitleByUserIdAsync(userId);
+            var reminders = await _personalEventReminderRepository.GetPersonalRemindersWithEventAndTitleByUserIdAsync(userId);
             return reminders.Any(r => r.Status == ReminderStatus.Unread 
                                 && r.Date.Date == DateTime.Today);
         }

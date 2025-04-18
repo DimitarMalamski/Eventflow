@@ -18,10 +18,12 @@ namespace Eventflow.Domain.Models.Models
 
         [Required]
         public DateTime Date { get; set; }
+        public DateTime? ReadAt { get; set; }
         public ReminderStatus Status { get; set; }
 
         [Required]
         public int PersonalEventId { get; set; }
+        public bool IsLiked { get; set; } = false;
 
         // Navigation property
         public PersonalEvent? PersonalEvent { get; set; }

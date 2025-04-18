@@ -11,5 +11,6 @@ namespace Eventflow.Domain.Models.ViewModels
         public DateTime Date { get; set; }
         public ReminderStatus Status { get; set; }
         public string EventTitle { get; set; } = "Unknown";
+        public bool IsLiked { get; set; }
     }
 }

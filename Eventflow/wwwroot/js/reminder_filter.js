@@ -25,6 +25,8 @@
                 const html = await res.text();
                 container.innerHTML = html;
 
+                document.dispatchEvent(new Event("reminders:updated"));
+
                 container.classList.remove("fade-out");
                 container.classList.add("fade-in");
 

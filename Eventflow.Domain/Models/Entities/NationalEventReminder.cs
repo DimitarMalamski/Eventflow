@@ -20,6 +20,6 @@ namespace Eventflow.Domain.Models.Models
         public bool IsRead { get; set; } = false;
 
         [Required]
-        public int NationalEventId { get; set; }
+        public int NationalEventId { get; set; }       
     }
 }

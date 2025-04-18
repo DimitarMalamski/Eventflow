@@ -106,5 +106,35 @@ namespace Eventflow.Controllers
 
             return PartialView("~/Views/Shared/Partials/Reminder/_ReminderListPartial.cshtml", reminders);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RequireUserOrAdmin]
+        public async Task<IActionResult> ToggleLike(int id)
+        {
+            var reminder = await _personalEventReminderService.GetPersonalReminderByIdAsync(id);
+
+            if (reminder == null)
+            {
+                return NotFound();
+            }
+
+            bool likeState = !reminder.IsLiked;
+
+            if (reminder.IsLiked)
+            {
+                await _personalEventReminderService.UnlikePersonalReminderAsync(id);
+            }
+            else
+            {
+                await _personalEventReminderService.LikePersonalReminderAsync(id);
+            }
+
+            return Json(new
+            {
+                success = true,
+                liked = likeState
+            });
+        }
     }
 }
