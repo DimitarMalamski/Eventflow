@@ -6,10 +6,10 @@ namespace Eventflow.Domain.Interfaces.Repositories
     {
         public Task CreatePersonalReminderAsync(PersonalEventReminder reminder);
         public Task<List<PersonalEventReminder>> GetAllPersonalRemindersByEventIdAsync(List<int> eventIds);
-        public Task MarkPersonalReminderAsReadAsync(int reminderId);
+        public Task MarkPersonalReminderAsReadAsync(int reminderId, int userId);
         public Task<List<PersonalEventReminder>> GetPersonalRemindersWithEventAndTitleByUserIdAsync(int userId);
-        public Task LikePersonalReminderAsync(int reminderId);
-        public Task UnlikePersonalReminderAsync(int reminderId);
+        public Task LikePersonalReminderAsync(int reminderId, int userId);
+        public Task UnlikePersonalReminderAsync(int reminderId, int userId);
         public Task<List<PersonalEventReminder>> GetUnreadPersonalRemindersForTodayAsync(int userId);
         public Task<List<PersonalEventReminder>> GetReadPersonalRemindersWithin3DaysAsync(int userId);
         public Task<PersonalEventReminder?> GetPersonalReminderByIdAsync(int reminderId);

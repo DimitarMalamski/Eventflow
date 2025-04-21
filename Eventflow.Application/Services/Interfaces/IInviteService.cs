@@ -11,5 +11,6 @@ namespace Eventflow.Application.Services.Interfaces
         public Task<List<Invite>> GetInvitesByUserAndStatusAsync(int userId, int statusId);
         public Task AutoDeclineExpiredInvitesAsync();
         public Task<bool> HasPendingInvitesAsync(int userId);
+        public Task<bool> HasUserAcceptedInviteAsync(int userId, int personalEventId);
     }
 }

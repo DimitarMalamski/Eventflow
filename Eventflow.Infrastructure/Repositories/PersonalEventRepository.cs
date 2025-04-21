@@ -37,7 +37,9 @@ namespace Eventflow.Infrastructure.Repositories
                     SELECT e.*
                     FROM Invite i
                     INNER JOIN PersonalEvent e ON i.PersonalEventId = e.Id
-                    WHERE i.InvitedUserId = @UserId AND i.StatusId = 2";
+                    WHERE i.InvitedUserId = @UserId
+                    AND i.StatusId = 2
+                    AND CONVERT(date, e.Date) >= CONVERT(date, GETDATE());";
 
             var parameters = new Dictionary<string, object>
             {
@@ -56,8 +58,9 @@ namespace Eventflow.Infrastructure.Repositories
                     Title = row["Title"].ToString()!,
                     Description = row["Description"]?.ToString(),
                     Date = Convert.ToDateTime(row["Date"]),
+                    IsCompleted = Convert.ToBoolean(row["IsCompleted"]),
                     CategoryId = row["CategoryId"] != DBNull.Value ? Convert.ToInt32(row["CategoryId"]) : null,
-                    UserId = Convert.ToInt32(row["UserId"])
+                    UserId = Convert.ToInt32(row["UserId"]),
                 });
             }
 

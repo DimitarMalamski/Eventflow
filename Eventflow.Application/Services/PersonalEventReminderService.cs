@@ -20,20 +20,6 @@ namespace Eventflow.Application.Services
 
         public async Task CreatePersonalEventReminderAsync(PersonalEventReminder reminder)
             => await _personalEventReminderRepository.CreatePersonalReminderAsync(reminder);
-        public async Task<List<PersonalEventReminder>> GetAllPersonalEventRemindersByUserIdAsync(int userId)
-        {
-            var allUserEvents = await _personalEventRepository.GetAllPersonalEventsByUserIdAsync(userId);
-            var eventIds = allUserEvents.Select(e => e.Id).ToList();
-
-            if (!eventIds.Any())
-            {
-                return new List<PersonalEventReminder>();
-            }
-
-            var allReminders = await _personalEventReminderRepository.GetAllPersonalRemindersByEventIdAsync(eventIds);
-
-            return allReminders;
-        }
         public async Task<PaginatedRemindersViewModel> GetPaginatedFilteredPersonalRemindersAsync(int userId,
             ReminderStatus status,
             string? search,
@@ -118,7 +104,7 @@ namespace Eventflow.Application.Services
                 return false;
             }
 
-            await _personalEventReminderRepository.LikePersonalReminderAsync(reminderId);
+            await _personalEventReminderRepository.LikePersonalReminderAsync(reminderId, userId);
             return true;
         }
         public async Task<bool> MarkPersonalEventReminderAsReadAsync(int reminderId, int userId)
@@ -130,7 +116,7 @@ namespace Eventflow.Application.Services
                 return false;
             }
 
-            await _personalEventReminderRepository.MarkPersonalReminderAsReadAsync(reminderId);
+            await _personalEventReminderRepository.MarkPersonalReminderAsReadAsync(reminderId, userId);
             return true;
         }
         public async Task<bool?> ToggleLikeAsync(int reminderId, int userId)
@@ -138,18 +124,18 @@ namespace Eventflow.Application.Services
             var personalReminder = await _personalEventReminderRepository
                 .GetPersonalReminderByIdAsync(reminderId);
 
-            if (personalReminder?.PersonalEvent?.UserId != userId)
+            if (personalReminder == null || personalReminder.UserId != userId)
             {
                 return null;
             }
 
             if (personalReminder.IsLiked)
             {
-                await _personalEventReminderRepository.UnlikePersonalReminderAsync(reminderId);
+                await _personalEventReminderRepository.UnlikePersonalReminderAsync(reminderId, userId);
                 return false;
             }
 
-            await _personalEventReminderRepository.LikePersonalReminderAsync(reminderId);
+            await _personalEventReminderRepository.LikePersonalReminderAsync(reminderId, userId);
             return true;
         }
         public async Task<bool> UnlikePersonalReminderAsync(int reminderId, int userId)
@@ -161,14 +147,12 @@ namespace Eventflow.Application.Services
                 return false;
             }
 
-            await _personalEventReminderRepository.UnlikePersonalReminderAsync(reminderId);
+            await _personalEventReminderRepository.UnlikePersonalReminderAsync(reminderId, userId);
             return true;
         }
         private bool UserOwnsPersonalReminder(PersonalEventReminder? reminder, int userId)
         {
-            return reminder != null &&
-                reminder.PersonalEvent != null &&
-                reminder.PersonalEvent.UserId == userId;
+            return reminder != null && reminder.UserId == userId;
         }
         private async Task<List<PersonalEventReminder>> GetPersonalRemindersByStatusAsync(int userId, ReminderStatus status)
         {

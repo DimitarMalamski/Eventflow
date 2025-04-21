@@ -11,10 +11,16 @@ namespace Eventflow.Controllers
     public class ReminderController : Controller
     {
         private readonly IPersonalEventReminderService _personalEventReminderService;
+        private readonly IPersonalEventService _personalEventService;
+        private readonly IInviteService _inviteService;
         private const int PageSize = 5;
-        public ReminderController(IPersonalEventReminderService personalEventReminderService)
+        public ReminderController(IPersonalEventReminderService personalEventReminderService, 
+            IPersonalEventService personalEventService,
+            IInviteService inviteService)
         {
             _personalEventReminderService = personalEventReminderService;
+            _personalEventService = personalEventService;
+            _inviteService = inviteService;
         }
 
         [HttpGet]
@@ -63,6 +69,17 @@ namespace Eventflow.Controllers
         [RequireUserOrAdmin]
         public async Task<IActionResult> Create([FromBody] ReminderRequestModel model)
         {
+            var personalEvent = await _personalEventService.GetPersonalEventByIdAsync(model.PersonalEventId);
+
+            if (personalEvent == null)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Event not found"
+                });
+            }
+
             if (string.IsNullOrWhiteSpace(model.Title))
             {
                 return Json(new
@@ -92,13 +109,22 @@ namespace Eventflow.Controllers
 
             int userId = GetUserId(HttpContext.Session);
 
+            bool isOwner = personalEvent.UserId == userId;
+            bool isInvited = await _inviteService.HasUserAcceptedInviteAsync(userId, model.PersonalEventId);
+
+            if (!isOwner && !isInvited)
+            {
+                return Forbid();
+            }
+
             var reminder = new PersonalEventReminder
             {
                 Title = model.Title,
                 Description = model.Description,
                 Date = model.ReminderDate,
                 PersonalEventId = model.PersonalEventId,
-                Status = ReminderStatus.Unread
+                Status = ReminderStatus.Unread,
+                UserId = userId
             };
 
             await _personalEventReminderService.CreatePersonalEventReminderAsync(reminder);

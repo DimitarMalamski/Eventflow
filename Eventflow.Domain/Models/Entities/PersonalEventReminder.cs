@@ -25,6 +25,9 @@ namespace Eventflow.Domain.Models.Models
         public int PersonalEventId { get; set; }
         public bool IsLiked { get; set; } = false;
 
+        [Required]
+        public int UserId { get; set; }
+
         // Navigation property
         public PersonalEvent? PersonalEvent { get; set; }
     }

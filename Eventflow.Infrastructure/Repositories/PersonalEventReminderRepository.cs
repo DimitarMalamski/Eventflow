@@ -16,15 +16,16 @@ namespace Eventflow.Infrastructure.Repositories
         public async Task CreatePersonalReminderAsync(PersonalEventReminder reminder)
         {
             string createPersonalReminderQuery = @"
-                INSERT INTO PersonalEventReminder (Title, Description, Date, IsRead, IsLiked, PersonalEventId)
-                VALUES (@Title, @Description, @Date, 0, 0, @PersonalEventId);";
+                INSERT INTO PersonalEventReminder (Title, Description, Date, IsRead, IsLiked, PersonalEventId, UserId)
+                VALUES (@Title, @Description, @Date, 0, 0, @PersonalEventId, @UserId);";
 
             var parameters = new Dictionary<string, object?>()
             {
                 { "@Title", reminder.Title },
                 { "@Description", (object?)reminder.Description ?? DBNull.Value },
                 { "@Date", reminder.Date },
-                { "@PersonalEventId", reminder.PersonalEventId }
+                { "@PersonalEventId", reminder.PersonalEventId },
+                { "@UserId", reminder.UserId }
             };
 
             await _dbHelper.ExecuteNonQueryAsync(createPersonalReminderQuery, parameters!);
@@ -101,6 +102,7 @@ namespace Eventflow.Infrastructure.Repositories
                     ? ReminderStatus.Read 
                     : ReminderStatus.Unread,
                 PersonalEventId = Convert.ToInt32(row["PersonalEventId"]),
+                UserId = Convert.ToInt32(row["UserId"]),
                 ReadAt = row["ReadAt"] != DBNull.Value ? Convert.ToDateTime(row["ReadAt"]) : null,
                 PersonalEvent = new PersonalEvent
                 {
@@ -121,7 +123,7 @@ namespace Eventflow.Infrastructure.Repositories
                             e.CategoryId
                         FROM PersonalEventReminder r
                         INNER JOIN PersonalEvent e ON r.PersonalEventId = e.Id
-                        WHERE e.UserId = @UserId";
+                        WHERE r.UserId = @UserId";
 
             var parameters = new Dictionary<string, object>
             {
@@ -170,7 +172,7 @@ namespace Eventflow.Infrastructure.Repositories
                             e.CategoryId
                         FROM PersonalEventReminder r
                         INNER JOIN PersonalEvent e ON r.PersonalEventId = e.Id
-                        WHERE e.UserId = @UserId
+                        WHERE r.UserId = @UserId
                         AND r.IsRead = 1
                         AND (
                             r.IsLiked = 1 OR 
@@ -198,7 +200,7 @@ namespace Eventflow.Infrastructure.Repositories
                             e.CategoryId
                         FROM PersonalEventReminder r
                         INNER JOIN PersonalEvent e ON r.PersonalEventId = e.Id
-                        WHERE e.UserId = @UserId
+                        WHERE r.UserId = @UserId
                         AND r.IsRead = 0
                         AND r.Date = CAST(GETDATE() AS DATE);";
 
@@ -210,35 +212,47 @@ namespace Eventflow.Infrastructure.Repositories
             var dt = await _dbHelper.ExecuteQueryAsync(getUnreadPersonalRemindersForTodayQuery, parameters);
             return MapPersonalReminderWithEvent(dt);
         }
-        public async Task LikePersonalReminderAsync(int reminderId)
+        public async Task LikePersonalReminderAsync(int reminderId, int userId)
         {
-            string likePersonalReminderQuery = "UPDATE PersonalEventReminder SET IsLiked = 1 WHERE Id = @Id";
+            string likePersonalReminderQuery = @"UPDATE PersonalEventReminder 
+                    SET IsLiked = 1 
+                    WHERE Id = @Id
+                    AND UserId = @UserId";
 
             var parameters = new Dictionary<string, object>
             {
                 { "@Id", reminderId },
+                { "@UserId", userId }
             };
 
             await _dbHelper.ExecuteNonQueryAsync(likePersonalReminderQuery, parameters);
         }
-        public async Task MarkPersonalReminderAsReadAsync(int reminderId)
+        public async Task MarkPersonalReminderAsReadAsync(int reminderId, int userId)
         {
-            string markPersonalReminderAsReadQuery = "UPDATE PersonalEventReminder SET IsRead = 1, ReadAt = GETDATE() WHERE Id = @Id";
+            string markPersonalReminderAsReadQuery = @"UPDATE PersonalEventReminder SET IsRead = 1,
+                        ReadAt = GETDATE()
+                        WHERE Id = @Id 
+                        AND UserId = @UserId";
 
             var parameters = new Dictionary<string, object>()
             {
-                { "@Id", reminderId }
+                { "@Id", reminderId },
+                { "@UserId", userId }
             };
 
             await _dbHelper.ExecuteNonQueryAsync(markPersonalReminderAsReadQuery, parameters);
         }
-        public async Task UnlikePersonalReminderAsync(int reminderId)
+        public async Task UnlikePersonalReminderAsync(int reminderId, int userId)
         {
-            string unlikePersonalReminderQuery = "UPDATE PersonalEventReminder SET IsLiked = 0 WHERE Id = @Id";
+            string unlikePersonalReminderQuery = @"UPDATE PersonalEventReminder 
+                    SET IsLiked = 0
+                    WHERE Id = @Id
+                    AND UserId = @UserId";
 
             var parameters = new Dictionary<string, object>()
             {
-                { "@Id", reminderId }
+                { "@Id", reminderId },
+                { "@UserId", userId }
             };
 
             await _dbHelper.ExecuteNonQueryAsync(unlikePersonalReminderQuery, parameters);
@@ -287,10 +301,9 @@ namespace Eventflow.Infrastructure.Repositories
             string hasUnreadPersonalRemindersForTodayQuery = @"
                     SELECT COUNT(*) 
                     FROM PersonalEventReminder r
-                    JOIN PersonalEvent e ON r.PersonalEventId = e.Id
-                    WHERE e.UserId = @UserId 
-                        AND r.IsRead = 0 
-                        AND CAST(r.Date AS DATE) = CAST(GETDATE() AS DATE)";
+                    WHERE r.UserId = @UserId 
+                    AND r.IsRead = 0 
+                    AND CAST(r.Date AS DATE) = CAST(GETDATE() AS DATE)";
 
             var parameters = new Dictionary<string, object>()
             {

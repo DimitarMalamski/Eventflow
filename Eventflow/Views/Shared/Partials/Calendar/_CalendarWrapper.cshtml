@@ -13,5 +13,5 @@
     </h2>
 
     @await Component.InvokeAsync("Calendar", Model)
-    @await Component.InvokeAsync("CalendarNavigation", new { navigation = Model.Navigation })
+    @await Component.InvokeAsync("CalendarNavigation", new { navigation = Model!.Navigation })
 </div>

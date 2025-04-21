@@ -161,6 +161,24 @@ namespace Eventflow.Infrastructure.Repositories
             var count = (int)await _dbHelper.ExecuteScalarAsync(hasUnreadInvitesQuery, parameters);
             return count > 0;
         }
+        public async Task<bool> HasUserAcceptedInviteAsync(int userId, int personalEventId)
+        {
+            string hasUserAcceptedInviteQuery = @"
+                SELECT COUNT(1)
+                FROM Invite
+                WHERE InvitedUserId = @UserId
+                    AND PersonalEventId = @EventId
+                    AND StatusId = 2";
+
+            var parameters = new Dictionary<string, object>()
+            {
+                { "@UserId", userId },
+                { "@EventId", personalEventId }
+            };
+
+            var result = (int)await _dbHelper.ExecuteScalarAsync(hasUserAcceptedInviteQuery, parameters);
+            return result > 0;
+        }
         public async Task<bool> InviteExistsAsync(int eventId, int invitedUserId)
         {
             string query = "SELECT COUNT(*) FROM Invite WHERE PersonalEventId = @EventId AND InvitedUserId = @UserId";

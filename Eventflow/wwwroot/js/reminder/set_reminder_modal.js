@@ -1,6 +1,6 @@
 ﻿import { checkNotificationDots } from "../messages/check_notification_dots.js";
 export function openSetReminderModal() {
-    console.log("🔔 openSetReminderModal called. Current Event ID:", window.currentEventId); // ✅ Add this!
+    console.log("🔔 openSetReminderModal called. Current Event ID:", window.currentEventId);
 
 
     const eventId = window.currentEventId;
