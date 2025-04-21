@@ -20,19 +20,17 @@ namespace Eventflow.Views.ViewComponents
             var userId = GetUserId(HttpContext.Session);
             var isLoggedIn = IsLoggedIn(HttpContext.Session);
 
-            var hasReminders = await _messageNotificationService.HasTodaysUnreadRemindersAsync(userId);
-            var hasInvites = await _messageNotificationService.HasPendingInvitesAsync(userId);
-            var showNotification = hasInvites || hasInvites;
-
-            var buttons = SidebarViewModelBuilder.Build(context, isLoggedIn, showNotification);
+            var buttons = SidebarViewModelBuilder.Build(
+                context,
+                isLoggedIn
+            );
 
             var viewModel = new SidebarViewModel
             {
                 Context = context,
                 Continents = continents ?? new List<Continent>(),
                 Username = GetUsername(HttpContext.Session),
-                IsLoggedin = IsLoggedIn(HttpContext.Session),
-                ShowNotification = showNotification,
+                IsLoggedin = isLoggedIn,
                 Buttons = buttons
             };
 

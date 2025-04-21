@@ -1,28 +1,26 @@
 ﻿@using Eventflow.Domain.Models.ViewModels
 @model ReminderPageViewModel
 
-@if (!Model.Reminders.Any())
+@if (Model.Reminders?.Any() == true)
 {
-    <div class="d-flex justify-content-center align-items-center" style="height: 60vh;">
-        <p class="text-muted fs-5 mb-0">No reminders for today!</p>
-    </div>
+    foreach (var reminder in Model.Reminders)
+    {
+        if (reminder != null)
+        {
+            @await Html.PartialAsync("~/Views/Shared/Partials/Reminder/_ReminderCardPartial.cshtml", reminder)
+        }
+    }
+
+    @await Html.PartialAsync("~/Views/Shared/Partials/Reminder/_PaginationPartial.cshtml", new PaginationViewModel
+    {
+        CurrentPage = Model.CurrentPage,
+        TotalPages = Model.TotalPages,
+        SearchTerm = Model.SearchTerm,
+        SortBy = Model.SortBy,
+        State = Model.CurrentStatus
+    })
 }
 else
 {
-    @foreach (var reminder in Model.Reminders)  
-    {
-        @await Html.PartialAsync("~/Views/Shared/Partials/Reminder/_ReminderCardPartial.cshtml", reminder)
-    }
-
-    @if (Model.TotalPages > 1) {
-        <div class="pagination d-flex justify-content-center mt-4">
-            @for (int i = 1; i <= Model.TotalPages; i++) {
-                <button type="button"
-                        class="btn btn-sm mx-1 reminder-page-btn @(i == Model.CurrentPage ? "btn-primary" : "btn-outline-primary")"
-                        data-page="@i">
-                    @i
-                </button>
-            }
-        </div>
-    }
+    @await Html.PartialAsync("~/Views/Shared/Partials/Reminder/_ReminderEmptyStatePartial.cshtml")
 }

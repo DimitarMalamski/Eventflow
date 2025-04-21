@@ -1,5 +1,4 @@
-﻿using Eventflow.Application.Services;
-using Eventflow.Application.Services.Interfaces;
+﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Attributes;
 using Eventflow.Domain.Enums;
 using Eventflow.Domain.Models.Models;
@@ -20,18 +19,16 @@ namespace Eventflow.Controllers
 
         [HttpGet]
         [RequireUserOrAdmin]
-        public async Task<IActionResult> Index(string state = "unread")
+        public async Task<IActionResult> Index(string state = "unread",
+            string? search = null,
+            string? sortBy = null)
         {
             int userId = GetUserId(HttpContext.Session);
 
-            ReminderStatus status = state.ToLower() switch
-            {
-                "read" => ReminderStatus.Read,
-                _ => ReminderStatus.Unread
-            };
+            ReminderStatus status = ParseStatus(state);
 
             var result = await _personalEventReminderService
-                .GetPaginatedPersonalRemindersAsync(userId, status, page: 1, pageSize: 5);
+                .GetPaginatedFilteredPersonalRemindersAsync(userId, status, search, sortBy, page: 1, PageSize);
 
             var model = new ReminderPageViewModel
             {
@@ -39,6 +36,8 @@ namespace Eventflow.Controllers
                 Reminders = result.PersonalReminders,
                 TotalPages = result.TotalPages,
                 CurrentPage = result.CurrentPage,
+                SearchTerm = search,
+                SortBy = sortBy
             };
 
             return View(model);
@@ -61,16 +60,33 @@ namespace Eventflow.Controllers
         }
 
         [HttpPost]
-        [Route("Reminder/Create")]
         [RequireUserOrAdmin]
         public async Task<IActionResult> Create([FromBody] ReminderRequestModel model)
         {
-            if (string.IsNullOrWhiteSpace(model.Title) || model.PersonalEventId <= 0 || model.ReminderDate == default)
+            if (string.IsNullOrWhiteSpace(model.Title))
             {
                 return Json(new
                 {
-                    success = false,
-                    message = "Invalid reminder data."
+                    Success = false,
+                    message = "Title is required!"
+                });
+            }
+
+            if (model.PersonalEventId <= 0)
+            {
+                return Json(new
+                {
+                    Success = false,
+                    message = "Invalid event ID!"
+                });
+            }
+
+            if (model.ReminderDate == default)
+            {
+                return Json(new
+                {
+                    Success = false,
+                    message = "Reminder date is invalid."
                 });
             }
 
@@ -96,23 +112,26 @@ namespace Eventflow.Controllers
 
         [HttpGet]
         [RequireUserOrAdmin]
-        public async Task<IActionResult> GetRemindersPartial(string state = "unread", int page = 1)
+        public async Task<IActionResult> GetRemindersPartial(string state = "unread", 
+            int page = 1,
+            string? search = null,
+            string? sortBy = null)
         {
             int userId = GetUserId(HttpContext.Session);
 
-            ReminderStatus status = state.ToLower() == "read" 
-                ? ReminderStatus.Read 
-                : ReminderStatus.Unread;
+            ReminderStatus status = ParseStatus(state);
 
             var paginatedResult = await _personalEventReminderService
-                    .GetPaginatedPersonalRemindersAsync(userId, status, page, PageSize);
+                    .GetPaginatedFilteredPersonalRemindersAsync(userId, status, search, sortBy, page, PageSize);
 
             var model = new ReminderPageViewModel
             {
                 CurrentStatus = status,
                 Reminders = paginatedResult.PersonalReminders,
                 TotalPages = paginatedResult.TotalPages,
-                CurrentPage = paginatedResult.CurrentPage
+                CurrentPage = paginatedResult.CurrentPage,
+                SearchTerm = search,
+                SortBy = sortBy
             };
 
             return PartialView("~/Views/Shared/Partials/Reminder/_ReminderListPartial.cshtml", model);
@@ -138,5 +157,9 @@ namespace Eventflow.Controllers
                 liked = result.Value
             });
         }
+        private ReminderStatus ParseStatus(string? state)
+            => state?.ToLower() == "read" 
+                ? ReminderStatus.Read 
+                : ReminderStatus.Unread;
     }
 }

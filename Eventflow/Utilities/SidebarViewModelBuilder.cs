@@ -4,7 +4,9 @@ namespace Eventflow.Utilities
 {
     public static class SidebarViewModelBuilder
     {
-        public static List<SidebarButtonViewModel> Build(string context, bool isLoggedIn, bool showNotification)
+        public static List<SidebarButtonViewModel> Build(string context,
+            bool isLoggedIn
+            )
         {
             var buttons = new List<SidebarButtonViewModel>();
 
@@ -35,7 +37,7 @@ namespace Eventflow.Utilities
                         Label = "My messages",
                         Url = "/Messages/Index",
                         CssClass = "btn btn-primary w-100 position-relative",
-                        ShowNotification = showNotification
+                        NotificationDotId = "messages-notification-dot"
                     });
 
                     buttons.Add(new SidebarButtonViewModel
@@ -50,17 +52,22 @@ namespace Eventflow.Utilities
                     buttons.Add(new SidebarButtonViewModel 
                     { 
                         Label = "Invites",
-                        Url = "/Invite/Index"
+                        Url = "/Invite/Index",
+                        CssClass = "btn btn-primary w-100",
+                        NotificationDotId = "invites-notification-dot"
                     });
                     buttons.Add(new SidebarButtonViewModel
                     {
                         Label = "Reminders", 
-                        Url = "/Reminder/Index" 
+                        Url = "/Reminder/Index",
+                        CssClass = "btn btn-primary w-100",
+                        NotificationDotId = "reminders-notification-dot"
                     });
                     buttons.Add(new SidebarButtonViewModel
                     { 
                         Label = "Back To My Events", 
-                        Url = "/Event/MyEvents" 
+                        Url = "/Event/MyEvents",
+                        CssClass = "btn btn-primary w-100"
                     });
                 break;
 
@@ -69,7 +76,8 @@ namespace Eventflow.Utilities
                     buttons.Add(new SidebarButtonViewModel 
                     { 
                         Label = "Back to Messages",
-                        Url = "/Messages/Index"
+                        Url = "/Messages/Index",
+                        CssClass = "btn btn-primary w-100"
                     });
                 break;
 
@@ -78,7 +86,8 @@ namespace Eventflow.Utilities
                     buttons.Add(new SidebarButtonViewModel
                     { 
                         Label = "Back To My Events", 
-                        Url = "/Event/MyEvents" 
+                        Url = "/Event/MyEvents",
+                        CssClass = "btn btn-primary w-100"
                     });
                 break;
             }

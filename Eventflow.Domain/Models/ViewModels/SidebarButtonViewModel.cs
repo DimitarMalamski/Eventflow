@@ -5,6 +5,6 @@
         public string Label { get; set; } = "";
         public string Url { get; set; } = "";
         public string? CssClass { get; set; }
-        public bool ShowNotification { get; set; } = false;
+        public string? NotificationDotId { get; set; }
     }
 }

@@ -1,4 +1,7 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿import { initMessagesUI } from "./messages/messages_ui_binder.js";
+import { initRemindersUI } from "./reminder/reminder_ui_binder.js"
 
-// Write your JavaScript code.
+document.addEventListener("DOMContentLoaded", () => {
+    initMessagesUI();
+    initRemindersUI();
+});

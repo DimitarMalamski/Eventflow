@@ -13,7 +13,6 @@ namespace Eventflow.Infrastructure.Repositories
         {
             _dbHelper = dbHelper;
         }
-
         public async Task CreatePersonalReminderAsync(PersonalEventReminder reminder)
         {
             string createPersonalReminderQuery = @"
@@ -184,7 +183,7 @@ namespace Eventflow.Infrastructure.Repositories
             };
 
             var dt = await _dbHelper.ExecuteQueryAsync(getReadPersonalRemindersWithin3DaysQuery, parameters);
-            return MapPersoanlReminderWithEvent(dt);
+            return MapPersonalReminderWithEvent(dt);
         }
         public async Task<List<PersonalEventReminder>> GetUnreadPersonalRemindersForTodayAsync(int userId)
         {
@@ -209,7 +208,7 @@ namespace Eventflow.Infrastructure.Repositories
             };
 
             var dt = await _dbHelper.ExecuteQueryAsync(getUnreadPersonalRemindersForTodayQuery, parameters);
-            return MapPersoanlReminderWithEvent(dt);
+            return MapPersonalReminderWithEvent(dt);
         }
         public async Task LikePersonalReminderAsync(int reminderId)
         {
@@ -244,9 +243,14 @@ namespace Eventflow.Infrastructure.Repositories
 
             await _dbHelper.ExecuteNonQueryAsync(unlikePersonalReminderQuery, parameters);
         }
-        private List<PersonalEventReminder> MapPersoanlReminderWithEvent(DataTable dt)
+        private List<PersonalEventReminder> MapPersonalReminderWithEvent(DataTable dt)
         {
             var personalReminders = new List<PersonalEventReminder>();
+
+            if (dt.Rows.Count == 0)
+            {
+                return new List<PersonalEventReminder>();
+            }
 
             foreach (DataRow row in dt.Rows)
             {
@@ -260,19 +264,41 @@ namespace Eventflow.Infrastructure.Repositories
                     IsLiked = Convert.ToBoolean(row["IsLiked"]),
                     ReadAt = row["ReadAt"] != DBNull.Value ? Convert.ToDateTime(row["ReadAt"]) : null,
                     PersonalEventId = Convert.ToInt32(row["PersonalEventId"]),
-                    PersonalEvent = new PersonalEvent
-                    {
-                        Id = Convert.ToInt32(row["EventId"]),
-                        Title = row["EventTitle"].ToString()!,
-                        Description = row["EventDescription"]?.ToString(),
-                        Date = Convert.ToDateTime(row["EventDate"]),
-                        UserId = Convert.ToInt32(row["EventUserId"]),
-                        CategoryId = row["CategoryId"] != DBNull.Value ? Convert.ToInt32(row["CategoryId"]) : null
-                    }
+                    PersonalEvent = MapPersonalEvent(row)
                 });
             }
 
             return personalReminders;
+        }
+        private PersonalEvent MapPersonalEvent(DataRow row)
+        {
+            return new PersonalEvent
+            {
+                Id = Convert.ToInt32(row["EventId"]),
+                Title = row["EventTitle"].ToString()!,
+                Description = row["EventDescription"]?.ToString(),
+                Date = Convert.ToDateTime(row["EventDate"]),
+                UserId = Convert.ToInt32(row["EventUserId"]),
+                CategoryId = row["CategoryId"] != DBNull.Value ? Convert.ToInt32(row["CategoryId"]) : null
+            };
+        }
+        public async Task<bool> HasUnreadPersonalRemindersForTodayAsync(int userId)
+        {
+            string hasUnreadPersonalRemindersForTodayQuery = @"
+                    SELECT COUNT(*) 
+                    FROM PersonalEventReminder r
+                    JOIN PersonalEvent e ON r.PersonalEventId = e.Id
+                    WHERE e.UserId = @UserId 
+                        AND r.IsRead = 0 
+                        AND CAST(r.Date AS DATE) = CAST(GETDATE() AS DATE)";
+
+            var parameters = new Dictionary<string, object>()
+            {
+                { "@UserId", userId }
+            };
+
+            int count = (int)await _dbHelper.ExecuteScalarAsync(hasUnreadPersonalRemindersForTodayQuery, parameters);
+            return count > 0;
         }
     }
 }

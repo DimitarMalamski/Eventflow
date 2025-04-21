@@ -29,6 +29,30 @@
         </div>
     </div>
 
+    <div class="row mb-3">
+    <div class="col-md-6">
+        <input type="text"
+               id="searchInput"
+               class="form-control"
+               placeholder="Search by title, description, or event title"
+               value="@Model.SearchTerm" />
+    </div>
+
+    <div class="col-md-3">
+        <select id="sortDropdown" class="form-select">
+            <option value="">Sort By (Default)</option>
+            <option value="event" selected="@(Model.SortBy == "event")">Event Title</option>
+            <option value="date" selected="@(Model.SortBy == "date")">Reminder Date</option>
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <button type="button" id="applyFiltersBtn" class="btn btn-primary w-100">
+            Apply Filters
+        </button>
+    </div>
+</div>
+
     <div id="reminderListContainer" class="reminder-scrollbox">
         @await Html.PartialAsync("~/Views/Shared/Partials/Reminder/_ReminderListPartial.cshtml"
         , Model)
@@ -38,12 +62,6 @@
         @Html.AntiForgeryToken()
     </form>
 </div>
-
-@section Scripts {
-    <script src="~/js/mark_reminder_read.js" asp-append-version="true"></script>
-    <script src="~/js/reminder_filter.js" asp-append-version="true"></script>
-    <script src="~/js/toggle_like_reminder.js" asp-append-version="true"></script>  
-}
 
 @section Styles {
     <link rel="stylesheet" href="~/css/reminder_styles.css" />

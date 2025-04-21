@@ -2,6 +2,7 @@
 using Eventflow.Attributes;
 using Eventflow.Domain.Models.Models;
 using Eventflow.Domain.Models.ViewModels;
+using Eventflow.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using static Eventflow.Utilities.SessionHelper;
 
@@ -14,11 +15,15 @@ namespace Eventflow.Controllers
         private readonly IContinentService _continentService;
         private readonly ICategoryService _categoryService;
         private readonly IPersonalEventService _personalEventService;
+        private readonly IPersonalEventReminderService _personalEventReminderService;
+        private readonly IInviteService _inviteService;
         public EventController(ICalendarNavigationService calendarNavigationService,
             ICalendarService calendarService,
             IContinentService continentService,
             ICategoryService categoryService,
-            IPersonalEventService personalEventService
+            IPersonalEventService personalEventService,
+            IPersonalEventReminderService personalEventReminderService,
+            IInviteService inviteService
             )
         {
             _calendarNavigationService = calendarNavigationService;
@@ -26,6 +31,8 @@ namespace Eventflow.Controllers
             _continentService = continentService;
             _categoryService = categoryService;
             _personalEventService = personalEventService;
+            _personalEventReminderService = personalEventReminderService;
+            _inviteService = inviteService;
         }
 
         [RequireUserOrAdmin]
@@ -46,6 +53,9 @@ namespace Eventflow.Controllers
 
             var combinedEvents = ownEvents.Concat(invitedEvents).ToList();
 
+            bool hasUnreadReminders = await _personalEventReminderService.HasUnreadRemindersForTodayAsync(userId); // <- add this
+            bool hasPendingInvites = await _inviteService.HasPendingInvitesAsync(userId);
+
             var model = new CalendarPageViewModel
             {
                 Continents = await _continentService.OrderContinentByNameAsync(),
@@ -54,6 +64,14 @@ namespace Eventflow.Controllers
                 {
                     CurrentMonth = normalizedMonth,
                     CurrentYear = normalizedYear
+                },
+                SidebarViewModel = new SidebarViewModel
+                {
+                    Context = "MyEvents",
+                    Buttons = SidebarViewModelBuilder.Build(
+                        context: "MyEvents",
+                        isLoggedIn: true
+                    )
                 }
             };
 

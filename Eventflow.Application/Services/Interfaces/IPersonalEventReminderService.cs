@@ -16,5 +16,13 @@ namespace Eventflow.Application.Services.Interfaces
         public Task<PersonalEventReminder?> GetPersonalReminderByIdAsync(int reminderId);
         public Task<PaginatedRemindersViewModel> GetPaginatedPersonalRemindersAsync(int userId, ReminderStatus status, int page, int pageSize);
         public Task<bool?> ToggleLikeAsync(int reminderId, int userId);
+        public Task<PaginatedRemindersViewModel> GetPaginatedFilteredPersonalRemindersAsync(
+            int userId,
+            ReminderStatus status,
+            string? search,
+            string? sortBy,
+            int page,
+            int pageSize);
+        public Task<bool> HasUnreadRemindersForTodayAsync(int userId);
     }
 }

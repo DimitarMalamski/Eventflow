@@ -1,0 +1,20 @@
+﻿@using Eventflow.Domain.Models.ViewModels
+@model PaginationViewModel
+
+@if (Model.TotalPages > 1)
+{
+    <div class="pagination d-flex justify-content-center mt-4">
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <button type="button"
+                    class="btn btn-sm mx-1 reminder-page-btn @(i == Model.CurrentPage ? "btn-primary" : "btn-outline-primary")"
+                    data-page="@i"
+                    data-search="@Model.SearchTerm"
+                    data-sort="@Model.SortBy"
+                    data-state="@Model.State.ToString().ToLower()"
+                    aria-label="Go to page @i">
+                    @i
+            </button>
+        }
+    </div>
+}

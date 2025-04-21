@@ -3,6 +3,7 @@ using Eventflow.Domain.Enums;
 using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
 using Eventflow.Domain.Models.ViewModels;
+using static Eventflow.Application.Mapper.ViewModelMapper.PersonalReminder;
 
 namespace Eventflow.Application.Services
 {
@@ -33,36 +34,54 @@ namespace Eventflow.Application.Services
 
             return allReminders;
         }
+        public async Task<PaginatedRemindersViewModel> GetPaginatedFilteredPersonalRemindersAsync(int userId,
+            ReminderStatus status,
+            string? search,
+            string? sortBy,
+            int page,
+            int pageSize)
+        {
+            page = Math.Max(1, page);
+
+            var personalReminders = await GetPersonalRemindersByStatusAsync(userId, status);
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                personalReminders = FilterPersonalReminders(personalReminders, search);
+            }
+
+            personalReminders = SortPersonalReminders(personalReminders, sortBy);
+
+            var totalCount = personalReminders.Count;
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            var peginatedPersonalReminders = personalReminders
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
+
+            return new PaginatedRemindersViewModel
+            {
+                PersonalReminders = ToBoxViewModelList(peginatedPersonalReminders),
+                TotalPages = totalPages,
+                CurrentPage = page
+            };
+        }
         public async Task<PaginatedRemindersViewModel> GetPaginatedPersonalRemindersAsync(int userId, ReminderStatus status, int page, int pageSize)
         {
             page = Math.Max(1, page);
 
-            var personalReminders = status == ReminderStatus.Read
-                ? await _personalEventReminderRepository.GetReadPersonalRemindersWithin3DaysAsync(userId)
-                : await _personalEventReminderRepository.GetUnreadPersonalRemindersForTodayAsync(userId);
+            var personalReminders = await GetPersonalRemindersByStatusAsync(userId, status);
 
             var totalCount = personalReminders.Count;
             var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
             var paginatedPersonalReminders = personalReminders
                 .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .Select(r => new ReminderBoxViewModel
-                {
-                    Id = r.Id,
-                    EventId = r.PersonalEventId,
-                    Title = r.Title,
-                    Description = r.Description,
-                    Date = r.Date,
-                    Status = r.Status,
-                    EventTitle = r.PersonalEvent?.Title ?? "Unknown",
-                    IsLiked = r.IsLiked
-                })
-                .ToList();
+                .Take(pageSize);
 
             return new PaginatedRemindersViewModel
             {
-                PersonalReminders = paginatedPersonalReminders,
+                PersonalReminders = ToBoxViewModelList(paginatedPersonalReminders),
                 TotalPages = totalPages,
                 CurrentPage = page,
             };
@@ -75,55 +94,20 @@ namespace Eventflow.Application.Services
             {
                 var personalReminders = await _personalEventReminderRepository.GetUnreadPersonalRemindersForTodayAsync(userId);
 
-                return personalReminders
-                    .Select(r => new ReminderBoxViewModel
-                    {
-                        Id = r.Id,
-                        EventId = r.PersonalEventId,
-                        Title = r.Title,
-                        Description = r.Description,
-                        Date = r.Date,
-                        Status = r.Status,
-                        EventTitle = r.PersonalEvent?.Title ?? "Unknown",
-                        IsLiked = r.IsLiked
-                    })
-                    .ToList();
+                return ToBoxViewModelList(personalReminders);
             }
             else
             {
                 var personalReminders = await _personalEventReminderRepository.GetReadPersonalRemindersWithin3DaysAsync(userId);
 
-                return personalReminders
-                    .Select(r => new ReminderBoxViewModel
-                    {
-                        Id = r.Id,
-                        EventId = r.PersonalEventId,
-                        Title = r.Title,
-                        Description = r.Description,
-                        Date = r.Date,
-                        Status = r.Status,
-                        EventTitle = r.PersonalEvent?.Title ?? "Unknown"
-                    })
-                    .ToList();
+                return ToBoxViewModelList(personalReminders);
             }
         }
         public async Task<List<ReminderBoxViewModel>> GetTodaysUnreadRemindersAsync(int userId)
         {
             var personalReminders = await _personalEventReminderRepository.GetUnreadPersonalRemindersForTodayAsync(userId);
 
-            return personalReminders
-                .Select(r => new ReminderBoxViewModel
-                {
-                    Id = r.Id,
-                    EventId = r.PersonalEventId,
-                    Title = r.Title,
-                    Description = r.Description,
-                    Date = r.Date,
-                    Status = r.Status,
-                    EventTitle = r.PersonalEvent?.Title ?? "Unknown",
-                    IsLiked = r.IsLiked,
-                })
-                .ToList();
+            return ToBoxViewModelList(personalReminders);
         }
         public async Task<bool> LikePersonalReminderAsync(int reminderId, int userId)
         {
@@ -164,12 +148,8 @@ namespace Eventflow.Application.Services
                 await _personalEventReminderRepository.UnlikePersonalReminderAsync(reminderId);
                 return false;
             }
-            else
-            {
-                await _personalEventReminderRepository.LikePersonalReminderAsync(reminderId);
-                return true;
-            }
 
+            await _personalEventReminderRepository.LikePersonalReminderAsync(reminderId);
             return true;
         }
         public async Task<bool> UnlikePersonalReminderAsync(int reminderId, int userId)
@@ -190,5 +170,31 @@ namespace Eventflow.Application.Services
                 reminder.PersonalEvent != null &&
                 reminder.PersonalEvent.UserId == userId;
         }
+        private async Task<List<PersonalEventReminder>> GetPersonalRemindersByStatusAsync(int userId, ReminderStatus status)
+        {
+            return status == ReminderStatus.Read
+                ? await _personalEventReminderRepository.GetReadPersonalRemindersWithin3DaysAsync(userId)
+                : await _personalEventReminderRepository.GetUnreadPersonalRemindersForTodayAsync(userId);
+        }
+        private List<PersonalEventReminder> FilterPersonalReminders(List<PersonalEventReminder> personalReminders, string search)
+        {
+            return personalReminders
+                .Where(r =>
+                    (r.Title?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                    (r.Description?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                    (r.PersonalEvent?.Title?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false))
+                .ToList();
+        }
+        private List<PersonalEventReminder> SortPersonalReminders(List<PersonalEventReminder> personalReminders, string? sortBy)
+        {
+            return sortBy?.ToLower() switch
+            {
+                "event" => personalReminders.OrderBy(r => r.PersonalEvent?.Title).ToList(),
+                "date" => personalReminders.OrderBy(r => r.Date).ToList(),
+                _ => personalReminders.OrderBy(r => r.Id).ToList()
+            };
+        }
+        public async Task<bool> HasUnreadRemindersForTodayAsync(int userId)
+            => await _personalEventReminderRepository.HasUnreadPersonalRemindersForTodayAsync(userId);
     }
 }

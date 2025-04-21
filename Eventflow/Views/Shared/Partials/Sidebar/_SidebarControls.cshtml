@@ -7,21 +7,23 @@
     {
         <form method="post" class="w-100">
             <div class="w-100 mb-3">
-                @await Component.InvokeAsync("Dropdown", new DropdownViewModel {
+                @await Component.InvokeAsync("Dropdown", new DropdownViewModel
+                {
                     Label = "Continent",
                     Name = "continent",
                     Id = "continentSelect",
                     DefaultOptionLabel = "Select Continent",
-                    Options = Model.Continents.Select(c => new DropdownOption {
+                    Options = Model.Continents.Select(c => new DropdownOption
+                    {
                         Id = c.Id.ToString(),
                         Name = c.Name
-                    })
-                    .ToList()
+                    }).ToList()
                 })
             </div>
 
             <div class="w-100 mb-3">
-                @await Component.InvokeAsync("Dropdown", new DropdownViewModel {
+                @await Component.InvokeAsync("Dropdown", new DropdownViewModel
+                {
                     Label = "Country",
                     Name = "country",
                     Id = "countrySelect",
@@ -34,12 +36,16 @@
 
     @foreach (var btn in Model.Buttons)
     {
-        <a href="@btn.Url" class="@(btn.CssClass ?? "btn btn-primary w-100")">
-        @btn.Label
-            @if (btn.ShowNotification)
+        <a href="@btn.Url" class="@(btn.CssClass ?? "btn btn-primary w-100") position-relative">
+            @btn.Label
+
+            @if (!string.IsNullOrEmpty(btn.NotificationDotId))
             {
-                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-                    <span class="visually-hidden">New alerts</span>
+                <span id="@btn.NotificationDotId"
+                      class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle d-none">
+                    <span class="visually-hidden">
+                        New alerts
+                    </span>
                 </span>
             }
         </a>
