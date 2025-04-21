@@ -12,6 +12,11 @@
                     const outer = document.getElementById("calendarOuterWrapper");
                     if (outer) {
                         outer.innerHTML = html;
+
+                        console.log("🧠 Calendar updated via AJAX"); // ✅ Add this!
+
+                        document.dispatchEvent(new Event("calendar:updated"));
+
                         if (typeof initCalendarUI === "function") {
                             initCalendarUI();
                         }

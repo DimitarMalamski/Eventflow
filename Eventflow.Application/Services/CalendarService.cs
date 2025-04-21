@@ -5,6 +5,11 @@ namespace Eventflow.Application.Services
 {
     public class CalendarService : ICalendarService
     {
+        private readonly IPersonalEventService _personalEventService;
+        public CalendarService(IPersonalEventService personalEventService)
+        {
+            _personalEventService = personalEventService;
+        }
         public CalendarViewModel GenerateCalendar(int year, int month, List<PersonalEventWithCategoryNameViewModel> personalEvents)
         {
             var firstDay = new DateTime(year, month, 1);
@@ -61,6 +66,14 @@ namespace Eventflow.Application.Services
         public CalendarViewModel GenerateCalendar(int year, int month)
         {
             return GenerateCalendar(year, month, new List<PersonalEventWithCategoryNameViewModel>());
+        }
+        public async Task<CalendarViewModel> GenerateUserCalendarAsync(int userId, int year, int month)
+        {
+            var ownEvents = await _personalEventService.GetEventsWithCategoryNamesAsync(userId, year, month);
+            var invitedEvents = await _personalEventService.GetAcceptedInvitedEventsAsync(userId, year, month);
+            var combinedEvents = ownEvents.Concat(invitedEvents).ToList();
+
+            return GenerateCalendar(year, month, combinedEvents);
         }
     }
 }

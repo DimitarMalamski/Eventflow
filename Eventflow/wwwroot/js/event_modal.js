@@ -43,4 +43,30 @@ function setReminder() {
 function invitePeople() {
     openInviteModal();
 }
+function bindModalActionButtons() {
+    document.getElementById("edit-button")?.addEventListener("click", editEvent);
+    document.getElementById("reminder-button")?.addEventListener("click", setReminder);
+    document.getElementById("invite-button")?.addEventListener("click", invitePeople);
+}
 
+function bindEventClickHandlers() {
+    document.querySelectorAll(".calendar-event").forEach(btn => {
+        btn.addEventListener("click", function () {
+            console.log("📅 Event clicked:", this.dataset.id)
+
+            const event = {
+                id: this.dataset.id,
+                title: this.dataset.title,
+                description: this.dataset.description,
+                date: this.dataset.date,
+                category: this.dataset.category,
+                isInvited: this.dataset.isInvited
+            };
+            openEventModal(event);
+        });
+    });
+}
+export function initEventModalUI() {
+    bindEventClickHandlers();
+    bindModalActionButtons();
+}

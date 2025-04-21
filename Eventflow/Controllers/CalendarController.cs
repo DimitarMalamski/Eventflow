@@ -1,4 +1,5 @@
-﻿using Eventflow.Application.Services.Interfaces;
+﻿using Eventflow.Application.Services;
+using Eventflow.Application.Services.Interfaces;
 using Eventflow.Domain.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using static Eventflow.Utilities.SessionHelper;
@@ -10,13 +11,16 @@ namespace Eventflow.Controllers
         private readonly IContinentService _continentService;
         private readonly ICalendarService _calendarService;
         private readonly ICalendarNavigationService _calendarNavigationService;
+        private readonly IPersonalEventService _personalEventService;
         public CalendarController(IContinentService continentService,
             ICalendarService calendarService,
-            ICalendarNavigationService calendarNavigationService)
+            ICalendarNavigationService calendarNavigationService,
+            IPersonalEventService personalEventService)
         {
             _continentService = continentService;
             _calendarService = calendarService;
             _calendarNavigationService = calendarNavigationService;
+            _personalEventService = personalEventService;
         }
         public async Task<IActionResult> Index(int? month, int? year)
         {
@@ -53,7 +57,7 @@ namespace Eventflow.Controllers
 
             var model = new CalendarComponentViewModel
             {
-                Calendar = _calendarService.GenerateCalendar(normalizedYear, normalizedMonth),
+                Calendar = await _calendarService.GenerateUserCalendarAsync(userId, normalizedYear, normalizedMonth),
                 Navigation = new CalendarNavigationViewModel
                 {
                     CurrentMonth = normalizedMonth,

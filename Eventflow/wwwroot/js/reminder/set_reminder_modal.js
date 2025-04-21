@@ -1,5 +1,8 @@
 ﻿import { checkNotificationDots } from "../messages/check_notification_dots.js";
 export function openSetReminderModal() {
+    console.log("🔔 openSetReminderModal called. Current Event ID:", window.currentEventId); // ✅ Add this!
+
+
     const eventId = window.currentEventId;
 
     if (!eventId) {
@@ -11,6 +14,15 @@ export function openSetReminderModal() {
 
     if (input) {
         input.value = eventId;
+        console.log("✅ Reminder input value set to:", input.value); 
+    }
+
+    const reminderForm = document.getElementById("setReminderForm");
+    if (reminderForm) {
+        const clone = reminderForm.cloneNode(true);
+        reminderForm.replaceWith(clone);
+
+        clone.addEventListener("submit", handleReminderFormSubmit);
     }
 
     const reminderModal = new bootstrap.Modal(document.getElementById("setReminderModal"));
@@ -20,7 +32,7 @@ export function openSetReminderModal() {
 async function handleReminderFormSubmit(e) {
     e.preventDefault();
 
-    const formData = new FormData(reminderForm);
+    const formData = new FormData(e.target);
 
     const reminder = {
         title: formData.get("Title"),

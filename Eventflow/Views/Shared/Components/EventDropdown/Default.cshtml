@@ -10,15 +10,14 @@
     <ul class="list-unstyled mb-0 small">
     @foreach (var pe in Model.PersonalEvents)
     {
-        <li class="text-success" style="cursor: pointer;"
-            onclick="openEventModal({
-        id: '@pe.Id',
-        title: '@pe.Title',
-        description: '@pe.Description',
-        date: '@Model.Date.ToString("yyyy-MM-dd")',
-        category: '@pe.CategoryName',
-        isInvited: @pe.IsInvited.ToString().ToLower()
-        })">
+        <li class="text-success calendar-event" 
+            style="cursor: pointer;"
+            data-id="@pe.Id"
+            data-title="@pe.Title"
+            data-description="@pe.Description"
+            data-date="@Model.Date.ToString("yyyy-MM-dd")"
+            data-category="@pe.CategoryName"
+            data-is-invited="@pe.IsInvited.ToString().ToLower()">
             📌 @pe.Title
         </li>
     }

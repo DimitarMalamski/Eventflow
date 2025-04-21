@@ -46,34 +46,7 @@ namespace Eventflow.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var (normalizedYear, normalizedMonth) = _calendarNavigationService.Normalize(year, month);
-
-            var ownEvents = await _personalEventService.GetEventsWithCategoryNamesAsync(userId, normalizedYear, normalizedMonth);
-            var invitedEvents = await _personalEventService.GetAcceptedInvitedEventsAsync(userId, normalizedYear, normalizedMonth);
-
-            var combinedEvents = ownEvents.Concat(invitedEvents).ToList();
-
-            bool hasUnreadReminders = await _personalEventReminderService.HasUnreadRemindersForTodayAsync(userId); // <- add this
-            bool hasPendingInvites = await _inviteService.HasPendingInvitesAsync(userId);
-
-            var model = new CalendarPageViewModel
-            {
-                Continents = await _continentService.OrderContinentByNameAsync(),
-                Calendar = _calendarService.GenerateCalendar(normalizedYear, normalizedMonth, combinedEvents),
-                Navigation = new CalendarNavigationViewModel
-                {
-                    CurrentMonth = normalizedMonth,
-                    CurrentYear = normalizedYear
-                },
-                SidebarViewModel = new SidebarViewModel
-                {
-                    Context = "MyEvents",
-                    Buttons = SidebarViewModelBuilder.Build(
-                        context: "MyEvents",
-                        isLoggedIn: true
-                    )
-                }
-            };
+            var model = await ComposeMyEventsViewModel(userId, year ?? DateTime.Now.Year, month ?? DateTime.Now.Month);
 
             return View(model);
         }
@@ -170,6 +143,37 @@ namespace Eventflow.Controllers
             await _personalEventService.UpdatePersonalEventAsync(existingPersonalEvent);
 
             return RedirectToAction("MyEvents");
+        }
+
+        private async Task<CalendarPageViewModel> ComposeMyEventsViewModel(int userId, int year, int month)
+        {
+            var (normalizedYear, normalizedMonth) = _calendarNavigationService.Normalize(year, month);
+
+            var ownEvents = await _personalEventService.GetEventsWithCategoryNamesAsync(userId, normalizedYear, normalizedMonth);
+            var invitedEvents = await _personalEventService.GetAcceptedInvitedEventsAsync(userId, normalizedYear, normalizedMonth);
+            var combinedEvents = ownEvents.Concat(invitedEvents).ToList();
+
+            bool hasUnreadReminders = await _personalEventReminderService.HasUnreadRemindersForTodayAsync(userId);
+            bool hasPendingInvites = await _inviteService.HasPendingInvitesAsync(userId);
+
+            return new CalendarPageViewModel
+            {
+                Continents = await _continentService.OrderContinentByNameAsync(),
+                Calendar = _calendarService.GenerateCalendar(normalizedYear, normalizedMonth, combinedEvents),
+                Navigation = new CalendarNavigationViewModel
+                {
+                    CurrentMonth = normalizedMonth,
+                    CurrentYear = normalizedYear
+                },
+                SidebarViewModel = new SidebarViewModel
+                {
+                    Context = "MyEvents",
+                    Buttons = SidebarViewModelBuilder.Build(
+                        context: "MyEvents",
+                        isLoggedIn: true
+                    )
+                }
+            };
         }
     }
 }
