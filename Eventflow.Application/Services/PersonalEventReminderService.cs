@@ -160,8 +160,13 @@ namespace Eventflow.Application.Services
                 ? await _personalEventReminderRepository.GetReadPersonalRemindersWithin3DaysAsync(userId)
                 : await _personalEventReminderRepository.GetUnreadPersonalRemindersForTodayAsync(userId);
         }
-        private List<PersonalEventReminder> FilterPersonalReminders(List<PersonalEventReminder> personalReminders, string search)
+        private List<PersonalEventReminder> FilterPersonalReminders(List<PersonalEventReminder> personalReminders, string? search)
         {
+            if (string.IsNullOrWhiteSpace(search))
+            {
+                return personalReminders;
+            }
+
             return personalReminders
                 .Where(r =>
                     (r.Title?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false) ||
@@ -175,6 +180,10 @@ namespace Eventflow.Application.Services
             {
                 "event" => personalReminders.OrderBy(r => r.PersonalEvent?.Title).ToList(),
                 "date" => personalReminders.OrderBy(r => r.Date).ToList(),
+                "liked" => personalReminders
+                            .Where(r => r.IsLiked)
+                            .OrderByDescending(r => r.Date)
+                            .ToList(),
                 _ => personalReminders.OrderBy(r => r.Id).ToList()
             };
         }
@@ -184,5 +193,31 @@ namespace Eventflow.Application.Services
             => (await _personalEventReminderRepository.GetLikedRemindersByUserAsync(userId)).Count;
         public async Task<int> CountUnreadRemindersForTodayAsync(int userId)
             => (await _personalEventReminderRepository.GetUnreadPersonalRemindersForTodayAsync(userId)).Count;
+        public async Task<PaginatedRemindersViewModel> GetPaginatedLikedRemindersAsync(int userId,
+            string? search, 
+            string? sortBy,
+            int page, 
+            int pageSize)
+        {
+            var allLikedReminders = await _personalEventReminderRepository.GetLikedRemindersByUserAsync(userId);
+
+            allLikedReminders = FilterPersonalReminders(allLikedReminders, search);
+            allLikedReminders = SortPersonalReminders(allLikedReminders, sortBy);
+
+            int totalCount = allLikedReminders.Count;
+            int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            var paginated = allLikedReminders
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return new PaginatedRemindersViewModel
+            {
+                PersonalReminders = ToBoxViewModelList(paginated),
+                TotalPages = totalPages,
+                CurrentPage = page
+            };
+        }
     }
 }

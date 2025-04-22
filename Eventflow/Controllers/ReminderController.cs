@@ -27,18 +27,28 @@ namespace Eventflow.Controllers
         [RequireUserOrAdmin]
         public async Task<IActionResult> Index(string state = "unread",
             string? search = null,
-            string? sortBy = null)
+            string? sortBy = null,
+            string? filterBy = null)
         {
             int userId = GetUserId(HttpContext.Session);
 
-            ReminderStatus status = ParseStatus(state);
+            PaginatedRemindersViewModel result;
 
-            var result = await _personalEventReminderService
-                .GetPaginatedFilteredPersonalRemindersAsync(userId, status, search, sortBy, page: 1, PageSize);
+            if (filterBy == "liked")
+            {
+                result = await _personalEventReminderService.GetPaginatedLikedRemindersAsync(
+                    userId, search, sortBy, page: 1, PageSize);
+            }
+            else
+            {
+                ReminderStatus status = ParseStatus(state);
+                result = await _personalEventReminderService
+                    .GetPaginatedFilteredPersonalRemindersAsync(userId, status, search, sortBy, page: 1, PageSize);
+            }
 
             var model = new ReminderPageViewModel
             {
-                CurrentStatus = status,
+                CurrentStatus = ParseStatus(state),
                 Reminders = result.PersonalReminders,
                 TotalPages = result.TotalPages,
                 CurrentPage = result.CurrentPage,
