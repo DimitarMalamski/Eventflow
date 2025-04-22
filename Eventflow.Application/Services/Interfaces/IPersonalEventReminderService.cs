@@ -23,5 +23,7 @@ namespace Eventflow.Application.Services.Interfaces
             int page,
             int pageSize);
         public Task<bool> HasUnreadRemindersForTodayAsync(int userId);
+        public Task<int> GetLikedReminderCountAsync(int userId);
+        public Task<int> CountUnreadRemindersForTodayAsync(int userId);
     }
 }

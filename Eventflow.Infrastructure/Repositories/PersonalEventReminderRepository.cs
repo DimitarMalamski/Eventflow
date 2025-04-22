@@ -313,5 +313,27 @@ namespace Eventflow.Infrastructure.Repositories
             int count = (int)await _dbHelper.ExecuteScalarAsync(hasUnreadPersonalRemindersForTodayQuery, parameters);
             return count > 0;
         }
+        public async Task<List<PersonalEventReminder>> GetLikedRemindersByUserAsync(int userId)
+        {
+            string getAllLikedRemindersQuery = @"
+                    SELECT r.*, 
+                           e.Id AS EventId,
+                           e.Title AS EventTitle,
+                           e.Description AS EventDescription,
+                           e.Date AS EventDate,
+                           e.UserId AS EventUserId,
+                           e.CategoryId
+                    FROM PersonalEventReminder r
+                    INNER JOIN PersonalEvent e ON r.PersonalEventId = e.Id
+                    WHERE r.UserId = @UserId AND r.IsLiked = 1;";
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "@UserId", userId }
+            };
+
+            var dt = await _dbHelper.ExecuteQueryAsync(getAllLikedRemindersQuery, parameters);
+            return MapPersonalReminderWithEvent(dt);
+        }
     }
 }

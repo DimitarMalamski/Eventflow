@@ -1,10 +1,37 @@
-﻿@{
+﻿@using Eventflow.Domain.Models.ViewModels
+@model MessagesSummaryViewModel
+
+@{
     Layout = "~/Views/Shared/_CalendarLayout.cshtml";
 
     ViewData["Title"] = "My messages";
 }
 
-<div class="text-center">
-    <img src="~/images/messages_placeholder.png" alt="Messages Placeholder" class="img-fluid" style="max-width: 300px;" />
-    <p class="mt-3 text-muted">Select a section from the sidebar to view your invites or reminders.</p>
+<div class="notebook-wrapper text-center mt-4">
+    <h2 class="fw-bold display-6 mb-5">Recent activity</h2>
+
+    <div class="note-card card-1 bg-warning-subtle">
+        <div class="note-pin">📌</div>
+        <h5>Pending Invites</h5>
+        <p>You have <strong>@Model.PendingInvitesCount</strong> invite(s).</p>
+        <a href="/Invite/Index" class="btn btn-sm btn-outline-dark">Go to Invites</a>
+    </div>
+
+    <div class="note-card card-2 bg-light-subtle">
+        <div class="note-pin">📌</div>
+        <h5>Unread Reminders</h5>
+        <p><strong>@Model.UnreadRemindersCount</strong> reminder(s) due today.</p>
+        <a href="/Reminder/Index?state=unread" class="btn btn-sm btn-outline-dark">View Reminders</a>
+    </div>
+
+    <div class="note-card card-3 bg-success-subtle">
+        <div class="note-pin">📌</div>
+        <h5>Liked Reminders</h5>
+        <p>You’ve liked <strong>@Model.LikedRemindersCount</strong> recently.</p>
+        <a href="/Reminder/Index?state=read&sortBy=date" class="btn btn-sm btn-outline-dark">View Favorites</a>
+    </div>
 </div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/messages.css" />
+}

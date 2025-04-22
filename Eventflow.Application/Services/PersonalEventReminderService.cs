@@ -180,5 +180,9 @@ namespace Eventflow.Application.Services
         }
         public async Task<bool> HasUnreadRemindersForTodayAsync(int userId)
             => await _personalEventReminderRepository.HasUnreadPersonalRemindersForTodayAsync(userId);
+        public async Task<int> GetLikedReminderCountAsync(int userId)
+            => (await _personalEventReminderRepository.GetLikedRemindersByUserAsync(userId)).Count;
+        public async Task<int> CountUnreadRemindersForTodayAsync(int userId)
+            => (await _personalEventReminderRepository.GetUnreadPersonalRemindersForTodayAsync(userId)).Count;
     }
 }

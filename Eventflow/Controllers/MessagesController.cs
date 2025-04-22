@@ -42,18 +42,16 @@ namespace Eventflow.Controllers
         {
             var userId = GetUserId(HttpContext.Session);
 
-            var sidebarViewModel = new SidebarViewModel
+            var model = new MessagesSummaryViewModel
             {
-                Context = "Messages",
-                Buttons = SidebarViewModelBuilder.Build(
-                    context: "Messages",
-                    isLoggedIn: true
-                )
+                PendingInvitesCount = await _inviteService.CountPendingInvitesAsync(userId),
+                UnreadRemindersCount = await _personalEventReminderService.CountUnreadRemindersForTodayAsync(userId),
+                LikedRemindersCount = await _personalEventReminderService.GetLikedReminderCountAsync(userId)
             };
 
             ViewData["Title"] = "My messages";
 
-            return View(sidebarViewModel);
+            return View(model);
         }
     }
 }

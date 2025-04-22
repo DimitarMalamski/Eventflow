@@ -20,6 +20,8 @@ namespace Eventflow.Application.Services
                 await _inviteRepository.UpdateInviteStatusAsync(invite.Id, 3);
             }
         }
+        public async Task<int> CountPendingInvitesAsync(int userId)
+            => (await _inviteRepository.GetInvitesByUserAndStatusAsync(userId, 1)).Count;
         public async Task CreateInviteAsync(Invite invite)
             => await _inviteRepository.CreateInviteAsync(invite);
         public async Task<List<Invite>> GetAllInvitesByUserIdAsync(int userId)

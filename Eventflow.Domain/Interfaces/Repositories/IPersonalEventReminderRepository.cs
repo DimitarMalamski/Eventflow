@@ -14,6 +14,7 @@ namespace Eventflow.Domain.Interfaces.Repositories
         public Task<List<PersonalEventReminder>> GetReadPersonalRemindersWithin3DaysAsync(int userId);
         public Task<PersonalEventReminder?> GetPersonalReminderByIdAsync(int reminderId);
         public Task<bool> HasUnreadPersonalRemindersForTodayAsync(int userId);
+        public Task<List<PersonalEventReminder>> GetLikedRemindersByUserAsync(int userId);
 
     }
 }
