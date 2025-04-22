@@ -105,8 +105,7 @@ namespace Eventflow.Infrastructure.Repositories
                     FROM PersonalEvent 
                     WHERE UserId = @UserId 
                     AND Date >= @StartDate 
-                    AND Date <= @EndDate
-                    AND CONVERT(date, Date) >= CONVERT(date, GETDATE())";
+                    AND Date <= @EndDate;";
 
             var parameters = new Dictionary<string, object?>()
             {
@@ -121,7 +120,7 @@ namespace Eventflow.Infrastructure.Repositories
 
             foreach (DataRow row in dt.Rows)
             {
-                events.Add(new PersonalEvent
+                var ev = new PersonalEvent
                 {
                     Id = Convert.ToInt32(row["Id"]),
                     Title = row["Title"].ToString()!,
@@ -130,7 +129,15 @@ namespace Eventflow.Infrastructure.Repositories
                     IsCompleted = Convert.ToBoolean(row["IsCompleted"]),
                     UserId = Convert.ToInt32(row["UserId"]),
                     CategoryId = row["CategoryId"] != DBNull.Value ? Convert.ToInt32(row["CategoryId"]) : null
-                });
+                };
+
+                if (ev.Date.Date < DateTime.Today && !ev.IsCompleted)
+                {
+                    ev.IsCompleted = true;
+                    await UpdateIsCompleteAsync(ev.Id, true);
+                }
+
+                events.Add(ev);
             }
 
             return events;
@@ -188,6 +195,21 @@ namespace Eventflow.Infrastructure.Repositories
             }
 
             return events;
+        }
+        private async Task UpdateIsCompleteAsync(int eventId, bool isComplete)
+        {
+            string updateIsCompleteStatusQuery = @"
+                    UPDATE PersonalEvent
+                    SET IsCompleted = @IsCompleted
+                    WHERE Id = @Id";
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "@IsCompleted", isComplete },
+                { "@Id", eventId }
+            };
+
+            await _dbHelper.ExecuteNonQueryAsync(updateIsCompleteStatusQuery, parameters);
         }
     }
 }
