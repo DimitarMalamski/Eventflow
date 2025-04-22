@@ -12,6 +12,8 @@ namespace Eventflow.Application.Services
         {
             _userRepository = userRepository;
         }
+        public async Task<User?> GetUserByIdAsync(int userId)
+            => await _userRepository.GetUserByIdAsync(userId);
         public async Task<User?> GetUserByUsernameAsync(string username)
             => await _userRepository.GetUserByInputAsync(username);
 

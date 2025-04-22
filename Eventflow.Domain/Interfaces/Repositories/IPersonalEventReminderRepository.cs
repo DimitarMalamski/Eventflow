@@ -5,7 +5,6 @@ namespace Eventflow.Domain.Interfaces.Repositories
     public interface IPersonalEventReminderRepository
     {
         public Task CreatePersonalReminderAsync(PersonalEventReminder reminder);
-        public Task<List<PersonalEventReminder>> GetAllPersonalRemindersByEventIdAsync(List<int> eventIds);
         public Task MarkPersonalReminderAsReadAsync(int reminderId, int userId);
         public Task<List<PersonalEventReminder>> GetPersonalRemindersWithEventAndTitleByUserIdAsync(int userId);
         public Task LikePersonalReminderAsync(int reminderId, int userId);

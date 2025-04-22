@@ -17,7 +17,9 @@
             data-description="@pe.Description"
             data-date="@Model.Date.ToString("yyyy-MM-dd")"
             data-category="@pe.CategoryName"
-            data-is-invited="@pe.IsInvited.ToString().ToLower()">
+            data-is-invited="@pe.IsInvited.ToString().ToLower()"
+            data-creator="@pe.CreatorUsername"
+            data-is-creator="@pe.IsCreator.ToString().ToLower()">
             📌 @pe.Title
         </li>
     }

@@ -9,15 +9,17 @@ namespace Eventflow.Application.Services
     {
         private readonly IPersonalEventRepository _personalEventRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IUserRepository _userRepository;
         public PersonalEventService(IPersonalEventRepository personalEventRepository,
-            ICategoryRepository categoryRepository)
+            ICategoryRepository categoryRepository,
+            IUserRepository userRepository)
         {
             _personalEventRepository = personalEventRepository;
             _categoryRepository = categoryRepository;
+            _userRepository = userRepository;
         }
         public async Task CreateAsync(PersonalEvent personalEvent)
             => await _personalEventRepository.CreateEventAsync(personalEvent);
-
         public async Task<List<PersonalEventWithCategoryNameViewModel>> GetAcceptedInvitedEventsAsync(int userId, int year, int month)
         {
             var acceptedEvents = await _personalEventRepository.GetAcceptedInvitedEventsAsync(userId);
@@ -29,24 +31,32 @@ namespace Eventflow.Application.Services
             var categories = await _categoryRepository.GetAllCategoriesAsync();
             var categoryMap = categories.ToDictionary(c => c.Id, c => c.Name);
 
-            var model = filteredEvents.Select(e => new PersonalEventWithCategoryNameViewModel
+            var model = new List<PersonalEventWithCategoryNameViewModel>();
+
+            foreach (var e in filteredEvents)
             {
-                Id = e.Id,
-                Title = e.Title,
-                Description = e.Description,
-                Date = e.Date,
-                IsCompleted = e.IsCompleted,
-                CategoryId = e.CategoryId,
-                UserId = e.UserId,
-                CategoryName = e.CategoryId.HasValue && categoryMap.ContainsKey(e.CategoryId.Value)
-                    ? categoryMap[e.CategoryId.Value]
-                    : "Uncategorized",
-                IsInvited = true
-            }).ToList();
+                var creator = await _userRepository.GetUserByIdAsync(e.UserId);
+
+                model.Add(new PersonalEventWithCategoryNameViewModel
+                {
+                    Id = e.Id,
+                    Title = e.Title,
+                    Description = e.Description,
+                    Date = e.Date,
+                    IsCompleted = e.IsCompleted,
+                    CategoryId = e.CategoryId,
+                    UserId = e.UserId,
+                    CategoryName = e.CategoryId.HasValue && categoryMap.ContainsKey(e.CategoryId.Value)
+                        ? categoryMap[e.CategoryId.Value]
+                        : "Uncategorized",
+                    IsInvited = true,
+                    CreatorUsername = creator?.Username ?? "Unknown",
+                    IsCreator = e.UserId == userId
+                });
+            }
 
             return model;
         }
-
         public async Task<PersonalEvent?> GetPersonalEventByIdAsync(int id)
             => await _personalEventRepository.GetPersonalEventByIdAsync(id);
         public async Task<List<PersonalEventWithCategoryNameViewModel>> GetEventsWithCategoryNamesAsync(int userId, int year, int month)

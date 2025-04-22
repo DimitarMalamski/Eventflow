@@ -1,5 +1,4 @@
-﻿using Eventflow.Domain.Models.Models;
-using Eventflow.Domain.Models.ViewModels;
+﻿using Eventflow.Domain.Models.ViewModels;
 
 namespace Eventflow.Application.Services.Interfaces
 {

@@ -1,4 +1,4 @@
-﻿using Eventflow.Domain.Models.Models;
+﻿using Eventflow.Domain.Models.Common;
 
 namespace Eventflow.Domain.Models.ViewModels
 {
@@ -10,10 +10,5 @@ namespace Eventflow.Domain.Models.ViewModels
         public string? SelectedValue { get; set; }
         public string? DefaultOptionLabel { get; set; }
         public List<DropdownOption> Options { get; set; } = new List<DropdownOption>();
-    }
-    public class DropdownOption
-    {
-        public string Id { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
     }
 }

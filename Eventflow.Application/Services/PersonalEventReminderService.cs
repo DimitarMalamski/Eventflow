@@ -4,6 +4,7 @@ using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
 using Eventflow.Domain.Models.ViewModels;
 using static Eventflow.Application.Mapper.ViewModelMapper.PersonalReminder;
+using static Eventflow.Application.Helper.StringMatchHelper;
 
 namespace Eventflow.Application.Services
 {
@@ -27,85 +28,8 @@ namespace Eventflow.Application.Services
             int page,
             int pageSize)
         {
-            page = Math.Max(1, page);
-
             var personalReminders = await GetPersonalRemindersByStatusAsync(userId, status);
-
-            if (!string.IsNullOrWhiteSpace(search))
-            {
-                personalReminders = FilterPersonalReminders(personalReminders, search);
-            }
-
-            personalReminders = SortPersonalReminders(personalReminders, sortBy);
-
-            var totalCount = personalReminders.Count;
-            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-
-            var peginatedPersonalReminders = personalReminders
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize);
-
-            return new PaginatedRemindersViewModel
-            {
-                PersonalReminders = ToBoxViewModelList(peginatedPersonalReminders),
-                TotalPages = totalPages,
-                CurrentPage = page
-            };
-        }
-        public async Task<PaginatedRemindersViewModel> GetPaginatedPersonalRemindersAsync(int userId, ReminderStatus status, int page, int pageSize)
-        {
-            page = Math.Max(1, page);
-
-            var personalReminders = await GetPersonalRemindersByStatusAsync(userId, status);
-
-            var totalCount = personalReminders.Count;
-            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-
-            var paginatedPersonalReminders = personalReminders
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize);
-
-            return new PaginatedRemindersViewModel
-            {
-                PersonalReminders = ToBoxViewModelList(paginatedPersonalReminders),
-                TotalPages = totalPages,
-                CurrentPage = page,
-            };
-        }
-        public async Task<PersonalEventReminder?> GetPersonalReminderByIdAsync(int reminderId)
-            => await _personalEventReminderRepository.GetPersonalReminderByIdAsync(reminderId);
-        public async Task<List<ReminderBoxViewModel>> GetRemindersWithEventTitlesByUserIdAsync(int userId, ReminderStatus status)
-        {
-            if (status == ReminderStatus.Unread)
-            {
-                var personalReminders = await _personalEventReminderRepository.GetUnreadPersonalRemindersForTodayAsync(userId);
-
-                return ToBoxViewModelList(personalReminders);
-            }
-            else
-            {
-                var personalReminders = await _personalEventReminderRepository.GetReadPersonalRemindersWithin3DaysAsync(userId);
-
-                return ToBoxViewModelList(personalReminders);
-            }
-        }
-        public async Task<List<ReminderBoxViewModel>> GetTodaysUnreadRemindersAsync(int userId)
-        {
-            var personalReminders = await _personalEventReminderRepository.GetUnreadPersonalRemindersForTodayAsync(userId);
-
-            return ToBoxViewModelList(personalReminders);
-        }
-        public async Task<bool> LikePersonalReminderAsync(int reminderId, int userId)
-        {
-            var personalReminder = await _personalEventReminderRepository.GetPersonalReminderByIdAsync(reminderId);
-
-            if (!UserOwnsPersonalReminder(personalReminder, userId))
-            {
-                return false;
-            }
-
-            await _personalEventReminderRepository.LikePersonalReminderAsync(reminderId, userId);
-            return true;
+            return PaginateAndWrap(personalReminders, search, sortBy, page, pageSize);
         }
         public async Task<bool> MarkPersonalEventReminderAsReadAsync(int reminderId, int userId)
         {
@@ -138,17 +62,20 @@ namespace Eventflow.Application.Services
             await _personalEventReminderRepository.LikePersonalReminderAsync(reminderId, userId);
             return true;
         }
-        public async Task<bool> UnlikePersonalReminderAsync(int reminderId, int userId)
+        public async Task<bool> HasUnreadRemindersForTodayAsync(int userId)
+            => await _personalEventReminderRepository.HasUnreadPersonalRemindersForTodayAsync(userId);
+        public async Task<int> GetLikedReminderCountAsync(int userId)
+            => (await _personalEventReminderRepository.GetLikedRemindersByUserAsync(userId)).Count;
+        public async Task<int> CountUnreadRemindersForTodayAsync(int userId)
+            => (await _personalEventReminderRepository.GetUnreadPersonalRemindersForTodayAsync(userId)).Count;
+        public async Task<PaginatedRemindersViewModel> GetPaginatedLikedRemindersAsync(int userId,
+            string? search, 
+            string? sortBy,
+            int page, 
+            int pageSize)
         {
-            var personalReminder = await _personalEventReminderRepository.GetPersonalReminderByIdAsync(reminderId);
-
-            if (!UserOwnsPersonalReminder(personalReminder, userId))
-            {
-                return false;
-            }
-
-            await _personalEventReminderRepository.UnlikePersonalReminderAsync(reminderId, userId);
-            return true;
+            var likedReminders = await _personalEventReminderRepository.GetLikedRemindersByUserAsync(userId);
+            return PaginateAndWrap(likedReminders, search, sortBy, page, pageSize);
         }
         private bool UserOwnsPersonalReminder(PersonalEventReminder? reminder, int userId)
         {
@@ -169,9 +96,9 @@ namespace Eventflow.Application.Services
 
             return personalReminders
                 .Where(r =>
-                    (r.Title?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                    (r.Description?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                    (r.PersonalEvent?.Title?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false))
+                    Match(r.Title, search) ||
+                    Match(r.Description, search) ||
+                    Match(r.PersonalEvent?.Title, search))
                 .ToList();
         }
         private List<PersonalEventReminder> SortPersonalReminders(List<PersonalEventReminder> personalReminders, string? sortBy)
@@ -187,27 +114,23 @@ namespace Eventflow.Application.Services
                 _ => personalReminders.OrderBy(r => r.Id).ToList()
             };
         }
-        public async Task<bool> HasUnreadRemindersForTodayAsync(int userId)
-            => await _personalEventReminderRepository.HasUnreadPersonalRemindersForTodayAsync(userId);
-        public async Task<int> GetLikedReminderCountAsync(int userId)
-            => (await _personalEventReminderRepository.GetLikedRemindersByUserAsync(userId)).Count;
-        public async Task<int> CountUnreadRemindersForTodayAsync(int userId)
-            => (await _personalEventReminderRepository.GetUnreadPersonalRemindersForTodayAsync(userId)).Count;
-        public async Task<PaginatedRemindersViewModel> GetPaginatedLikedRemindersAsync(int userId,
+        private PaginatedRemindersViewModel PaginateAndWrap(IEnumerable<PersonalEventReminder> personalReminders,
             string? search, 
-            string? sortBy,
+            string? sortBy, 
             int page, 
             int pageSize)
         {
-            var allLikedReminders = await _personalEventReminderRepository.GetLikedRemindersByUserAsync(userId);
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                personalReminders = FilterPersonalReminders(personalReminders.ToList(), search);
+            }
 
-            allLikedReminders = FilterPersonalReminders(allLikedReminders, search);
-            allLikedReminders = SortPersonalReminders(allLikedReminders, sortBy);
+            var sorted = SortPersonalReminders(personalReminders.ToList(), sortBy);
 
-            int totalCount = allLikedReminders.Count;
-            int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+            var totalCount = sorted.Count;
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-            var paginated = allLikedReminders
+            var paginated = sorted
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();

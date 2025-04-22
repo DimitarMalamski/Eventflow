@@ -2,7 +2,10 @@
     <div class="modal-dialog modal-dialog-centered mx-auto" style="max-width: 900px; width: 40%;">
         <div class="modal-content custom-modal-content mx-auto">
             <div class="modal-header custom-modal-header">
-                <h5 class="modal-title" id="eventModalLabel">Event Details</h5>
+                <h5 class="modal-title" id="eventModalLabel">
+                      Event Details – <small><span id="modal-event-creator" class="text-muted"></span></small>
+                </h5>
+
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -26,6 +29,12 @@
                 <button id="invite-button" class="btn btn-outline-success">
                     <i class="bi bi-person-plus me-1"></i> Invite People
                 </button>
+
+                <form method="post" action="/Invite/LeaveEvent" id="leave-event-form" style="display:none;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="eventId" id="leave-event-id" />
+                    <button type="submit" class="btn btn-danger">Leave Event</button>
+                </form>
             </div>
         </div>
     </div>

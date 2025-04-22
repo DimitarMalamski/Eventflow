@@ -129,5 +129,23 @@ namespace Eventflow.Controllers
             TempData["Success"] = statusId == 2 ? "Invite accepted!" : "Invite declined.";
             return RedirectToAction("Index", new { statusId = 1 });
         }
+
+        [HttpPost]
+        [RequireUserOrAdmin]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LeaveEvent(int eventId)
+        {
+            var userId = GetUserId(HttpContext.Session);
+
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            await _inviteService.LeaveEventAsync(userId, eventId);
+
+            TempData["Message"] = "You’ve successfully left the event.";
+            return RedirectToAction("MyEvents", "Event");
+        }
     }
 }

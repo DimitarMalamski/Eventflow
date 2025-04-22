@@ -1,6 +1,6 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Domain.Models.ViewModels;
+using Eventflow.Domain.Models.Common;
 
 namespace Eventflow.Application.Services
 {

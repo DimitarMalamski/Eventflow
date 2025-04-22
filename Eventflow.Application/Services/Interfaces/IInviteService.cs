@@ -13,5 +13,6 @@ namespace Eventflow.Application.Services.Interfaces
         public Task<bool> HasPendingInvitesAsync(int userId);
         public Task<bool> HasUserAcceptedInviteAsync(int userId, int personalEventId);
         public Task<int> CountPendingInvitesAsync(int userId);
+        public Task LeaveEventAsync(int userId, int eventId);
     }
 }

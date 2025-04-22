@@ -103,5 +103,34 @@ namespace Eventflow.infrastructure.Repositories
                 RoleId = Convert.ToInt32(row["RoleId"])
             };
         }
+        public async Task<User?> GetUserByIdAsync(int userId)
+        {
+            string getUserByIdQuery = "SELECT * FROM [User] WHERE Id = @Id";
+
+            var parameters = new Dictionary<string, object>()
+            {
+                { "@Id", userId }
+            };
+
+            var table = await _dbHelper.ExecuteQueryAsync(getUserByIdQuery, parameters);
+
+            if (table.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            var row = table.Rows[0];
+
+            return new User
+            {
+                Id = Convert.ToInt32(row["Id"]),
+                Username = row["Username"].ToString()!,
+                PasswordHash = row["PasswordHash"].ToString()!,
+                Salt = row["Salt"].ToString()!,
+                Firstname = row["Firstname"].ToString()!,
+                Email = row["Email"].ToString()!,
+                RoleId = Convert.ToInt32(row["RoleId"])
+            };
+        }
     }
 }

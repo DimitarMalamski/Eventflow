@@ -192,6 +192,22 @@ namespace Eventflow.Infrastructure.Repositories
             var result = await _dbHelper.ExecuteScalarAsync(query, parameters);
             return Convert.ToInt32(result) > 0;
         }
+        public async Task MarkInviteAsLeftAsync(int userId, int eventId)
+        {
+            string markInviteAsDeclinedQuery = @"
+                UPDATE Invite
+                SET StatusId = 3
+                WHERE InvitedUserId = @UserId AND PersonalEventId = @EventId AND StatusId = 2";
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "@UserId", userId },
+                { "@EventId", eventId }
+            };
+
+            await _dbHelper.ExecuteNonQueryAsync(markInviteAsDeclinedQuery, parameters);
+
+        }
         public async Task UpdateInviteStatusAsync(int inviteId, int statusId)
         {
             string updateInviteStatusQuery = "UPDATE Invite SET StatusId = @StatusId WHERE Id = @Id";

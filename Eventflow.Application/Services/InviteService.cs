@@ -34,6 +34,8 @@ namespace Eventflow.Application.Services
             => await _inviteRepository.HasUserAcceptedInviteAsync(userId, personalEventId);
         public async Task<bool> InviteExistsAsync(int eventId, int invitedUserId)
             => await _inviteRepository.InviteExistsAsync(eventId, invitedUserId);
+        public async Task LeaveEventAsync(int userId, int eventId)
+            => await _inviteRepository.MarkInviteAsLeftAsync(userId, eventId);
         public async Task UpdateInviteStatusAsync(int inviteId, int statusId)
             => await _inviteRepository.UpdateInviteStatusAsync(inviteId, statusId);
     }

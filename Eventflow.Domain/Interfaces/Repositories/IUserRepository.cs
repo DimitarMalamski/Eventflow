@@ -8,5 +8,6 @@ namespace Eventflow.Domain.Interfaces.Repositories
         public Task<bool> UserExistsAsync(string username, string email);
         public Task<int> RegisterUserAsync(User user);
         public Task<User?> GetByUsernameAsync(string username);
+        public Task<User?> GetUserByIdAsync(int userId);
     }
 }

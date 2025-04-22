@@ -24,7 +24,6 @@ namespace Eventflow.Infrastructure.Repositories
 
             return result != null;
         }
-
         public async Task<List<Country>> GetAllCountriesByContinentIdAsync(int continentId)
         {
             string query = @"SELECT Id, Name, FlagPath, ContinentId 

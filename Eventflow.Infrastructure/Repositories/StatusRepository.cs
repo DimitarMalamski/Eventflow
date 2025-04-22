@@ -1,5 +1,5 @@
 ﻿using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Domain.Models.ViewModels;
+using Eventflow.Domain.Models.Common;
 using Eventflow.Infrastructure.Data.Interfaces;
 using System.Data;
 

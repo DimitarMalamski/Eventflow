@@ -6,6 +6,14 @@ function openEventModal(event) {
     document.getElementById("modal-event-description").innerText = event.description;
     document.getElementById("modal-event-date").innerText = event.date;
     document.getElementById("modal-event-category").innerText = event.category;
+    document.getElementById("modal-event-creator").textContent = event.creatorUsername;
+
+    if (event.isInvited && !event.isCreator) {
+        document.getElementById("leave-event-id").value = event.id;
+        document.getElementById("leave-event-form").style.display = "block";
+    } else {
+        document.getElementById("leave-event-form").style.display = "none";
+    }
 
     const isInvited = event.isInvited === true || event.isInvited === "true";
 
@@ -57,7 +65,9 @@ function bindEventClickHandlers() {
                 description: this.dataset.description,
                 date: this.dataset.date,
                 category: this.dataset.category,
-                isInvited: this.dataset.isInvited
+                isInvited: this.dataset.isInvited === "true",
+                creatorUsername: this.dataset.creator,
+                isCreator: this.dataset.isCreator === "true"
             };
             openEventModal(event);
         });

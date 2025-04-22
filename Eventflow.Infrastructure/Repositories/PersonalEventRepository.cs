@@ -1,7 +1,6 @@
 ﻿using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
 using Eventflow.Infrastructure.Data.Interfaces;
-using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace Eventflow.Infrastructure.Repositories
@@ -163,38 +162,6 @@ namespace Eventflow.Infrastructure.Repositories
             };
 
             await _dbHelper.ExecuteNonQueryAsync(updatePersonalEventQuery, parameters);
-        }
-        public async Task<List<PersonalEvent>> GetAllPersonalEventsByUserIdAsync(int userId)
-        {
-            string getAllPersonalEventsByUserIdQuery = @"
-                                    SELECT * FROM PersonalEvent
-                                    WHERE UserId = @UserId
-                                    AND Date >= CAST(GETDATE() AS DATE)";
-
-            var parameters = new Dictionary<string, object>
-            {
-                { "@UserId", userId }
-            };
-
-            var dt = await _dbHelper.ExecuteQueryAsync(getAllPersonalEventsByUserIdQuery, parameters);
-
-            List<PersonalEvent> events = new List<PersonalEvent>();
-
-            foreach (DataRow row in dt.Rows)
-            {
-                events.Add(new PersonalEvent
-                {
-                    Id = Convert.ToInt32(row["Id"]),
-                    Title = row["Title"].ToString()!,
-                    Description = row["Description"]?.ToString(),
-                    Date = Convert.ToDateTime(row["Date"]),
-                    IsCompleted = Convert.ToBoolean(row["IsCompleted"]),
-                    CategoryId = row["CategoryId"] != DBNull.Value ? Convert.ToInt32(row["CategoryId"]) : null,
-                    UserId = Convert.ToInt32(row["UserId"])
-                });
-            }
-
-            return events;
         }
         private async Task UpdateIsCompleteAsync(int eventId, bool isComplete)
         {

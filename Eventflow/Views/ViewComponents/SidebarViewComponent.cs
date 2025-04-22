@@ -9,12 +9,6 @@ namespace Eventflow.Views.ViewComponents
 {
     public class SidebarViewComponent : ViewComponent
     {
-        private readonly IMessageNotificationService _messageNotificationService;
-        public SidebarViewComponent(IMessageNotificationService messageNotificationService)
-        {
-            _messageNotificationService = messageNotificationService;
-        }
-
         public async Task<IViewComponentResult> InvokeAsync(string context, List<Continent>? continents =  null)
         {
             var userId = GetUserId(HttpContext.Session);

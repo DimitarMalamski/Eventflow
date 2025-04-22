@@ -30,43 +30,6 @@ namespace Eventflow.Infrastructure.Repositories
 
             await _dbHelper.ExecuteNonQueryAsync(createPersonalReminderQuery, parameters!);
         }
-        public async Task<List<PersonalEventReminder>> GetAllPersonalRemindersByEventIdAsync(List<int> eventIds)
-        {
-            if (eventIds == null || !eventIds.Any())
-            {
-                return new List<PersonalEventReminder>();
-            }
-
-            string[] paramNames = eventIds.Select((_, i) => $"@Id{i}").ToArray();
-
-            string getAllPersonalRemindersByEventIdQuery = $"SELECT * FROM PersonalEventReminder WHERE PersonalEventId IN ({string.Join(",", paramNames)})";
-
-            var parameters = new Dictionary<string, object>();
-
-            for (int i = 0; i < eventIds.Count; i++)
-            {
-                parameters.Add(paramNames[i], eventIds[i]);
-            }
-
-            var dt = await _dbHelper.ExecuteQueryAsync(getAllPersonalRemindersByEventIdQuery, parameters);
-
-            var reminders = new List<PersonalEventReminder>();
-
-            foreach (DataRow row in dt.Rows)
-            {
-                reminders.Add(new PersonalEventReminder
-                {
-                    Id = Convert.ToInt32(row["Id"]),
-                    Title = row["Title"].ToString()!,
-                    Description = row["Description"]?.ToString(),
-                    Date = Convert.ToDateTime(row["Date"]),
-                    Status = Convert.ToBoolean(row["IsRead"]) ? ReminderStatus.Read : ReminderStatus.Unread,
-                    PersonalEventId = Convert.ToInt32(row["PersonalEventId"])
-                });
-            }
-
-            return reminders;
-        }
         public async Task<PersonalEventReminder?> GetPersonalReminderByIdAsync(int reminderId)
         {
             string getPersonalReminderByIdQuery = @"
@@ -257,45 +220,6 @@ namespace Eventflow.Infrastructure.Repositories
 
             await _dbHelper.ExecuteNonQueryAsync(unlikePersonalReminderQuery, parameters);
         }
-        private List<PersonalEventReminder> MapPersonalReminderWithEvent(DataTable dt)
-        {
-            var personalReminders = new List<PersonalEventReminder>();
-
-            if (dt.Rows.Count == 0)
-            {
-                return new List<PersonalEventReminder>();
-            }
-
-            foreach (DataRow row in dt.Rows)
-            {
-                personalReminders.Add(new PersonalEventReminder
-                {
-                    Id = Convert.ToInt32(row["Id"]),
-                    Title = row["Title"].ToString()!,
-                    Description = row["Description"]?.ToString(),
-                    Date = Convert.ToDateTime(row["Date"]),
-                    Status = Convert.ToBoolean(row["IsRead"]) ? ReminderStatus.Read : ReminderStatus.Unread,
-                    IsLiked = Convert.ToBoolean(row["IsLiked"]),
-                    ReadAt = row["ReadAt"] != DBNull.Value ? Convert.ToDateTime(row["ReadAt"]) : null,
-                    PersonalEventId = Convert.ToInt32(row["PersonalEventId"]),
-                    PersonalEvent = MapPersonalEvent(row)
-                });
-            }
-
-            return personalReminders;
-        }
-        private PersonalEvent MapPersonalEvent(DataRow row)
-        {
-            return new PersonalEvent
-            {
-                Id = Convert.ToInt32(row["EventId"]),
-                Title = row["EventTitle"].ToString()!,
-                Description = row["EventDescription"]?.ToString(),
-                Date = Convert.ToDateTime(row["EventDate"]),
-                UserId = Convert.ToInt32(row["EventUserId"]),
-                CategoryId = row["CategoryId"] != DBNull.Value ? Convert.ToInt32(row["CategoryId"]) : null
-            };
-        }
         public async Task<bool> HasUnreadPersonalRemindersForTodayAsync(int userId)
         {
             string hasUnreadPersonalRemindersForTodayQuery = @"
@@ -334,6 +258,45 @@ namespace Eventflow.Infrastructure.Repositories
 
             var dt = await _dbHelper.ExecuteQueryAsync(getAllLikedRemindersQuery, parameters);
             return MapPersonalReminderWithEvent(dt);
+        }
+        private List<PersonalEventReminder> MapPersonalReminderWithEvent(DataTable dt)
+        {
+            var personalReminders = new List<PersonalEventReminder>();
+
+            if (dt.Rows.Count == 0)
+            {
+                return new List<PersonalEventReminder>();
+            }
+
+            foreach (DataRow row in dt.Rows)
+            {
+                personalReminders.Add(new PersonalEventReminder
+                {
+                    Id = Convert.ToInt32(row["Id"]),
+                    Title = row["Title"].ToString()!,
+                    Description = row["Description"]?.ToString(),
+                    Date = Convert.ToDateTime(row["Date"]),
+                    Status = Convert.ToBoolean(row["IsRead"]) ? ReminderStatus.Read : ReminderStatus.Unread,
+                    IsLiked = Convert.ToBoolean(row["IsLiked"]),
+                    ReadAt = row["ReadAt"] != DBNull.Value ? Convert.ToDateTime(row["ReadAt"]) : null,
+                    PersonalEventId = Convert.ToInt32(row["PersonalEventId"]),
+                    PersonalEvent = MapPersonalEvent(row)
+                });
+            }
+
+            return personalReminders;
+        }
+        private PersonalEvent MapPersonalEvent(DataRow row)
+        {
+            return new PersonalEvent
+            {
+                Id = Convert.ToInt32(row["EventId"]),
+                Title = row["EventTitle"].ToString()!,
+                Description = row["EventDescription"]?.ToString(),
+                Date = Convert.ToDateTime(row["EventDate"]),
+                UserId = Convert.ToInt32(row["EventUserId"]),
+                CategoryId = row["CategoryId"] != DBNull.Value ? Convert.ToInt32(row["CategoryId"]) : null
+            };
         }
     }
 }

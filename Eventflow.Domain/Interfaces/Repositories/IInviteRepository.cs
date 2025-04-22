@@ -12,5 +12,6 @@ namespace Eventflow.Domain.Interfaces.Repositories
         public Task<List<Invite>> GetExpiredPendingInvitesAsync();
         public Task<bool> HasPendingInvitesAsync(int userId);
         public Task<bool> HasUserAcceptedInviteAsync(int userId, int personalEventId);
+        public Task MarkInviteAsLeftAsync(int userId, int eventId);
     }
 }

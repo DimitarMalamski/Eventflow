@@ -1,6 +1,4 @@
-﻿using Eventflow.Domain.Models.Models;
-
-namespace Eventflow.Domain.Models.ViewModels
+﻿namespace Eventflow.Domain.Models.ViewModels
 {
     public class EventDropdownViewModel
     {

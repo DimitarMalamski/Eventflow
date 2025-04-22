@@ -11,5 +11,7 @@
         public string CategoryName { get; set; } = "Uncategorized";
         public int UserId { get; set; }
         public bool IsInvited { get; set; } = false;
+        public string CreatorUsername { get; set; } = string.Empty;
+        public bool IsCreator { get; set; }
     }
 }

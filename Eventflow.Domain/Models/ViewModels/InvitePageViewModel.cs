@@ -1,4 +1,4 @@
-﻿using Eventflow.Domain.Models.Models;
+﻿using Eventflow.Domain.Models.Common;
 
 namespace Eventflow.Domain.Models.ViewModels
 {
