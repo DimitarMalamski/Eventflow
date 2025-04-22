@@ -11,11 +11,13 @@
 
       <div class="modal-body">
         <form id="inviteForm">
-            <input type="hidden" id="invite-event-id" value="@Model.EventId" />
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" id="invite-event-id" name="EventId" value="@Model.EventId" />
 
             <div class="mb-3">
                 <label for="invite-username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="invite-username" placeholder="Enter username" required />
+                <input type="text" class="form-control" id="invite-username" name="Username" placeholder="Enter username" required />
             </div>
 
             <button type="submit" class="btn btn-primary w-100">Send Invite</button>

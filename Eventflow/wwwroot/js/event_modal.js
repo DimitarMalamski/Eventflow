@@ -1,4 +1,5 @@
-﻿function openEventModal(event) {
+﻿import { invitePeople } from './invite_modal.js';
+function openEventModal(event) {
     window.currentEventId = event.id;
 
     document.getElementById("modal-event-title").innerText = event.title;
@@ -38,10 +39,6 @@ function editEvent() {
 
 function setReminder() {
     openSetReminderModal();
-}
-
-function invitePeople() {
-    openInviteModal();
 }
 function bindModalActionButtons() {
     document.getElementById("edit-button")?.addEventListener("click", editEvent);

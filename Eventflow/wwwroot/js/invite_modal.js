@@ -1,4 +1,4 @@
-﻿function openInviteModal() {
+﻿export function openInviteModal() {
     const eventId = window.currentEventId;
 
     if (!eventId) {
@@ -16,23 +16,27 @@
     inviteModal.show();
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+export function initInviteModal() {
     const inviteForm = document.getElementById("inviteForm");
 
-    if (inviteForm) {
+    if (inviteForm && !inviteForm.classList.contains("bound")) {
+        inviteForm.classList.add("bound");
+
         inviteForm.addEventListener("submit", async function (e) {
             e.preventDefault();
 
             const username = document.getElementById("invite-username").value;
             const eventId = document.getElementById("invite-event-id").value;
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
 
             try {
                 const response = await fetch("/Invite/Send", {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                        "RequestVerificationToken": token
                     },
-                    body: JSON.stringify({ eventId, username })
+                    body: JSON.stringify({ eventId: parseInt(eventId), username })
                 });
 
                 const result = await response.json();
@@ -49,6 +53,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
 
                     inviteForm.reset();
+
+                    if (typeof checkNotificationDots === "function") {
+                        checkNotificationDots();
+                    }
                 }
                 else {
                     Swal.fire({
@@ -66,4 +74,10 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-});
+};
+
+export function invitePeople() {
+    openInviteModal();
+}
+
+window.openInviteModal = openInviteModal;
