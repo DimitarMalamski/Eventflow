@@ -30,12 +30,16 @@
                     <i class="bi bi-person-plus me-1"></i> Invite People
                 </button>
 
-                <form method="post" action="/Invite/LeaveEvent" id="leave-event-form" style="display:none;">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="eventId" id="leave-event-id" />
-                    <button type="submit" class="btn btn-danger">Leave Event</button>
-                </form>
+                <button id="leave-button" class="btn btn-danger">
+                    <i class="bi bi-box-arrow-right me-1"></i> Leave Event
+                </button>
             </div>
         </div>
     </div>
 </div>
+
+<form method="post" action="/Invite/LeaveEvent" id="leave-event-form" style="display:none;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="eventId" id="leave-event-id" />
+    <button type="submit" id="leave-form-submit"></button>
+</form>

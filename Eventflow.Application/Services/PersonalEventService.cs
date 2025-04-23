@@ -81,7 +81,8 @@ namespace Eventflow.Application.Services
                 CategoryName = pe.CategoryId.HasValue && categoryMap.ContainsKey(pe.CategoryId.Value)
                             ? categoryMap[pe.CategoryId.Value]
                             : "Uncategorized",
-                IsInvited = false
+                IsInvited = false,
+                IsCreator = pe.UserId == userId
             }).ToList();
 
             return personalEventsWithCategoryName;

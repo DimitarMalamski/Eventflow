@@ -11,7 +11,7 @@ namespace Eventflow.Infrastructure.Repositories
         public PersonalEventRepository(IDbHelper dbHelper)
         {
             _dbHelper = dbHelper;
-        }
+        }      
         public async Task CreateEventAsync(PersonalEvent personalEvent)
         {
             string insertPersonalEventQuery = @"

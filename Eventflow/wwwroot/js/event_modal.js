@@ -8,20 +8,29 @@ function openEventModal(event) {
     document.getElementById("modal-event-category").innerText = event.category;
     document.getElementById("modal-event-creator").textContent = event.creatorUsername;
 
-    if (event.isInvited && !event.isCreator) {
-        document.getElementById("leave-event-id").value = event.id;
-        document.getElementById("leave-event-form").style.display = "block";
+    const creatorSpan = document.getElementById("modal-event-creator");
+    if (event.isCreator === true) {
+        creatorSpan.textContent = "Yours"
     } else {
-        document.getElementById("leave-event-form").style.display = "none";
+        creatorSpan.textContent = event.creatorUsername;
     }
 
-    const isInvited = event.isInvited === true || event.isInvited === "true";
+    const leaveEventInput = document.getElementById("leave-event-id");
+    const leaveBtn = document.getElementById("leave-button");
+
+    if (event.isInvited && !event.isCreator) {
+        leaveEventInput.value = event.id;
+        leaveBtn.style.display = "inline-block";
+    }
+    else {
+        leaveBtn.style.display = "none";
+    }
 
     const editBtn = document.getElementById("edit-button");
     const inviteBtn = document.getElementById("invite-button");
     const reminderBtn = document.getElementById("reminder-button");
 
-    if (isInvited) {
+    if (event.isInvited) {
         editBtn.style.display = "none";
         inviteBtn.style.display = "none";
         reminderBtn.style.display = "inline-block";
@@ -52,6 +61,18 @@ function bindModalActionButtons() {
     document.getElementById("edit-button")?.addEventListener("click", editEvent);
     document.getElementById("reminder-button")?.addEventListener("click", setReminder);
     document.getElementById("invite-button")?.addEventListener("click", invitePeople);
+
+    document.getElementById("leave-button")?.addEventListener("click", () => {
+        const form = document.getElementById("leave-event-form");
+        const submitBtn = document.getElementById("leave-form-submit");
+
+        if (form && submitBtn) {
+            submitBtn.click();
+        }
+        else {
+            console.error("Leave event form or submit button not found.")
+        }
+    })
 }
 
 function bindEventClickHandlers() {
@@ -69,6 +90,11 @@ function bindEventClickHandlers() {
                 creatorUsername: this.dataset.creator,
                 isCreator: this.dataset.isCreator === "true"
             };
+
+            console.log("📅 Event Clicked:", event);
+            console.log("👤 Creator Username:", event.creatorUsername);
+            console.log("🧑 Is Creator:", event.isCreator);
+
             openEventModal(event);
         });
     });
