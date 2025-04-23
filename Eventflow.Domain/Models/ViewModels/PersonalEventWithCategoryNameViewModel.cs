@@ -1,6 +1,6 @@
 ﻿namespace Eventflow.Domain.Models.ViewModels
 {
-    public class PersonalEventWithCategoryNameViewModel
+    public class PersonalEventWithCategoryNameViewModel //Model
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;
@@ -13,5 +13,6 @@
         public bool IsInvited { get; set; } = false;
         public string CreatorUsername { get; set; } = string.Empty;
         public bool IsCreator { get; set; }
+        public List<string> ParticipantUsernames { get; set; } = new List<string>();
     }
 }

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="15.0.0">
-  <zoom_level>2</zoom_level>
+  <zoom_level>7</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>584</x>
-      <y>112</y>
-      <w>42</w>
-      <h>32</h>
+      <x>1771</x>
+      <y>91</y>
+      <w>147</w>
+      <h>119</h>
     </coordinates>
     <panel_attributes>User
 --
@@ -18,16 +18,17 @@
 + Firstname: string
 + Lastname: string
 + Email: string
-+ RoleId: int</panel_attributes>
++ RoleId: int
+--</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>570</x>
-      <y>164</y>
-      <w>74</w>
-      <h>24</h>
+      <x>1722</x>
+      <y>273</y>
+      <w>259</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 IUserRepository
@@ -41,10 +42,10 @@ IUserRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>588</x>
-      <y>218</y>
-      <w>34</w>
-      <h>6</h>
+      <x>1785</x>
+      <y>462</y>
+      <w>119</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>UserRepository</panel_attributes>
     <additional_attributes/>
@@ -52,10 +53,10 @@ IUserRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>450</x>
-      <y>216</y>
-      <w>114</w>
-      <h>22</h>
+      <x>1302</x>
+      <y>448</y>
+      <w>399</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 IDbHelper
@@ -69,55 +70,56 @@ IDbHelper
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>488</x>
-      <y>190</y>
-      <w>42</w>
-      <h>6</h>
+      <x>1365</x>
+      <y>595</y>
+      <w>147</w>
+      <h>35</h>
     </coordinates>
     <panel_attributes>DbHelper
-</panel_attributes>
+--
+--</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>506</x>
-      <y>194</y>
-      <w>6</w>
-      <h>26</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;110.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>604</x>
-      <y>142</y>
-      <w>6</w>
-      <h>26</h>
+      <x>1428</x>
+      <y>525</y>
+      <w>21</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>604</x>
-      <y>186</y>
-      <w>6</w>
-      <h>36</h>
+      <x>1841</x>
+      <y>203</y>
+      <w>21</w>
+      <h>84</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1841</x>
+      <y>350</y>
+      <w>21</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;160.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>562</x>
-      <y>220</y>
-      <w>30</w>
-      <h>6</h>
+      <x>1694</x>
+      <y>469</y>
+      <w>105</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;130.0;10.0</additional_attributes>
@@ -125,10 +127,10 @@ IDbHelper
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>440</x>
-      <y>122</y>
-      <w>72</w>
-      <h>16</h>
+      <x>1267</x>
+      <y>126</y>
+      <w>252</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 IUserService
@@ -139,10 +141,10 @@ IUserService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>406</x>
-      <y>144</y>
-      <w>136</w>
-      <h>18</h>
+      <x>1148</x>
+      <y>203</y>
+      <w>476</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 IAuthService
@@ -154,65 +156,56 @@ IAuthService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>510</x>
-      <y>128</y>
-      <w>78</w>
-      <h>6</h>
+      <x>1512</x>
+      <y>147</y>
+      <w>273</w>
+      <h>21</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <panel_attributes>lt=&lt;.</panel_attributes>
     <additional_attributes>370.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>540</x>
-      <y>136</y>
-      <w>48</w>
-      <h>22</h>
+      <x>1617</x>
+      <y>175</y>
+      <w>168</w>
+      <h>77</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <panel_attributes>lt=&lt;.</panel_attributes>
     <additional_attributes>220.0;10.0;110.0;10.0;10.0;90.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>456</x>
-      <y>176</y>
-      <w>42</w>
-      <h>6</h>
+      <x>1323</x>
+      <y>315</y>
+      <w>147</w>
+      <h>28</h>
     </coordinates>
-    <panel_attributes>UserService</panel_attributes>
+    <panel_attributes>UserService
+--
+--</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>382</x>
-      <y>130</y>
-      <w>78</w>
-      <h>54</h>
+      <x>1050</x>
+      <y>140</y>
+      <w>357</w>
+      <h>224</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>290.0;10.0;10.0;10.0;10.0;250.0;370.0;250.0</additional_attributes>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>310.0;10.0;10.0;10.0;10.0;300.0;490.0;300.0;490.0;290.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>378</x>
-      <y>126</y>
-      <w>102</w>
-      <h>64</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>310.0;10.0;10.0;10.0;10.0;300.0;490.0;300.0;490.0;280.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>496</x>
-      <y>178</y>
-      <w>78</w>
-      <h>6</h>
+      <x>1463</x>
+      <y>322</y>
+      <w>273</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>370.0;10.0;10.0;10.0</additional_attributes>
@@ -220,10 +213,10 @@ IAuthService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>302</x>
-      <y>218</y>
-      <w>74</w>
-      <h>14</h>
+      <x>784</x>
+      <y>462</y>
+      <w>259</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 IStatusRepository
@@ -234,10 +227,10 @@ IStatusRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>336</x>
-      <y>230</y>
-      <w>6</w>
-      <h>18</h>
+      <x>903</x>
+      <y>504</y>
+      <w>21</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
@@ -245,10 +238,10 @@ IStatusRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>316</x>
-      <y>244</y>
-      <w>42</w>
-      <h>14</h>
+      <x>833</x>
+      <y>553</y>
+      <w>147</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>DropDownOption
 --
@@ -259,10 +252,10 @@ IStatusRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>224</y>
-      <w>34</w>
-      <h>6</h>
+      <x>1099</x>
+      <y>483</y>
+      <w>119</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>StatusRepository
 </panel_attributes>
@@ -271,10 +264,10 @@ IStatusRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>374</x>
-      <y>224</y>
-      <w>22</w>
-      <h>6</h>
+      <x>1036</x>
+      <y>483</y>
+      <w>77</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;90.0;10.0</additional_attributes>
@@ -282,10 +275,10 @@ IStatusRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>424</x>
-      <y>226</y>
-      <w>30</w>
-      <h>6</h>
+      <x>1211</x>
+      <y>490</y>
+      <w>105</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
@@ -293,10 +286,10 @@ IStatusRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>304</x>
-      <y>276</y>
-      <w>70</w>
-      <h>18</h>
+      <x>791</x>
+      <y>665</y>
+      <w>245</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 IStatusService
@@ -307,10 +300,10 @@ IStatusService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>334</x>
-      <y>256</y>
-      <w>6</w>
-      <h>24</h>
+      <x>896</x>
+      <y>595</y>
+      <w>21</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
@@ -318,10 +311,10 @@ IStatusService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>390</x>
-      <y>282</y>
-      <w>42</w>
-      <h>6</h>
+      <x>1092</x>
+      <y>686</y>
+      <w>147</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>StatusService
 </panel_attributes>
@@ -330,10 +323,10 @@ IStatusService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>372</x>
-      <y>282</y>
-      <w>22</w>
-      <h>6</h>
+      <x>1029</x>
+      <y>686</y>
+      <w>77</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;90.0;10.0</additional_attributes>
@@ -341,10 +334,10 @@ IStatusService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>356</x>
-      <y>250</y>
-      <w>60</w>
-      <h>36</h>
+      <x>973</x>
+      <y>574</y>
+      <w>210</w>
+      <h>126</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;280.0;10.0;280.0;160.0</additional_attributes>
@@ -352,21 +345,21 @@ IStatusService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>476</x>
-      <y>142</y>
-      <w>126</w>
-      <h>38</h>
+      <x>1393</x>
+      <y>203</y>
+      <w>441</w>
+      <h>126</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>610.0;10.0;610.0;50.0;430.0;50.0;430.0;130.0;10.0;130.0;10.0;170.0</additional_attributes>
+    <additional_attributes>610.0;10.0;610.0;40.0;430.0;40.0;430.0;120.0;10.0;120.0;10.0;160.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>656</x>
-      <y>202</y>
-      <w>32</w>
-      <h>14</h>
+      <x>2023</x>
+      <y>406</y>
+      <w>112</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>Category
 --
@@ -377,10 +370,10 @@ IStatusService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>638</x>
-      <y>226</y>
-      <w>58</w>
-      <h>14</h>
+      <x>1960</x>
+      <y>490</y>
+      <w>203</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 ICategoryRepository
@@ -391,10 +384,10 @@ ICategoryRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>588</x>
-      <y>230</y>
-      <w>34</w>
-      <h>6</h>
+      <x>1785</x>
+      <y>504</y>
+      <w>119</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>CategoryRepository
 </panel_attributes>
@@ -403,10 +396,10 @@ ICategoryRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>562</x>
-      <y>230</y>
-      <w>30</w>
-      <h>6</h>
+      <x>1694</x>
+      <y>504</y>
+      <w>105</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;130.0;10.0</additional_attributes>
@@ -414,10 +407,10 @@ ICategoryRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>620</x>
-      <y>232</y>
-      <w>22</w>
-      <h>6</h>
+      <x>1897</x>
+      <y>511</y>
+      <w>77</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>90.0;10.0;10.0;10.0</additional_attributes>
@@ -425,10 +418,10 @@ ICategoryRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>704</x>
-      <y>202</y>
-      <w>58</w>
-      <h>14</h>
+      <x>2191</x>
+      <y>406</y>
+      <w>203</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 ICategoryService
@@ -439,10 +432,10 @@ ICategoryService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>712</x>
-      <y>182</y>
-      <w>42</w>
-      <h>6</h>
+      <x>2219</x>
+      <y>336</y>
+      <w>147</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>CategoryService
 </panel_attributes>
@@ -451,10 +444,10 @@ ICategoryService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>730</x>
-      <y>186</y>
-      <w>6</w>
-      <h>20</h>
+      <x>2282</x>
+      <y>350</y>
+      <w>21</w>
+      <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
@@ -462,10 +455,10 @@ ICategoryService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>670</x>
-      <y>174</y>
-      <w>66</w>
-      <h>32</h>
+      <x>2072</x>
+      <y>308</y>
+      <w>231</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;140.0;10.0;10.0;310.0;10.0;310.0;40.0</additional_attributes>
@@ -473,10 +466,10 @@ ICategoryService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>336</x>
-      <y>166</y>
-      <w>22</w>
-      <h>14</h>
+      <x>903</x>
+      <y>280</y>
+      <w>77</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>Continent
 --
@@ -487,10 +480,10 @@ ICategoryService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>312</x>
-      <y>192</y>
-      <w>74</w>
-      <h>18</h>
+      <x>819</x>
+      <y>371</y>
+      <w>259</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 IContinentRepository
@@ -502,10 +495,10 @@ IContinentRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>432</x>
-      <y>200</y>
-      <w>34</w>
-      <h>6</h>
+      <x>1239</x>
+      <y>399</y>
+      <w>119</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>ContinentRepository
 </panel_attributes>
@@ -514,21 +507,21 @@ IContinentRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>464</x>
-      <y>200</y>
-      <w>30</w>
-      <h>20</h>
+      <x>1351</x>
+      <y>399</y>
+      <w>105</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>130.0;80.0;130.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>130.0;70.0;130.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>384</x>
-      <y>200</y>
-      <w>52</w>
-      <h>6</h>
+      <x>1071</x>
+      <y>399</y>
+      <w>182</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;240.0;10.0</additional_attributes>
@@ -536,10 +529,10 @@ IContinentRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>310</x>
-      <y>140</y>
-      <w>66</w>
-      <h>14</h>
+      <x>812</x>
+      <y>189</y>
+      <w>231</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 IContinentService
@@ -550,10 +543,10 @@ IContinentService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>344</x>
-      <y>178</y>
-      <w>6</w>
-      <h>18</h>
+      <x>931</x>
+      <y>322</y>
+      <w>21</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
@@ -561,10 +554,10 @@ IContinentService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>344</x>
-      <y>152</y>
-      <w>6</w>
-      <h>18</h>
+      <x>931</x>
+      <y>231</y>
+      <w>21</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
@@ -572,10 +565,10 @@ IContinentService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>262</x>
-      <y>168</y>
-      <w>42</w>
-      <h>6</h>
+      <x>644</x>
+      <y>287</y>
+      <w>147</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>ContinentService
 </panel_attributes>
@@ -584,10 +577,10 @@ IContinentService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>280</x>
-      <y>144</y>
-      <w>34</w>
-      <h>28</h>
+      <x>707</x>
+      <y>203</y>
+      <w>119</w>
+      <h>98</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>150.0;10.0;10.0;10.0;10.0;120.0</additional_attributes>
@@ -595,10 +588,10 @@ IContinentService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>302</x>
-      <y>170</y>
-      <w>38</w>
-      <h>6</h>
+      <x>784</x>
+      <y>294</y>
+      <w>133</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>170.0;10.0;10.0;10.0</additional_attributes>
@@ -606,10 +599,10 @@ IContinentService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>732</x>
-      <y>246</y>
-      <w>26</w>
-      <h>20</h>
+      <x>2289</x>
+      <y>560</y>
+      <w>91</w>
+      <h>70</h>
     </coordinates>
     <panel_attributes>Country
 --
@@ -622,10 +615,10 @@ IContinentService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>670</x>
-      <y>214</y>
-      <w>6</w>
-      <h>16</h>
+      <x>2072</x>
+      <y>448</y>
+      <w>21</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
@@ -633,10 +626,10 @@ IContinentService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>686</x>
-      <y>208</y>
-      <w>22</w>
-      <h>6</h>
+      <x>2128</x>
+      <y>427</y>
+      <w>77</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;90.0;10.0</additional_attributes>
@@ -644,10 +637,10 @@ IContinentService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>626</x>
-      <y>246</y>
-      <w>90</w>
-      <h>20</h>
+      <x>1918</x>
+      <y>560</y>
+      <w>315</w>
+      <h>70</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 ICountryRepository
@@ -660,10 +653,10 @@ ICountryRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>588</x>
-      <y>246</y>
-      <w>34</w>
-      <h>6</h>
+      <x>1785</x>
+      <y>560</y>
+      <w>119</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>CountryRepository
 </panel_attributes>
@@ -672,10 +665,10 @@ ICountryRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>620</x>
-      <y>248</y>
-      <w>10</w>
-      <h>6</h>
+      <x>1897</x>
+      <y>567</y>
+      <w>35</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>30.0;10.0;10.0;10.0</additional_attributes>
@@ -683,10 +676,10 @@ ICountryRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>562</x>
-      <y>234</y>
-      <w>30</w>
-      <h>20</h>
+      <x>1694</x>
+      <y>518</y>
+      <w>105</w>
+      <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0;70.0;80.0;130.0;80.0</additional_attributes>
@@ -694,10 +687,10 @@ ICountryRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>714</x>
-      <y>256</y>
-      <w>22</w>
-      <h>6</h>
+      <x>2226</x>
+      <y>595</y>
+      <w>77</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>90.0;10.0;10.0;10.0</additional_attributes>
@@ -705,10 +698,10 @@ ICountryRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>714</x>
-      <y>224</y>
-      <w>68</w>
-      <h>14</h>
+      <x>2226</x>
+      <y>483</y>
+      <w>238</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 ICountryService
@@ -719,10 +712,10 @@ ICountryService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>742</x>
-      <y>236</y>
-      <w>6</w>
-      <h>14</h>
+      <x>2324</x>
+      <y>525</y>
+      <w>21</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
@@ -730,10 +723,10 @@ ICountryService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>770</x>
-      <y>252</y>
-      <w>42</w>
-      <h>6</h>
+      <x>2422</x>
+      <y>581</y>
+      <w>147</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>CountryService
 </panel_attributes>
@@ -742,10 +735,10 @@ ICountryService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>780</x>
-      <y>230</y>
-      <w>16</w>
-      <h>26</h>
+      <x>2457</x>
+      <y>504</y>
+      <w>56</w>
+      <h>91</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;60.0;10.0;60.0;110.0</additional_attributes>
@@ -753,10 +746,10 @@ ICountryService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>756</x>
-      <y>252</y>
-      <w>18</w>
-      <h>6</h>
+      <x>2373</x>
+      <y>581</y>
+      <w>63</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
@@ -764,10 +757,10 @@ ICountryService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>730</x>
-      <y>294</y>
-      <w>46</w>
-      <h>26</h>
+      <x>2282</x>
+      <y>728</y>
+      <w>161</w>
+      <h>91</h>
     </coordinates>
     <panel_attributes>Invite
 --
@@ -782,10 +775,10 @@ ICountryService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>626</x>
-      <y>290</y>
-      <w>94</w>
-      <h>36</h>
+      <x>1918</x>
+      <y>714</y>
+      <w>329</w>
+      <h>126</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 IInviteRepository
@@ -803,10 +796,10 @@ IInviteRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>550</x>
-      <y>262</y>
-      <w>34</w>
-      <h>6</h>
+      <x>1652</x>
+      <y>616</y>
+      <w>119</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>InviteRepository
 </panel_attributes>
@@ -815,10 +808,10 @@ IInviteRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>546</x>
-      <y>236</y>
-      <w>26</w>
-      <h>30</h>
+      <x>1638</x>
+      <y>525</y>
+      <w>91</w>
+      <h>105</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;40.0;110.0;40.0;110.0;130.0</additional_attributes>
@@ -826,10 +819,10 @@ IInviteRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>572</x>
-      <y>266</y>
-      <w>184</w>
-      <h>32</h>
+      <x>1729</x>
+      <y>630</y>
+      <w>644</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>900.0;140.0;900.0;70.0;10.0;70.0;10.0;10.0</additional_attributes>
@@ -837,10 +830,10 @@ IInviteRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>566</x>
-      <y>266</y>
-      <w>64</w>
-      <h>48</h>
+      <x>1708</x>
+      <y>630</y>
+      <w>224</w>
+      <h>168</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>300.0;220.0;10.0;220.0;10.0;10.0</additional_attributes>
@@ -848,10 +841,10 @@ IInviteRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>786</x>
-      <y>290</y>
-      <w>94</w>
-      <h>40</h>
+      <x>2478</x>
+      <y>714</y>
+      <w>329</w>
+      <h>140</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 IInviteService
@@ -870,10 +863,10 @@ IInviteService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>718</x>
-      <y>306</y>
-      <w>16</w>
-      <h>6</h>
+      <x>2240</x>
+      <y>770</y>
+      <w>56</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>60.0;10.0;10.0;10.0</additional_attributes>
@@ -881,10 +874,10 @@ IInviteService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>774</x>
-      <y>306</y>
-      <w>16</w>
-      <h>6</h>
+      <x>2436</x>
+      <y>770</y>
+      <w>56</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;60.0;10.0</additional_attributes>
@@ -892,10 +885,10 @@ IInviteService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>812</x>
-      <y>268</y>
-      <w>42</w>
-      <h>6</h>
+      <x>2569</x>
+      <y>637</y>
+      <w>147</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>InviteService
 </panel_attributes>
@@ -904,10 +897,10 @@ IInviteService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>832</x>
-      <y>272</y>
-      <w>6</w>
-      <h>22</h>
+      <x>2639</x>
+      <y>651</y>
+      <w>21</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -915,10 +908,10 @@ IInviteService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>650</x>
-      <y>168</y>
-      <w>88</w>
-      <h>62</h>
+      <x>2002</x>
+      <y>287</y>
+      <w>308</w>
+      <h>217</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;290.0;10.0;10.0;420.0;10.0;420.0;70.0</additional_attributes>
@@ -926,10 +919,10 @@ IInviteService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>670</x>
-      <y>256</y>
-      <w>126</w>
-      <h>22</h>
+      <x>2072</x>
+      <y>595</y>
+      <w>441</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;50.0;10.0;90.0;610.0;90.0;610.0;10.0</additional_attributes>
@@ -937,10 +930,10 @@ IInviteService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>758</x>
-      <y>272</y>
-      <w>74</w>
-      <h>26</h>
+      <x>2380</x>
+      <y>651</y>
+      <w>259</w>
+      <h>91</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;110.0;10.0;40.0;350.0;40.0;350.0;10.0</additional_attributes>
@@ -948,10 +941,10 @@ IInviteService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>708</x>
-      <y>268</y>
-      <w>186</w>
-      <h>70</h>
+      <x>2205</x>
+      <y>637</y>
+      <w>651</w>
+      <h>245</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;290.0;10.0;330.0;910.0;330.0;910.0;10.0;730.0;10.0</additional_attributes>
@@ -959,10 +952,10 @@ IInviteService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>358</x>
-      <y>230</y>
-      <w>62</w>
-      <h>56</h>
+      <x>980</x>
+      <y>504</y>
+      <w>217</w>
+      <h>196</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0;290.0;90.0;290.0;260.0</additional_attributes>
@@ -970,10 +963,10 @@ IInviteService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>280</x>
-      <y>172</y>
-      <w>36</w>
-      <h>34</h>
+      <x>707</x>
+      <y>301</y>
+      <w>126</w>
+      <h>119</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>160.0;150.0;10.0;150.0;10.0;10.0</additional_attributes>
@@ -981,10 +974,10 @@ IInviteService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>618</x>
-      <y>338</y>
-      <w>32</w>
-      <h>32</h>
+      <x>1890</x>
+      <y>882</y>
+      <w>112</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>PersonalEvent
 --
@@ -1001,10 +994,10 @@ IInviteService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>494</x>
-      <y>338</y>
-      <w>108</w>
-      <h>30</h>
+      <x>1456</x>
+      <y>882</y>
+      <w>378</w>
+      <h>105</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 IPersonalEventRepository
@@ -1020,10 +1013,10 @@ IPersonalEventRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>472</x>
-      <y>272</y>
-      <w>80</w>
-      <h>10</h>
+      <x>1379</x>
+      <y>651</y>
+      <w>280</w>
+      <h>35</h>
     </coordinates>
     <panel_attributes>PersonalEventRepository
 --
@@ -1033,10 +1026,10 @@ IPersonalEventRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>516</x>
-      <y>236</y>
-      <w>6</w>
-      <h>40</h>
+      <x>1533</x>
+      <y>525</y>
+      <w>21</w>
+      <h>140</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;180.0</additional_attributes>
@@ -1044,10 +1037,10 @@ IPersonalEventRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>512</x>
-      <y>280</y>
-      <w>6</w>
-      <h>62</h>
+      <x>1519</x>
+      <y>679</y>
+      <w>21</w>
+      <h>217</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;290.0;10.0;10.0</additional_attributes>
@@ -1055,10 +1048,10 @@ IPersonalEventRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>530</x>
-      <y>280</y>
-      <w>108</w>
-      <h>62</h>
+      <x>1582</x>
+      <y>679</y>
+      <w>378</w>
+      <h>217</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>520.0;290.0;520.0;260.0;10.0;260.0;10.0;10.0</additional_attributes>
@@ -1066,10 +1059,10 @@ IPersonalEventRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>600</x>
-      <y>352</y>
-      <w>22</w>
-      <h>6</h>
+      <x>1827</x>
+      <y>931</y>
+      <w>77</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>90.0;10.0;10.0;10.0</additional_attributes>
@@ -1077,10 +1070,10 @@ IPersonalEventRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>664</x>
-      <y>348</y>
-      <w>156</w>
-      <h>28</h>
+      <x>2051</x>
+      <y>917</y>
+      <w>546</w>
+      <h>98</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 IPersonalEventService
@@ -1095,10 +1088,10 @@ IPersonalEventService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>836</x>
-      <y>348</y>
-      <w>66</w>
-      <h>36</h>
+      <x>2653</x>
+      <y>917</y>
+      <w>231</w>
+      <h>126</h>
     </coordinates>
     <panel_attributes>PersonalEventWithCategoryNameViewModel
 --
@@ -1116,10 +1109,10 @@ IPersonalEventService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>818</x>
-      <y>362</y>
-      <w>22</w>
-      <h>6</h>
+      <x>2590</x>
+      <y>966</y>
+      <w>77</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>90.0;10.0;10.0;10.0</additional_attributes>
@@ -1127,10 +1120,10 @@ IPersonalEventService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>648</x>
-      <y>338</y>
-      <w>98</w>
-      <h>14</h>
+      <x>1995</x>
+      <y>882</y>
+      <w>343</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;470.0;10.0;470.0;50.0</additional_attributes>
@@ -1138,10 +1131,10 @@ IPersonalEventService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>722</x>
-      <y>388</y>
-      <w>42</w>
-      <h>6</h>
+      <x>2254</x>
+      <y>1057</y>
+      <w>147</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>PersonalEventService</panel_attributes>
     <additional_attributes/>
@@ -1149,10 +1142,10 @@ IPersonalEventService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>740</x>
-      <y>374</y>
-      <w>6</w>
-      <h>18</h>
+      <x>2317</x>
+      <y>1008</y>
+      <w>21</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
@@ -1160,10 +1153,10 @@ IPersonalEventService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>646</x>
-      <y>164</y>
-      <w>284</w>
-      <h>232</h>
+      <x>1988</x>
+      <y>273</y>
+      <w>994</w>
+      <h>812</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;310.0;10.0;10.0;1390.0;10.0;1400.0;1140.0;590.0;1140.0</additional_attributes>
@@ -1171,10 +1164,10 @@ IPersonalEventService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>642</x>
-      <y>368</y>
-      <w>84</w>
-      <h>26</h>
+      <x>1974</x>
+      <y>987</y>
+      <w>294</w>
+      <h>91</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;110.0;400.0;110.0</additional_attributes>
@@ -1182,10 +1175,10 @@ IPersonalEventService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>754</x>
-      <y>368</y>
-      <w>86</w>
-      <h>24</h>
+      <x>2366</x>
+      <y>987</y>
+      <w>301</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>410.0;10.0;370.0;10.0;370.0;70.0;10.0;70.0;10.0;100.0</additional_attributes>
@@ -1193,10 +1186,10 @@ IPersonalEventService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>334</x>
-      <y>312</y>
-      <w>46</w>
-      <h>40</h>
+      <x>896</x>
+      <y>791</y>
+      <w>161</w>
+      <h>140</h>
     </coordinates>
     <panel_attributes>PersonalEventReminder
 --
@@ -1215,10 +1208,10 @@ IPersonalEventService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>362</x>
-      <y>364</y>
-      <w>130</w>
-      <h>44</h>
+      <x>994</x>
+      <y>973</y>
+      <w>455</w>
+      <h>154</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 IPersonalEventReminderRepository
@@ -1238,24 +1231,25 @@ IPersonalEventReminderRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>396</x>
-      <y>298</y>
-      <w>106</w>
-      <h>14</h>
+      <x>1113</x>
+      <y>742</y>
+      <w>371</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>PersonalEventReminderRepository
 --
 - MapPersonalReminderWithEvent(dt: DataTable): List&lt;PersonalEventReminder&gt;
-- MapPersonalEvent(row: DataRow): PersonalEvent</panel_attributes>
+- MapPersonalEvent(row: DataRow): PersonalEvent
+--</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>458</x>
-      <y>236</y>
-      <w>6</w>
-      <h>66</h>
+      <x>1330</x>
+      <y>525</y>
+      <w>21</w>
+      <h>231</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;310.0</additional_attributes>
@@ -1263,21 +1257,21 @@ IPersonalEventReminderRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>460</x>
-      <y>310</y>
-      <w>6</w>
-      <h>58</h>
+      <x>1337</x>
+      <y>784</y>
+      <w>21</w>
+      <h>203</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;270.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>378</x>
-      <y>310</y>
-      <w>64</w>
-      <h>20</h>
+      <x>1050</x>
+      <y>784</y>
+      <w>224</w>
+      <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;80.0;300.0;80.0;300.0;10.0</additional_attributes>
@@ -1285,10 +1279,10 @@ IPersonalEventReminderRepository
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>378</x>
-      <y>342</y>
-      <w>52</w>
-      <h>26</h>
+      <x>1050</x>
+      <y>896</y>
+      <w>182</w>
+      <h>91</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;240.0;10.0;240.0;110.0</additional_attributes>
@@ -1296,10 +1290,10 @@ IPersonalEventReminderRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>270</x>
-      <y>300</y>
-      <w>46</w>
-      <h>16</h>
+      <x>672</x>
+      <y>749</y>
+      <w>161</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>&lt;&lt;enumeration&gt;&gt;
 ReminderStatus
@@ -1311,21 +1305,21 @@ Read</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>314</x>
-      <y>304</y>
-      <w>46</w>
-      <h>12</h>
+      <x>826</x>
+      <y>763</y>
+      <w>161</w>
+      <h>42</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <panel_attributes>lt=&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;210.0;10.0;210.0;40.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>110</x>
-      <y>370</y>
-      <w>232</w>
-      <h>36</h>
+      <x>112</x>
+      <y>994</y>
+      <w>812</w>
+      <h>126</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 IPersonalEventReminderService
@@ -1343,10 +1337,10 @@ IPersonalEventReminderService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>110</x>
-      <y>326</y>
-      <w>70</w>
-      <h>16</h>
+      <x>112</x>
+      <y>840</y>
+      <w>245</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>PaginatedRemindersViewModel
 --
@@ -1358,10 +1352,10 @@ IPersonalEventReminderService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>300</x>
-      <y>314</y>
-      <w>6</w>
-      <h>60</h>
+      <x>777</x>
+      <y>798</y>
+      <w>21</w>
+      <h>210</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;280.0</additional_attributes>
@@ -1369,10 +1363,10 @@ IPersonalEventReminderService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>326</x>
-      <y>334</y>
-      <w>12</w>
-      <h>40</h>
+      <x>868</x>
+      <y>868</y>
+      <w>42</w>
+      <h>140</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>40.0;10.0;10.0;10.0;10.0;180.0</additional_attributes>
@@ -1380,10 +1374,10 @@ IPersonalEventReminderService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>208</x>
-      <y>318</y>
-      <w>44</w>
-      <h>34</h>
+      <x>455</x>
+      <y>812</y>
+      <w>154</w>
+      <h>119</h>
     </coordinates>
     <panel_attributes>ReminderBoxViewModel
 --
@@ -1400,10 +1394,10 @@ IPersonalEventReminderService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>230</x>
-      <y>304</y>
-      <w>44</w>
-      <h>18</h>
+      <x>532</x>
+      <y>763</y>
+      <w>154</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>200.0;10.0;10.0;10.0;10.0;70.0</additional_attributes>
@@ -1411,10 +1405,10 @@ IPersonalEventReminderService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>178</x>
-      <y>334</y>
-      <w>34</w>
-      <h>6</h>
+      <x>350</x>
+      <y>868</y>
+      <w>119</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>150.0;10.0;10.0;10.0</additional_attributes>
@@ -1422,10 +1416,10 @@ IPersonalEventReminderService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>154</x>
-      <y>340</y>
-      <w>6</w>
-      <h>34</h>
+      <x>266</x>
+      <y>889</y>
+      <w>21</w>
+      <h>119</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
@@ -1433,10 +1427,10 @@ IPersonalEventReminderService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>110</x>
-      <y>418</y>
-      <w>218</w>
-      <h>26</h>
+      <x>112</x>
+      <y>1162</y>
+      <w>763</w>
+      <h>91</h>
     </coordinates>
     <panel_attributes>PersonalEventReminderService
 --
@@ -1450,10 +1444,10 @@ IPersonalEventReminderService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>224</x>
-      <y>404</y>
-      <w>6</w>
-      <h>18</h>
+      <x>511</x>
+      <y>1113</y>
+      <w>21</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
@@ -1461,10 +1455,10 @@ IPersonalEventReminderService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>326</x>
-      <y>374</y>
-      <w>380</w>
-      <h>50</h>
+      <x>868</x>
+      <y>1008</y>
+      <w>1330</w>
+      <h>175</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>1880.0;10.0;1880.0;230.0;10.0;230.0</additional_attributes>
@@ -1472,10 +1466,10 @@ IPersonalEventReminderService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>310</x>
-      <y>350</y>
-      <w>44</w>
-      <h>72</h>
+      <x>812</x>
+      <y>924</y>
+      <w>154</w>
+      <h>252</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>200.0;10.0;200.0;300.0;10.0;300.0;10.0;340.0</additional_attributes>
@@ -1483,10 +1477,10 @@ IPersonalEventReminderService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>90</x>
-      <y>300</y>
-      <w>184</w>
-      <h>138</h>
+      <x>42</x>
+      <y>749</y>
+      <w>644</w>
+      <h>483</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>900.0;10.0;10.0;10.0;10.0;670.0;100.0;670.0</additional_attributes>
@@ -1494,10 +1488,10 @@ IPersonalEventReminderService
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>96</x>
-      <y>332</y>
-      <w>18</w>
-      <h>100</h>
+      <x>63</x>
+      <y>861</y>
+      <w>63</w>
+      <h>350</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>70.0;10.0;10.0;10.0;10.0;480.0;70.0;480.0</additional_attributes>
@@ -1505,37 +1499,38 @@ IPersonalEventReminderService
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>426</x>
-      <y>86</y>
-      <w>102</w>
-      <h>20</h>
+      <x>1218</x>
+      <y>0</y>
+      <w>357</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>&lt;&lt;static&gt;&gt;
 PasswordHasher
 --
-+ HashPassword(password: string, slat: string): string
-+ VerifyPassword(password: string, storedhash: string, storedSalt: string): bool
-+ GenerateRandomSalt(): string</panel_attributes>
+_+ HashPassword(password: string, slat: string): string_
+_+ VerifyPassword(password: string, storedhash: string, storedSalt: string): bool_
+_+ GenerateRandomSalt(): string_
+--</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>476</x>
-      <y>104</y>
-      <w>6</w>
-      <h>22</h>
+      <x>1393</x>
+      <y>77</y>
+      <w>21</w>
+      <h>63</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>314</x>
-      <y>300</y>
-      <w>86</w>
-      <h>6</h>
+      <x>826</x>
+      <y>749</y>
+      <w>301</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;410.0;10.0</additional_attributes>
@@ -1543,10 +1538,10 @@ PasswordHasher
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>128</x>
-      <y>458</y>
-      <w>70</w>
-      <h>10</h>
+      <x>175</x>
+      <y>1302</y>
+      <w>245</w>
+      <h>35</h>
     </coordinates>
     <panel_attributes>StringMatchHelper
 --
@@ -1556,10 +1551,10 @@ PasswordHasher
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>172</x>
-      <y>442</y>
-      <w>6</w>
-      <h>20</h>
+      <x>329</x>
+      <y>1246</y>
+      <w>21</w>
+      <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
@@ -1567,10 +1562,10 @@ PasswordHasher
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>218</x>
-      <y>462</y>
-      <w>70</w>
-      <h>6</h>
+      <x>490</x>
+      <y>1316</y>
+      <w>245</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>ViewModelMapper
 </panel_attributes>
@@ -1579,10 +1574,10 @@ PasswordHasher
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>186</x>
-      <y>482</y>
-      <w>136</w>
-      <h>16</h>
+      <x>378</x>
+      <y>1386</y>
+      <w>476</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>PersonalReminder
 --
@@ -1594,10 +1589,10 @@ PasswordHasher
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>252</x>
-      <y>466</y>
-      <w>6</w>
-      <h>20</h>
+      <x>609</x>
+      <y>1330</y>
+      <w>21</w>
+      <h>70</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
@@ -1605,10 +1600,10 @@ PasswordHasher
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>252</x>
-      <y>442</y>
-      <w>6</w>
-      <h>24</h>
+      <x>609</x>
+      <y>1246</y>
+      <w>21</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
@@ -1616,10 +1611,10 @@ PasswordHasher
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>320</x>
-      <y>350</y>
-      <w>40</w>
-      <h>144</h>
+      <x>847</x>
+      <y>924</y>
+      <w>140</w>
+      <h>504</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>180.0;10.0;180.0;700.0;10.0;700.0</additional_attributes>
@@ -1627,12 +1622,23 @@ PasswordHasher
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>78</x>
-      <y>320</y>
-      <w>134</w>
-      <h>174</h>
+      <x>0</x>
+      <y>819</y>
+      <w>469</w>
+      <h>609</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>650.0;10.0;10.0;10.0;10.0;850.0;540.0;850.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1351</x>
+      <y>259</y>
+      <w>21</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
   </element>
 </diagram>

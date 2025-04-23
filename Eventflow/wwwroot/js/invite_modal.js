@@ -44,10 +44,14 @@ export function initInviteModal() {
                 if (result.success) {
                     bootstrap.Modal.getInstance(document.getElementById("inviteModal")).hide();
 
+                    let successTitle = 'Invite Sent!';
+                    if (result.message?.includes('resent')) successTitle = 'Invite Resent!';
+                    if (result.message?.includes('already')) successTitle = 'Already Invited';
+
                     Swal.fire({
                         icon: 'success',
-                        title: 'Invite Sent!',
-                        text: `Your invitation has been sent successfully.`,
+                        title: 'Success',
+                        text: result.message,
                         timer: 2000,
                         showConfirmButton: false
                     });

@@ -1,4 +1,5 @@
 ﻿using Eventflow.Application.Services.Interfaces;
+using Eventflow.Domain.Enums;
 using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
 
@@ -22,8 +23,8 @@ namespace Eventflow.Application.Services
         }
         public async Task<int> CountPendingInvitesAsync(int userId)
             => (await _inviteRepository.GetInvitesByUserAndStatusAsync(userId, 1)).Count;
-        public async Task CreateInviteAsync(Invite invite)
-            => await _inviteRepository.CreateInviteAsync(invite);
+        public async Task<InviteActionResult> CreateOrResetInviteAsync(Invite invite)
+            => await _inviteRepository.CreateOrResetInviteAsync(invite);
         public async Task<List<Invite>> GetAllInvitesByUserIdAsync(int userId)
             => await _inviteRepository.GetAllInvitesByUserIdAsync(userId);
         public async Task<List<Invite>> GetInvitesByUserAndStatusAsync(int userId, int statusId)

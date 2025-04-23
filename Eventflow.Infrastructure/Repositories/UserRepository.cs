@@ -132,5 +132,42 @@ namespace Eventflow.infrastructure.Repositories
                 RoleId = Convert.ToInt32(row["RoleId"])
             };
         }
+        public async Task<List<string>> GetUsernamesByEventIdAsync(int eventId)
+        {
+            string getUsernamesByEventIdQuery = @"
+                    SELECT u.Username
+                    FROM [User] u
+                    WHERE u.Id IN (
+
+                        SELECT pe.UserId
+                        FROM PersonalEvent pe
+                        WHERE pe.Id = @eventId
+
+                        UNION
+
+                        SELECT i.InvitedUserId
+                        FROM Invite i
+                        WHERE i.PersonalEventId = @eventId
+                          AND i.StatusId = (
+                              SELECT Id FROM Status WHERE Name = 'Accepted'
+                          )
+                    );";
+
+            var parameters = new Dictionary<string, object>()
+            {
+                { "@EventId", eventId }
+            };
+
+            var dt = await _dbHelper.ExecuteQueryAsync(getUsernamesByEventIdQuery, parameters);
+
+            var usernames = new List<string>();
+
+            foreach (DataRow row in dt.Rows)
+            {
+                usernames.Add(row["Username"].ToString() ?? "Unknown");
+            }
+
+            return usernames;
+        }
     }
 }

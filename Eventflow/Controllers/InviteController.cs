@@ -1,7 +1,9 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Attributes;
+using Eventflow.Domain.Enums;
 using Eventflow.Domain.Models.Models;
 using Eventflow.Domain.Models.ViewModels;
+using Eventflow.Infrastructure.Helper;
 using Microsoft.AspNetCore.Mvc;
 using static Eventflow.Utilities.SessionHelper;
 
@@ -57,31 +59,49 @@ namespace Eventflow.Controllers
                 });
             }
 
-            bool alreadyInvited = await _inviteService.InviteExistsAsync(model.EventId, invitedUser.Id);
-            if (alreadyInvited)
-            {
-                return Json(new
-                {
-                    success = false,
-                    message = "This user has already been invited!"
-                });
-            }
-
             var invite = new Invite
             {
                 PersonalEventId = model.EventId,
                 InvitedUserId = invitedUser.Id,
-                StatusId = 1,
+                StatusId = InviteStatusHelper.Pending,
                 CreatedAt = DateTime.Now
             };
 
-            await _inviteService.CreateInviteAsync(invite);
+            var result = await _inviteService.CreateOrResetInviteAsync(invite);
 
-            return Json(new
+            return result switch
             {
-                success = true,
-                message = "Invite sent successfully!"
-            });
+                InviteActionResult.Created
+                    => Json(new
+                    {
+                        success = true,
+                        message = "Invite sent successfully!"
+                    }),
+                InviteActionResult.UpdatedToPending
+                    => Json(new
+                    {
+                        success = true,
+                        message = "Invite resent successfully!"
+                    }),
+                InviteActionResult.AlreadyPending
+                    => Json(new
+                    {
+                        success = false,
+                        message = "This user already has a unanswered invite!"
+                    }),
+                InviteActionResult.AlreadyAccepted
+                    => Json(new
+                    {
+                        success = false,
+                        message = "User is already part of the event."
+                    }),
+                _
+                    => Json(new
+                    {
+                        success = false,
+                        message = "An unexpected error occurred."
+                    })
+            };
         }
 
         [HttpGet]

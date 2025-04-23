@@ -1,7 +1,9 @@
-﻿using Eventflow.Domain.Interfaces.Repositories;
+﻿using Eventflow.Domain.Enums;
+using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
 using Eventflow.Infrastructure.Data.Interfaces;
 using System.Data;
+using Eventflow.Infrastructure.Helper;
 
 namespace Eventflow.Infrastructure.Repositories
 {
@@ -27,6 +29,31 @@ namespace Eventflow.Infrastructure.Repositories
             };
 
             await _dbHelper.ExecuteNonQueryAsync(createInviteQuery, parameters);
+        }
+        public async Task<InviteActionResult> CreateOrResetInviteAsync(Invite invite)
+        {
+            var existing = await GetInviteStatusAndIdAsync(invite.PersonalEventId, invite.InvitedUserId);
+
+            if (existing == null)
+            {
+                await InsertInviteAsync(invite);
+                return InviteActionResult.Created;
+            }
+
+            var (inviteId, statusId) = existing.Value;
+
+            if (statusId == InviteStatusHelper.Pending)
+            {
+                return InviteActionResult.AlreadyPending;
+            }
+
+            if (statusId == InviteStatusHelper.Accepted)
+            {
+                return InviteActionResult.AlreadyAccepted;
+            }
+
+            await ResetInviteToPendingAsync(inviteId);
+            return InviteActionResult.UpdatedToPending;
         }
         public async Task<List<Invite>> GetAllInvitesByUserIdAsync(int userId)
         {
@@ -61,9 +88,15 @@ namespace Eventflow.Infrastructure.Repositories
                     SELECT i.*
                     FROM Invite i
                     INNER JOIN PersonalEvent e ON i.PersonalEventId = e.Id
-                    WHERE i.StatusId = 1 AND CONVERT(date, e.Date) < CONVERT(date, GETDATE())";
+                    WHERE i.StatusId = @PendingStatus
+                    AND CONVERT(date, e.Date) < CONVERT(date, GETDATE())";
 
-            var dt = await _dbHelper.ExecuteQueryAsync(getExpiredPendingInvitesQuery);
+            var parameters = new Dictionary<string, object>()
+            {
+                { "@PendingStatus", InviteStatusHelper.Pending }
+            };
+
+            var dt = await _dbHelper.ExecuteQueryAsync(getExpiredPendingInvitesQuery, parameters);
 
             List<Invite> invites = new List<Invite>();
 
@@ -168,12 +201,13 @@ namespace Eventflow.Infrastructure.Repositories
                 FROM Invite
                 WHERE InvitedUserId = @UserId
                     AND PersonalEventId = @EventId
-                    AND StatusId = 2";
+                    AND StatusId = @AcceptedStatus";
 
             var parameters = new Dictionary<string, object>()
             {
                 { "@UserId", userId },
-                { "@EventId", personalEventId }
+                { "@EventId", personalEventId },
+                { "@AcceptedStatus", InviteStatusHelper.Accepted }
             };
 
             var result = (int)await _dbHelper.ExecuteScalarAsync(hasUserAcceptedInviteQuery, parameters);
@@ -196,13 +230,17 @@ namespace Eventflow.Infrastructure.Repositories
         {
             string markInviteAsDeclinedQuery = @"
                 UPDATE Invite
-                SET StatusId = 3
-                WHERE InvitedUserId = @UserId AND PersonalEventId = @EventId AND StatusId = 2";
+                SET StatusId = @DeclinedStatus
+                WHERE InvitedUserId = @UserId 
+                AND PersonalEventId = @EventId 
+                AND StatusId = @AcceptedStatus";
 
             var parameters = new Dictionary<string, object>
             {
                 { "@UserId", userId },
-                { "@EventId", eventId }
+                { "@EventId", eventId },
+                { "@DeclinedStatus", InviteStatusHelper.Declined },
+                { "@AcceptedStatus", InviteStatusHelper.Accepted }
             };
 
             await _dbHelper.ExecuteNonQueryAsync(markInviteAsDeclinedQuery, parameters);
@@ -219,6 +257,48 @@ namespace Eventflow.Infrastructure.Repositories
             };
 
             await _dbHelper.ExecuteNonQueryAsync(updateInviteStatusQuery, parameters);
+        }
+        private async Task<(int Id, int StatusId)?> GetInviteStatusAndIdAsync(int eventId, int userId)
+        {
+            var getInviteStatusQuery = "SELECT Id, StatusId FROM Invite WHERE PersonalEventId = @EventId AND InvitedUserId = @UserId";
+            var parameters = new Dictionary<string, object>
+            {
+                { "@EventId", eventId },
+                { "@UserId", userId }
+            };
+
+            var dt = await _dbHelper.ExecuteQueryAsync(getInviteStatusQuery, parameters);
+            if (dt.Rows.Count == 0) return null;
+
+            return (Convert.ToInt32(dt.Rows[0]["Id"]), Convert.ToInt32(dt.Rows[0]["StatusId"]));
+        }
+        private async Task InsertInviteAsync(Invite invite)
+        {
+            var insertInviteQuery = @"
+                INSERT INTO Invite (PersonalEventId, InvitedUserId, StatusId, CreatedAt)
+                VALUES (@PersonalEventId, @InvitedUserId, @StatusId, @CreatedAt)";
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "@PersonalEventId", invite.PersonalEventId },
+                { "@InvitedUserId", invite.InvitedUserId },
+                { "@StatusId", InviteStatusHelper.Pending },
+                { "@CreatedAt", DateTime.UtcNow }
+            };
+
+            await _dbHelper.ExecuteNonQueryAsync(insertInviteQuery, parameters);
+        }
+        private async Task ResetInviteToPendingAsync(int inviteId)
+        {
+            var resetInviteQuery = "UPDATE Invite SET StatusId = @StatusId, CreatedAt = @CreatedAt WHERE Id = @Id";
+            var parameters = new Dictionary<string, object>
+            {
+                { "@Id", inviteId },
+                { "@StatusId", InviteStatusHelper.Pending },
+                { "@CreatedAt", DateTime.UtcNow }
+            };
+
+            await _dbHelper.ExecuteNonQueryAsync(resetInviteQuery, parameters);
         }
     }
 }

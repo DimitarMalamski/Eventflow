@@ -19,7 +19,8 @@
             data-category="@pe.CategoryName"
             data-is-invited="@pe.IsInvited.ToString().ToLower()"
             data-creator="@pe.CreatorUsername"
-            data-is-creator="@pe.IsCreator.ToString().ToLower()">
+            data-is-creator="@pe.IsCreator.ToString().ToLower()"
+            data-participants="@string.Join(",", pe.ParticipantUsernames)">
             📌 @pe.Title
         </li>
     }

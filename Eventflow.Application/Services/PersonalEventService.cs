@@ -36,6 +36,7 @@ namespace Eventflow.Application.Services
             foreach (var e in filteredEvents)
             {
                 var creator = await _userRepository.GetUserByIdAsync(e.UserId);
+                var participantUsernames = await _userRepository.GetUsernamesByEventIdAsync(e.Id);
 
                 model.Add(new PersonalEventWithCategoryNameViewModel
                 {
@@ -51,7 +52,8 @@ namespace Eventflow.Application.Services
                         : "Uncategorized",
                     IsInvited = true,
                     CreatorUsername = creator?.Username ?? "Unknown",
-                    IsCreator = e.UserId == userId
+                    IsCreator = e.UserId == userId,
+                    ParticipantUsernames = participantUsernames,
                 });
             }
 
@@ -66,24 +68,31 @@ namespace Eventflow.Application.Services
                 .ToList();
 
             var categories = await _categoryRepository.GetAllCategoriesAsync();
-
             var categoryMap = categories.ToDictionary(c => c.Id, c => c.Name);
 
-            var personalEventsWithCategoryName = personalEvents.Select(pe => new PersonalEventWithCategoryNameViewModel
+            var personalEventsWithCategoryName = new List<PersonalEventWithCategoryNameViewModel>();
+
+            foreach (var pe in personalEvents)
             {
-                Id = pe.Id,
-                Title = pe.Title,
-                Description = pe.Description,
-                Date = pe.Date,
-                IsCompleted = pe.IsCompleted,
-                CategoryId = pe.CategoryId,
-                UserId = userId,
-                CategoryName = pe.CategoryId.HasValue && categoryMap.ContainsKey(pe.CategoryId.Value)
-                            ? categoryMap[pe.CategoryId.Value]
-                            : "Uncategorized",
-                IsInvited = false,
-                IsCreator = pe.UserId == userId
-            }).ToList();
+                var perticipantsUsernames = await _userRepository.GetUsernamesByEventIdAsync(pe.Id);
+
+                personalEventsWithCategoryName.Add(new PersonalEventWithCategoryNameViewModel
+                {
+                    Id = pe.Id,
+                    Title = pe.Title,
+                    Description = pe.Description,
+                    Date = pe.Date,
+                    IsCompleted = pe.IsCompleted,
+                    CategoryId = pe.CategoryId,
+                    UserId = pe.UserId,
+                    CategoryName = pe.CategoryId.HasValue && categoryMap.ContainsKey(pe.CategoryId.Value)
+                        ? categoryMap[pe.CategoryId.Value]
+                        : "Uncategorized",
+                    IsInvited = false,
+                    IsCreator = pe.UserId == userId,
+                    ParticipantUsernames = perticipantsUsernames
+                });
+            }
 
             return personalEventsWithCategoryName;
         }

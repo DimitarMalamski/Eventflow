@@ -1,4 +1,5 @@
-﻿using Eventflow.Domain.Models.Models;
+﻿using Eventflow.Domain.Enums;
+using Eventflow.Domain.Models.Models;
 
 namespace Eventflow.Domain.Interfaces.Repositories
 {
@@ -13,5 +14,6 @@ namespace Eventflow.Domain.Interfaces.Repositories
         public Task<bool> HasPendingInvitesAsync(int userId);
         public Task<bool> HasUserAcceptedInviteAsync(int userId, int personalEventId);
         public Task MarkInviteAsLeftAsync(int userId, int eventId);
+        public Task<InviteActionResult> CreateOrResetInviteAsync(Invite invite);
     }
 }

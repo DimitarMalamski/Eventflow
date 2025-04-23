@@ -8,14 +8,21 @@
 
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <p><strong>Title:</strong> <span id="modal-event-title"></span></p>
-                <p><strong>Description:</strong> <span id="modal-event-description"></span></p>
-                <p><strong>Date:</strong> <span id="modal-event-date"></span></p>
-                <p><strong>Category:</strong> <span id="modal-event-category"></span></p>
+            <div class="modal-body d-flex justify-content-between flex-wrap">
+                <div class="left-section w-50">
+                    <p><strong>Title:</strong> <span id="modal-event-title"></span></p>
+                    <p><strong>Description:</strong> <span id="modal-event-description"></span></p>
+                    <p><strong>Date:</strong> <span id="modal-event-date"></span></p>
+                    <p><strong>Category:</strong> <span id="modal-event-category"></span></p>                           
+                </div>
+
+                <div class="right-section ms-auto" style="min-width: 220px">
+                    <p><strong>Participants:</strong></p>
+                    <ul id="modal-event-participants" class="mb-0 ps-3 small" style="max-height: 150px; overflow-y: auto;"></ul>  
+                </div>
 
                 <span id="modal-event-id" style="display: none;"></span>
-            </div>
+            </div>         
 
             <div class="modal-footer custom-modal-footer">
                 <button id="edit-button" class="btn btn-outline-primary">

@@ -9,5 +9,6 @@ namespace Eventflow.Domain.Interfaces.Repositories
         public Task<int> RegisterUserAsync(User user);
         public Task<User?> GetByUsernameAsync(string username);
         public Task<User?> GetUserByIdAsync(int userId);
+        public Task<List<string>> GetUsernamesByEventIdAsync(int eventId);
     }
 }

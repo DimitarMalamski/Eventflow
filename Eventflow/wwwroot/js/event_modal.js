@@ -8,6 +8,15 @@ function openEventModal(event) {
     document.getElementById("modal-event-category").innerText = event.category;
     document.getElementById("modal-event-creator").textContent = event.creatorUsername;
 
+    const participantsList = document.getElementById("modal-event-participants");
+    participantsList.innerHTML = "";
+
+    event.participants.forEach(name => {
+        const li = document.createElement("li");
+        li.textContent = name;
+        participantsList.appendChild(li);
+    })
+
     const creatorSpan = document.getElementById("modal-event-creator");
     if (event.isCreator === true) {
         creatorSpan.textContent = "Yours"
@@ -88,7 +97,8 @@ function bindEventClickHandlers() {
                 category: this.dataset.category,
                 isInvited: this.dataset.isInvited === "true",
                 creatorUsername: this.dataset.creator,
-                isCreator: this.dataset.isCreator === "true"
+                isCreator: this.dataset.isCreator === "true",
+                participants: this.dataset.participants ? this.dataset.participants.split(",") : []
             };
 
             console.log("📅 Event Clicked:", event);
