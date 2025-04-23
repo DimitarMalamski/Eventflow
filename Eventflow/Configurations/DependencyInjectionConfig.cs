@@ -27,7 +27,6 @@ namespace Eventflow.Configurations
             services.AddScoped<IContinentService, ContinentService>();
             services.AddScoped<ICalendarService, CalendarService>();
             services.AddScoped<ICountryService, CountryService>();
-            services.AddScoped<ICountryPopulationService, CountryPopulationService>();
             services.AddScoped<ICalendarNavigationService, CalendarNavigationService>();
             services.AddScoped<IPersonalEventService, PersonalEventService>();
             services.AddScoped<ICategoryService, CategoryService>();
@@ -38,6 +37,8 @@ namespace Eventflow.Configurations
 
             // DB Helper
             services.AddScoped<IDbHelper, DbHelper>();
+
+            services.AddScoped<CountryPopulationService>();
         }
     }
 }

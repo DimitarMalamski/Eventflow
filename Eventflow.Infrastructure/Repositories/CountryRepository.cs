@@ -26,7 +26,7 @@ namespace Eventflow.Infrastructure.Repositories
         }
         public async Task<List<Country>> GetAllCountriesByContinentIdAsync(int continentId)
         {
-            string query = @"SELECT Id, Name, FlagPath, ContinentId 
+            string query = @"SELECT Id, Name, FlagUrl, ContinentId 
                      FROM Country 
                      WHERE ContinentId = @ContinentId";
 
@@ -45,22 +45,24 @@ namespace Eventflow.Infrastructure.Repositories
                 {
                     Id = Convert.ToInt32(row["Id"]),
                     Name = row["Name"].ToString()!,
-                    FlagPath = null!,
+                    FlagUrl = null!,
                     ContinentId = Convert.ToInt32(row["ContinentId"])
                 });
             }
 
             return countries;
         }
-        public async Task InsertCountryAsync(string countryName, int continentId)
+        public async Task InsertCountryAsync(string countryName, int continentId, string flagUrl, string isoCode)
         {
-            string insertCountryQuery = @"INSERT INTO Country (Name, ContinentId)
-                                     VALUES (@Name, @ContinentId)";
+            string insertCountryQuery = @"INSERT INTO Country (Name, ContinentId, FlagUrl, ISOCode)
+                                     VALUES (@Name, @ContinentId, @FlagUrl, @ISOCode)";
 
             var countryParams = new Dictionary<string, object>
             {
                 { "@Name", countryName },
                 { "@ContinentId", continentId },
+                { "@FlagUrl", flagUrl },
+                { "@ISOCode", isoCode }
             };
 
             await _dbHelper.ExecuteNonQueryAsync(insertCountryQuery, countryParams);

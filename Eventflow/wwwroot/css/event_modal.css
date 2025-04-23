@@ -19,3 +19,21 @@
     align-items: center;
     margin-bottom: 1rem;
 }
+
+#modal-event-participants li {
+    padding: 4px 0;
+    border-bottom: 1px solid #eee;
+}
+
+#modal-event-participants li:last-child {
+    border-bottom: none;
+}
+
+#modal-event-participants::-webkit-scrollbar {
+    width: 6px;
+}
+
+#modal-event-participants::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}

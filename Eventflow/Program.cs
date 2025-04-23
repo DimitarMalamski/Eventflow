@@ -1,3 +1,4 @@
+using Eventflow.Application.Services;
 using Eventflow.Authentication;
 using Eventflow.Configurations;
 using Microsoft.AspNetCore.Authentication;
@@ -22,6 +23,12 @@ builder.Services.AddSession(option =>
 builder.Services.RegisterServices();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var countryPopulationService = scope.ServiceProvider.GetRequiredService<CountryPopulationService>();
+    await countryPopulationService.PopulateCountriesAsync();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

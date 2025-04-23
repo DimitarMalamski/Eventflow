@@ -11,7 +11,6 @@ namespace Eventflow.Application.Services
         {
             _countryRepository = countryRepository;
         }
-
         public async Task<List<Country>> GetCountriesByContinentIdAsync(int continentId)
             => (await _countryRepository.GetAllCountriesByContinentIdAsync(continentId))
                 .OrderBy(c => c.Name).ToList();
