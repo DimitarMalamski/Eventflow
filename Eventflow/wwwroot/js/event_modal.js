@@ -89,6 +89,24 @@ function bindEventClickHandlers() {
         btn.addEventListener("click", function () {
             console.log("📅 Event clicked:", this.dataset.id)
 
+            const type = this.dataset.type;
+
+            if (type === "national") {
+                document.getElementById("modal-event-title").innerText = this.dataset.title;
+                document.getElementById("modal-event-description").innerText = this.dataset.description;
+                document.getElementById("modal-event-date").innerText = this.dataset.date;
+                document.getElementById("modal-event-category").innerText = "National Holiday";
+                document.getElementById("modal-event-creator").innerText = this.dataset.country;
+
+                document.getElementById("edit-button").style.display = "none";
+                document.getElementById("invite-button").style.display = "none";
+                document.getElementById("reminder-button").style.display = "none";
+                document.getElementById("leave-button").style.display = "none";
+
+                new bootstrap.Modal(document.getElementById('eventModal')).show();
+                return;
+            }
+
             const event = {
                 id: this.dataset.id,
                 title: this.dataset.title,
@@ -100,11 +118,6 @@ function bindEventClickHandlers() {
                 isCreator: this.dataset.isCreator === "true",
                 participants: this.dataset.participants ? this.dataset.participants.split(",") : []
             };
-
-            console.log("📅 Event Clicked:", event);
-            console.log("👤 Creator Username:", event.creatorUsername);
-            console.log("🧑 Is Creator:", event.isCreator);
-
             openEventModal(event);
         });
     });

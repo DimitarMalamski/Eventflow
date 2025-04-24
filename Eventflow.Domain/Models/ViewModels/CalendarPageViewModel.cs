@@ -8,5 +8,6 @@ namespace Eventflow.Domain.Models.ViewModels
         public CalendarViewModel Calendar { get; set; } = new CalendarViewModel();
         public CalendarNavigationViewModel Navigation { get; set; } = new CalendarNavigationViewModel();
         public SidebarViewModel SidebarViewModel { get; set; }
+        public int? SelectedCountryId { get; set; }
     }
 }

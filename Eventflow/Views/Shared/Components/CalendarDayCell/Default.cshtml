@@ -16,7 +16,7 @@
         <div class="fw-bold d-flex justify-content-between align-items-center">
             <span>@Model.Day.DayNumber</span>
 
-            @if (Model.Day.PersonalEvents.Any())
+            @if (Model.Day.PersonalEvents.Any() || Model.Day.NationalEvents.Any())
             {
                 <i class="bi bi-chevron-down dropdown-arrow text-muted"
                    data-dropdown-id="@dropDownId"
@@ -28,15 +28,16 @@
             }
         </div>
 
-        @if (Model.Day.PersonalEvents.Any())
+        @if (Model.Day.PersonalEvents.Any() || Model.Day.NationalEvents.Any())
         {
             @await Component.InvokeAsync("EventDropdown", new
             {
                 index = Model.Index,
                 date = Model.Day.Date!.Value,
-                personalEvents = Model.Day.PersonalEvents
+                personalEvents = Model.Day.PersonalEvents,
+                nationalEvents = Model.Day.NationalEvents
             })
-        }     
+        } 
     }
     else
     {

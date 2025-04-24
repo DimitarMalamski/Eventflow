@@ -9,7 +9,7 @@ namespace Eventflow.Views.ViewComponents
 {
     public class SidebarViewComponent : ViewComponent
     {
-        public async Task<IViewComponentResult> InvokeAsync(string context, List<Continent>? continents =  null)
+        public async Task<IViewComponentResult> InvokeAsync(string context, List<Continent>? continents =  null, int? selectedCountryId = null)
         {
             var userId = GetUserId(HttpContext.Session);
             var isLoggedIn = IsLoggedIn(HttpContext.Session);
@@ -25,7 +25,8 @@ namespace Eventflow.Views.ViewComponents
                 Continents = continents ?? new List<Continent>(),
                 Username = GetUsername(HttpContext.Session),
                 IsLoggedin = isLoggedIn,
-                Buttons = buttons
+                Buttons = buttons,
+                SelectedCountryId = selectedCountryId
             };
 
             return View("Default", viewModel);

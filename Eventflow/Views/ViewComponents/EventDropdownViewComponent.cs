@@ -6,13 +6,14 @@ namespace Eventflow.Views.ViewComponents
 {
     public class EventDropdownViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke(int index, DateTime date, List<PersonalEventWithCategoryNameViewModel> personalEvents)
+        public IViewComponentResult Invoke(int index, DateTime date, List<PersonalEventWithCategoryNameViewModel> personalEvents, List<NationalEventViewModel> nationalEvents)
         {
             var model = new EventDropdownViewModel
             {
                 Index = index,
                 Date = date,
-                PersonalEvents = personalEvents
+                PersonalEvents = personalEvents,
+                NationalEvents = nationalEvents
             };
 
             return View(model);

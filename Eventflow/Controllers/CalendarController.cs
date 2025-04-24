@@ -22,7 +22,7 @@ namespace Eventflow.Controllers
             _calendarNavigationService = calendarNavigationService;
             _personalEventService = personalEventService;
         }
-        public async Task<IActionResult> Index(int? month, int? year)
+        public async Task<IActionResult> Index(int? month, int? year, int? countryId)
         {
             if (HttpContext.Session.GetString("UserId") == null)
             {
@@ -39,7 +39,8 @@ namespace Eventflow.Controllers
                 {
                     CurrentMonth = normalizedMonth,
                     CurrentYear = normalizedYear
-                }
+                },
+                SelectedCountryId = countryId
             };
 
             return View(model);
@@ -58,6 +59,26 @@ namespace Eventflow.Controllers
             var model = new CalendarComponentViewModel
             {
                 Calendar = await _calendarService.GenerateUserCalendarAsync(userId, normalizedYear, normalizedMonth),
+                Navigation = new CalendarNavigationViewModel
+                {
+                    CurrentMonth = normalizedMonth,
+                    CurrentYear = normalizedYear
+                }
+            };
+
+            return PartialView("~/Views/Shared/Partials/Calendar/_CalendarWrapper.cshtml", model);
+        }
+        public async Task<IActionResult> LoadCalendarByCountryPartial(int countryId, int? month, int? year)
+        {
+            var (normalizedYear, normalizedMonth) = _calendarNavigationService.Normalize(year, month);
+
+            var model = new CalendarComponentViewModel
+            {
+                Calendar = await _calendarService.GenerateNationalHolidayCalendarAsync(
+                    countryId,
+                    normalizedYear,
+                    normalizedMonth
+                ),
                 Navigation = new CalendarNavigationViewModel
                 {
                     CurrentMonth = normalizedMonth,

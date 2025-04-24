@@ -1,4 +1,23 @@
-﻿window.initCalendarUI = function () {
+﻿function toggleDropdown(dropdownId, arrowElement) {
+    const targetDropdown = document.getElementById(dropdownId);
+    const allDropdowns = document.querySelectorAll(".event-dropdown");
+    const allArrows = document.querySelectorAll(".dropdown-arrow");
+
+    // Check if the target dropdown is already visible
+    const isVisible = targetDropdown.classList.contains("show");
+
+    // Close all dropdowns and reset the arrow rotation
+    allDropdowns.forEach(d => d.classList.remove("show"));
+    allArrows.forEach(a => a.classList.remove("rotated"));
+
+    // If the target dropdown is not visible, show it and rotate the arrow
+    if (!isVisible) {
+        targetDropdown.classList.add("show");
+        arrowElement.classList.add("rotated");
+    }
+}
+
+window.initCalendarUI = function () {
     document.querySelectorAll(".dropdown-arrow").forEach(arrow => {
         arrow.addEventListener("click", function () {
             const dropdownId = this.getAttribute("data-dropdown-id");

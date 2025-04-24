@@ -48,7 +48,8 @@
             @await Component.InvokeAsync("Sidebar", new
                 {
                     context = sidebarContext,
-                    continents = continents
+                    continents = continents,
+                    selectedCountryId = Model.SelectedCountryId
                 })
         </div>
 

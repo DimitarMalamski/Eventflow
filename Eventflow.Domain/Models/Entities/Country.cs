@@ -17,5 +17,6 @@ namespace Eventflow.Domain.Models.Models
 
         [Required]
         public int ContinentId { get; set; }
+        public string ISOCode { get; set; } = null!;
     }
 }

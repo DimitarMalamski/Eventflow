@@ -24,11 +24,17 @@ builder.Services.RegisterServices();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var countryPopulationService = scope.ServiceProvider.GetRequiredService<CountryPopulationService>();
-    await countryPopulationService.PopulateCountriesAsync();
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var countryPopulationService = scope.ServiceProvider.GetRequiredService<CountryPopulationService>();
+//    await countryPopulationService.PopulateCountriesAsync();
+//}
+
+//using (var scope = app.Services.CreateScope())
+//{
+//    var countryHolidayService = scope.ServiceProvider.GetRequiredService<NationalEventsService>();
+//    await countryHolidayService.PopulateNationalHolidaysAsync();
+//}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -52,8 +52,8 @@
         }
         public static class NationalEventReminder
         {
-            public const int nationalEventReminderTitleMaxLength = 50;
-            public const int nationalEventReminderDesriptionMaxLength = 256;
+            public const int nationalEventReminderTitleMaxLength = 255;
+            public const int nationalEventReminderDesriptionMaxLength = Int32.MaxValue;
         }
     }
 }

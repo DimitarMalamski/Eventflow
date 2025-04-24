@@ -8,21 +8,40 @@
 <div id="@dropDownId" class="event-dropdown bg-white border rounded p-2 mt-2 shadow-sm text-start"
         style="position: absolute; top: 30px; left: 0; z-index: 10; width: 180px;">
     <ul class="list-unstyled mb-0 small">
-    @foreach (var pe in Model.PersonalEvents)
-    {
-        <li class="text-success calendar-event" 
-            style="cursor: pointer;"
-            data-id="@pe.Id"
-            data-title="@pe.Title"
-            data-description="@pe.Description"
-            data-date="@Model.Date.ToString("yyyy-MM-dd")"
-            data-category="@pe.CategoryName"
-            data-is-invited="@pe.IsInvited.ToString().ToLower()"
-            data-creator="@pe.CreatorUsername"
-            data-is-creator="@pe.IsCreator.ToString().ToLower()"
-            data-participants="@string.Join(",", pe.ParticipantUsernames)">
-            📌 @pe.Title
-        </li>
-    }
+        @if (Model.NationalEvents.Any())
+        {
+            @foreach (var ne in Model.NationalEvents)
+            {
+                <li class="calendar-event text-primary"
+                    data-title="@ne.Title"
+                    data-description="@ne.Description"
+                    data-date="@Model.Date.ToString("yyyy-MM-dd")"
+                    data-country="@ne.CountryName"
+                    data-type="national">
+                    📅 <strong>@ne.Title</strong><br />
+                    <small class="text-muted">(@ne.CountryName)</small>
+                </li>
+            }
+        }
+
+        @if (Model.PersonalEvents.Any())
+        {
+            @foreach (var pe in Model.PersonalEvents)
+            {
+                <li class="text-success calendar-event"
+                    style="cursor: pointer;"
+                    data-id="@pe.Id"
+                    data-title="@pe.Title"
+                    data-description="@pe.Description"
+                    data-date="@Model.Date.ToString("yyyy-MM-dd")"
+                    data-category="@pe.CategoryName"
+                    data-is-invited="@pe.IsInvited.ToString().ToLower()"
+                    data-creator="@pe.CreatorUsername"
+                    data-is-creator="@pe.IsCreator.ToString().ToLower()"
+                    data-participants="@string.Join(",", pe.ParticipantUsernames)">
+                    📌 @pe.Title
+            </li>
+            }
+        }
     </ul>
 </div>

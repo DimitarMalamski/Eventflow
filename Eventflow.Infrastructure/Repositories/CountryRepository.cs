@@ -1,6 +1,7 @@
 ﻿using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
 using Eventflow.Infrastructure.Data.Interfaces;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace Eventflow.Infrastructure.Repositories
@@ -26,7 +27,7 @@ namespace Eventflow.Infrastructure.Repositories
         }
         public async Task<List<Country>> GetAllCountriesByContinentIdAsync(int continentId)
         {
-            string query = @"SELECT Id, Name, FlagUrl, ContinentId 
+            string query = @"SELECT Id, Name, FlagUrl, ContinentId, ISOCode 
                      FROM Country 
                      WHERE ContinentId = @ContinentId";
 
@@ -46,11 +47,49 @@ namespace Eventflow.Infrastructure.Repositories
                     Id = Convert.ToInt32(row["Id"]),
                     Name = row["Name"].ToString()!,
                     FlagUrl = null!,
-                    ContinentId = Convert.ToInt32(row["ContinentId"])
+                    ContinentId = Convert.ToInt32(row["ContinentId"]),
+                    ISOCode = row["ISOCode"].ToString()!
                 });
             }
 
             return countries;
+        }
+        public async Task<Country> GetCountryByISOCodeAsync(string isoCode)
+        {
+            try
+            {
+                string query = "SELECT * FROM Country WHERE ISOCode = @ISOCode";
+
+                var parameters = new Dictionary<string, object>
+                {
+                    { "@ISOCode", isoCode }
+                };
+
+                var dt = await _dbHelper.ExecuteQueryAsync(query, parameters);
+
+
+
+                if (dt.Rows.Count > 0)
+                {
+                    var row = dt.Rows[0];
+
+                    return new Country
+                    {
+                        Id = Convert.ToInt32(row["Id"]),
+                        Name = row["Name"].ToString()!,
+                        ISOCode = row["ISOCode"].ToString()!,
+                        FlagUrl = row["FlagUrl"].ToString()!,
+                        ContinentId = Convert.ToInt32(row["ContinentId"])
+                    };
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error fetching country with ISOCode {isoCode}: {ex.Message}");
+                return null;
+            }
         }
         public async Task InsertCountryAsync(string countryName, int continentId, string flagUrl, string isoCode)
         {
@@ -66,6 +105,29 @@ namespace Eventflow.Infrastructure.Repositories
             };
 
             await _dbHelper.ExecuteNonQueryAsync(insertCountryQuery, countryParams);
+        }
+        public async Task InsertHolidayAsync(int countryId, string name, string date, string description)
+        {
+            // Ensure the fields are not null or empty before inserting
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(date))
+            {
+                Console.Error.WriteLine($"Skipping holiday: {name} due to missing data.");
+                return;
+            }
+
+            string query = @"INSERT INTO NationalEvent (CountryId, Title, Date, Description) 
+                     VALUES (@CountryId, @Title, @Date, @Description)";
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "@CountryId", countryId },
+                { "@Title", name },
+                { "@Date", date },
+                { "@Description", description }
+            };
+
+            await _dbHelper.ExecuteNonQueryAsync(query, parameters);
+            Console.WriteLine($"Inserted holiday: {name} for country: {countryId}");
         }
     }
 }
