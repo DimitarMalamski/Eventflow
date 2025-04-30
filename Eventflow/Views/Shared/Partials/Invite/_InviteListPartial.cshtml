@@ -1,0 +1,26 @@
+@using Eventflow.Domain.Models.ViewModels
+@model InvitePageViewModel
+
+@if (Model.Invites?.Any() == true)
+{
+    foreach (var invites in Model.Invites)
+    {
+        if (invites != null)
+        {
+            @await Html.PartialAsync("~/Views/Shared/Partials/Reminder/_InviteCardPartial.cshtml", invites)
+        }
+    }
+
+    @await Html.PartialAsync("~/Views/Shared/Partials/Reminder/_PaginationPartial.cshtml", new PaginationViewModel
+    {
+        CurrentPage = Model.CurrentPage,
+        TotalPages = Model.TotalPages,
+        SearchTerm = Model.SearchTerm,
+        SortBy = Model.SortBy,
+        State = "Invite" ?? null
+    })
+}
+else
+{
+    @await Html.PartialAsync("~/Views/Shared/Partials/Reminder/_InviteEmptyStatePartial.cshtml")
+}

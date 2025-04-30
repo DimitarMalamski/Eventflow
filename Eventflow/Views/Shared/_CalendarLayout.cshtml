@@ -14,8 +14,14 @@
     var sidebarContext = GetSidebarContext(currentController, currentAction);
     var needsVerticalCentering = NeedsVerticalCentering(currentController);
 
+    int? selectedCountryId = null;
+
     var pageModel = Model as CalendarPageViewModel;
     var continents = pageModel?.Continents ?? new List<Continent>();
+
+    if (pageModel != null) {
+        selectedCountryId = pageModel.SelectedCountryId;
+    }
 
     ViewData["Title"] ??= "Eventflow";
 }
@@ -49,7 +55,7 @@
                 {
                     context = sidebarContext,
                     continents = continents,
-                    selectedCountryId = Model.SelectedCountryId
+                    selectedCountryId = selectedCountryId
                 })
         </div>
 

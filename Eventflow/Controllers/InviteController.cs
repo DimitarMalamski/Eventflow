@@ -106,7 +106,7 @@ namespace Eventflow.Controllers
 
         [HttpGet]
         [RequireUserOrAdmin]
-        public async Task<IActionResult> Index(int statusId = 1)
+        public async Task<IActionResult> Index(int statusId = 0)
         {
             int userId = GetUserId(HttpContext.Session);
 
@@ -117,7 +117,7 @@ namespace Eventflow.Controllers
 
             var model = new InvitePageViewModel
             {
-                CurrentStatusId = statusId,
+                CurrentStatus = (InviteStatus)statusId,
                 StatusOptions = statuses,
                 Invites = invites.Select(invite => new InviteBoxViewModel
                 {

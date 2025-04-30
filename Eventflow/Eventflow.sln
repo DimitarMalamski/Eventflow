@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eventflow.Application", "..
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eventflow.Infrastructure", "..\Eventflow.Infrastructure\Eventflow.Infrastructure.csproj", "{54D296E3-D3E4-47B1-BFA7-E874FF64D62B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eventflow.Tests", "..\Eventflow.Tests\Eventflow.Tests.csproj", "{3AF80090-3738-474C-9848-DBCC44976F69}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{54D296E3-D3E4-47B1-BFA7-E874FF64D62B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54D296E3-D3E4-47B1-BFA7-E874FF64D62B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54D296E3-D3E4-47B1-BFA7-E874FF64D62B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AF80090-3738-474C-9848-DBCC44976F69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AF80090-3738-474C-9848-DBCC44976F69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AF80090-3738-474C-9848-DBCC44976F69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AF80090-3738-474C-9848-DBCC44976F69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

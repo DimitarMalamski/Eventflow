@@ -26,7 +26,7 @@ namespace Eventflow.Views.ViewComponents
                 Username = GetUsername(HttpContext.Session),
                 IsLoggedin = isLoggedIn,
                 Buttons = buttons,
-                SelectedCountryId = selectedCountryId
+                SelectedCountryId = selectedCountryId ?? 0
             };
 
             return View("Default", viewModel);
