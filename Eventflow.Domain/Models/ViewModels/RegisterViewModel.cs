@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static Eventflow.Domain.Common.ValidationConstants.User;
 using static Eventflow.Domain.Common.CustomErrorMessages.Register;
-using static Eventflow.Domain.Common.CustomErrorMessages.Login;
+using static Eventflow.Domain.Common.ValidationConstants.User;
+using static Eventflow.Domain.Common.ValidationRegex;
 
 namespace Eventflow.Domain.Models.ViewModels
 {
@@ -32,7 +32,7 @@ namespace Eventflow.Domain.Models.ViewModels
         [StringLength(userPasswordMaxLength,
             MinimumLength = userPasswordMinLength,
             ErrorMessage = registerPasswordInvalid)]
-        [RegularExpression(loginPasswordRegex,
+        [RegularExpression(PasswordPattern,
             ErrorMessage = registerPasswordInvalid)]
 
         public string Password { get; set; } = null!;

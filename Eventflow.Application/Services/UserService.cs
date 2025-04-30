@@ -1,6 +1,8 @@
 ﻿using Eventflow.Application.Services.Interfaces;
+using Eventflow.Domain.Enums;
 using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
+using static Eventflow.Application.Helper.InputValidator;
 using static Eventflow.Application.Security.PasswordHasher;
 
 namespace Eventflow.Application.Services
@@ -16,9 +18,16 @@ namespace Eventflow.Application.Services
             => await _userRepository.GetUserByIdAsync(userId);
         public async Task<User?> GetUserByUsernameAsync(string username)
             => await _userRepository.GetUserByInputAsync(username);
-
         public async Task<User?> LoginAsync(string loginInput, string password)
         {
+            loginInput = loginInput.Trim().ToLower();
+            password = password.Trim();
+
+            if (!IsValidLoginInput(loginInput) || !IsValidLoginPassword(password))
+            {
+                return null;
+            }
+
             User? user = await _userRepository.GetUserByInputAsync(loginInput);
 
             if (user == null)
@@ -35,10 +44,16 @@ namespace Eventflow.Application.Services
         }
         public async Task<bool> RegisterAsync(string username, string password, string firstname, string? lastname, string email)
         {
-            if (string.IsNullOrWhiteSpace(username) ||
-                string.IsNullOrWhiteSpace(password) ||
-                string.IsNullOrWhiteSpace(firstname) ||
-                string.IsNullOrWhiteSpace(email))
+            username = username.Trim().ToLower();
+            email = email.Trim().ToLower();
+            password = password.Trim();
+            firstname = firstname.Trim();
+            lastname = lastname?.Trim();
+
+            if (!IsValidUsername(username)
+                || !IsValidPassword(password)
+                || !IsValidFirstname(firstname)
+                || !IsValidEmail(email))
             {
                 return false;
             }
@@ -59,7 +74,7 @@ namespace Eventflow.Application.Services
                 Firstname = firstname,
                 Lastname = lastname,
                 Email = email,
-                RoleId = 2
+                RoleId = (int)Domain.Enums.Role.User
             };
 
             int rowsAffected = await _userRepository.RegisterUserAsync(newUser);

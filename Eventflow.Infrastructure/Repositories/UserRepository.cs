@@ -14,7 +14,9 @@ namespace Eventflow.infrastructure.Repositories
         }
         public async Task<User?> GetUserByInputAsync(string input)
         {
-            string getuserQuery = @"SELECT * FROM [User] WHERE [Username] = @Input OR [Email] = @Input";
+            string getuserQuery = @"SELECT * FROM [User] 
+                                WHERE LOWER([Username]) = LOWER(@Input)
+                                OR LOWER([Email]) = LOWER(@Input)";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>
             {
@@ -28,23 +30,13 @@ namespace Eventflow.infrastructure.Repositories
                 return null;
             }
 
-            DataRow row = dt.Rows[0];
-
-            return new User
-            {
-                Id = Convert.ToInt32(row["Id"]),
-                Username = row["Username"].ToString()!,
-                PasswordHash = row["PasswordHash"].ToString()!,
-                Salt = row["Salt"].ToString()!,
-                Firstname = row["Firstname"].ToString()!,
-                Lastname = row["Lastname"].ToString() ?? "",
-                Email = row["Email"].ToString()!,
-                RoleId = Convert.ToInt32(row["RoleId"])
-            };
+            return MapUser(dt.Rows[0]);
         }
         public async Task<bool> UserExistsAsync(string username, string email)
         {
-            string userExistsQuery = "SELECT COUNT(*) FROM [User] WHERE Username = @Username OR Email = @Email";
+            string userExistsQuery = @"SELECT COUNT(*) FROM [User]
+                            WHERE LOWER(Username) = LOWER(@Username)
+                            OR LOWER(Email) = LOWER(@Email)";
             Dictionary<string, object> parameters = new Dictionary<string, object>
             {
                 { "@Username", username },
@@ -89,19 +81,7 @@ namespace Eventflow.infrastructure.Repositories
                 return null;
             }
 
-            var row = dt.Rows[0];
-
-            return new User
-            {
-                Id = Convert.ToInt32(row["Id"]),
-                Username = row["Username"].ToString()!,
-                PasswordHash = row["PasswordHash"].ToString()!,
-                Salt = row["Salt"].ToString()!,
-                Firstname = row["Firstname"].ToString()!,
-                Lastname = row["Lastname"].ToString() ?? "",
-                Email = row["Email"].ToString()!,
-                RoleId = Convert.ToInt32(row["RoleId"])
-            };
+            return MapUser(dt.Rows[0]);
         }
         public async Task<User?> GetUserByIdAsync(int userId)
         {
@@ -112,25 +92,14 @@ namespace Eventflow.infrastructure.Repositories
                 { "@Id", userId }
             };
 
-            var table = await _dbHelper.ExecuteQueryAsync(getUserByIdQuery, parameters);
+            var dt = await _dbHelper.ExecuteQueryAsync(getUserByIdQuery, parameters);
 
-            if (table.Rows.Count == 0)
+            if (dt.Rows.Count == 0)
             {
                 return null;
             }
 
-            var row = table.Rows[0];
-
-            return new User
-            {
-                Id = Convert.ToInt32(row["Id"]),
-                Username = row["Username"].ToString()!,
-                PasswordHash = row["PasswordHash"].ToString()!,
-                Salt = row["Salt"].ToString()!,
-                Firstname = row["Firstname"].ToString()!,
-                Email = row["Email"].ToString()!,
-                RoleId = Convert.ToInt32(row["RoleId"])
-            };
+            return MapUser(dt.Rows[0]);
         }
         public async Task<List<string>> GetUsernamesByEventIdAsync(int eventId)
         {
@@ -169,5 +138,16 @@ namespace Eventflow.infrastructure.Repositories
 
             return usernames;
         }
+        private User MapUser(DataRow row) => new User
+        {
+            Id = Convert.ToInt32(row["Id"]),
+            Username = row["Username"].ToString()!,
+            PasswordHash = row["PasswordHash"].ToString()!,
+            Salt = row["Salt"].ToString()!,
+            Firstname = row["Firstname"].ToString()!,
+            Lastname = row["Lastname"].ToString() ?? "",
+            Email = row["Email"].ToString()!,
+            RoleId = Convert.ToInt32(row["RoleId"])
+        };
     }
 }

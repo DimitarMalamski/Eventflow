@@ -6,9 +6,6 @@
         {
             public const string loginInputRequired = "Username of email is required.";
             public const string loginPasswordRequired = "Password is required."; 
-
-            public const string loginPasswordRegex = @"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?""{}|<>]).{8,}$";
-
             public const string loginInputInvalid = $"Username/email should be at least 4 characters long";
             public const string loginPasswordInvalid = "Password must be at least 8 characters, contain an uppercase letter, a number, and a special symbol.";
         } 
