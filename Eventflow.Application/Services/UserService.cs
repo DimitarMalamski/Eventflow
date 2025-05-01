@@ -1,9 +1,13 @@
 ﻿using Eventflow.Application.Services.Interfaces;
-using Eventflow.Domain.Enums;
+using Eventflow.Domain.Exceptions;
 using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
 using static Eventflow.Application.Helper.InputValidator;
 using static Eventflow.Application.Security.PasswordHasher;
+using static Eventflow.Domain.Common.CustomErrorMessages.UserService;
+using static Eventflow.Domain.Common.CustomErrorMessages.Login;
+using static Eventflow.Domain.Common.CustomErrorMessages.Register;
+using Role = Eventflow.Domain.Enums.Role;
 
 namespace Eventflow.Application.Services
 {
@@ -12,55 +16,97 @@ namespace Eventflow.Application.Services
         private readonly IUserRepository _userRepository;
         public UserService(IUserRepository userRepository)
         {
-            _userRepository = userRepository;
+            _userRepository = userRepository
+                ?? throw new ArgumentNullException(nameof(userRepository));
         }
         public async Task<User?> GetUserByIdAsync(int userId)
-            => await _userRepository.GetUserByIdAsync(userId);
+        {
+            if (userId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(userId));
+            }
+
+            return await _userRepository.GetUserByIdAsync(userId);
+        }
         public async Task<User?> GetUserByUsernameAsync(string username)
-            => await _userRepository.GetUserByInputAsync(username);
+        {
+            if (!IsValidUsername(username)) 
+            {
+                throw new ArgumentException(userUsernameCannotBeNull, nameof(username));
+            }
+
+            return await _userRepository.GetByUsernameAsync(username);
+        }
         public async Task<User?> LoginAsync(string loginInput, string password)
         {
+            if (string.IsNullOrWhiteSpace(loginInput)
+                || string.IsNullOrWhiteSpace(password))
+            {
+                throw new InvalidLoginInputException(loginInputCannotBeNull);
+            }
+
             loginInput = loginInput.Trim().ToLower();
             password = password.Trim();
 
-            if (!IsValidLoginInput(loginInput) || !IsValidLoginPassword(password))
+            if (!IsValidLoginInput(loginInput))
             {
-                return null;
+                throw new InvalidLoginInputException(loginInputInvalid);
+            }
+
+            if (!IsValidPassword(password))
+            {
+                throw new InvalidLoginInputException(loginPasswordInvalid);
             }
 
             User? user = await _userRepository.GetUserByInputAsync(loginInput);
 
-            if (user == null)
+            if (user == null 
+                || !VerifyPassword(password, user.PasswordHash, user.Salt))
             {
                 return null;
             }
 
-            if (VerifyPassword(password, user.PasswordHash, user.Salt))
-            {
-                return user;
-            }
-
-            return null;
+            return user;
         }
         public async Task<bool> RegisterAsync(string username, string password, string firstname, string? lastname, string email)
         {
+            if (string.IsNullOrWhiteSpace(username)
+                || string.IsNullOrWhiteSpace(password)
+                || string.IsNullOrWhiteSpace(firstname)
+                || string.IsNullOrWhiteSpace(email))
+            {
+                throw new InvalidRegistrationInputException(registerUserAlreadyExists);
+            }
+
             username = username.Trim().ToLower();
             email = email.Trim().ToLower();
             password = password.Trim();
             firstname = firstname.Trim();
             lastname = lastname?.Trim();
 
-            if (!IsValidUsername(username)
-                || !IsValidPassword(password)
-                || !IsValidFirstname(firstname)
-                || !IsValidEmail(email))
+            if (!IsValidUsername(username))
             {
-                return false;
+                throw new InvalidRegistrationInputException(registerUsernameInvalid);
+            }
+
+            if (!IsValidPassword(password))
+            {
+                throw new InvalidRegistrationInputException(registerPasswordInvalid);
+            }
+
+            if (!IsValidFirstname(firstname))
+            {
+                throw new InvalidRegistrationInputException(registerFirstnameInvalid);
+            }
+
+            if (!IsValidEmail(email))
+            {
+                throw new InvalidRegistrationInputException(registerEmailInvalid);
             }
 
             if (await _userRepository.UserExistsAsync(username, email))
             {
-                return false;
+                throw new InvalidRegistrationInputException(registerUserAlreadyExists);
             }
 
             string passwordSalt = GenerateRandomSalt();
@@ -74,7 +120,7 @@ namespace Eventflow.Application.Services
                 Firstname = firstname,
                 Lastname = lastname,
                 Email = email,
-                RoleId = (int)Domain.Enums.Role.User
+                RoleId = (int)Role.User
             };
 
             int rowsAffected = await _userRepository.RegisterUserAsync(newUser);
