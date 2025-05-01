@@ -6,6 +6,10 @@
         {
             public const string userUsernameCannotBeNull = "Username cannot be null or empty.";
         }
+        public static class StatusService
+        {
+            public const string statusRetrievalFailed = "Failed to retrieve status options from the repository.";
+        }
         public static class Login
         {
             public const string loginInputCannotBeNull = "Login input or password cannot be empty.";
