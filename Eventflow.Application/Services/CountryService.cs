@@ -1,6 +1,8 @@
 ﻿using Eventflow.Application.Services.Interfaces;
+using Eventflow.Domain.Exceptions;
 using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
+using static Eventflow.Domain.Common.CustomErrorMessages.CountryService;
 
 namespace Eventflow.Application.Services
 {
@@ -9,10 +11,26 @@ namespace Eventflow.Application.Services
         private readonly ICountryRepository _countryRepository;
         public CountryService(ICountryRepository countryRepository)
         {
-            _countryRepository = countryRepository;
+            _countryRepository = countryRepository
+                ?? throw new ArgumentNullException(nameof(countryRepository));
         }
         public async Task<List<Country>> GetCountriesByContinentIdAsync(int continentId)
-            => (await _countryRepository.GetAllCountriesByContinentIdAsync(continentId))
-                .OrderBy(c => c.Name).ToList();
+        {
+            if (continentId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(continentId), continentIdWasInvalid);
+            }
+
+            try
+            {
+                return (await _countryRepository.GetAllCountriesByContinentIdAsync(continentId))
+                    .OrderBy(c => c.Name)
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                throw new CountryRetrievalException(countryRetrievalFailed);
+            }
+        }
     }
 }

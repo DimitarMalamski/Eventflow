@@ -6,6 +6,11 @@
         {
             public const string userUsernameCannotBeNull = "Username cannot be null or empty.";
         }
+        public static class CountryService
+        {
+            public const string countryRetrievalFailed = "Failed to retrieve countries from the repository.";
+            public const string continentIdWasInvalid = "Continent ID must be greater than zero.";
+        }
         public static class StatusService
         {
             public const string statusRetrievalFailed = "Failed to retrieve status options from the repository.";
