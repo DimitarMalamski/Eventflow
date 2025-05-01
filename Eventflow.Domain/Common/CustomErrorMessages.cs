@@ -6,6 +6,11 @@
         {
             public const string userUsernameCannotBeNull = "Username cannot be null or empty.";
         }
+
+        public static class CategoryService
+        {
+            public const string categoryRetrievalFailed = "Failed to retrieve categories from the repository.";
+        }
         public static class CountryService
         {
             public const string countryRetrievalFailed = "Failed to retrieve countries from the repository.";

@@ -21,7 +21,7 @@ namespace Eventflow.Tests.Services
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Constructor_ShouldThrow_WhenRepositoryIsNull()
+        public void Constructor_ShouldThrowException_WhenRepositoryIsNull()
         {
             // Act 
             var service = new StatusService(null!);

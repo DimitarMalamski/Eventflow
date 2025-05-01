@@ -1,6 +1,8 @@
 ﻿using Eventflow.Application.Services.Interfaces;
+using Eventflow.Domain.Exceptions;
 using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
+using static Eventflow.Domain.Common.CustomErrorMessages.CategoryService;
 
 namespace Eventflow.Application.Services
 {
@@ -9,12 +11,23 @@ namespace Eventflow.Application.Services
         private readonly ICategoryRepository _categoryRepository;
         public CategoryService(ICategoryRepository categoryRepository)
         {
-            _categoryRepository = categoryRepository;
+            _categoryRepository = categoryRepository
+                ?? throw new ArgumentNullException(nameof(categoryRepository));
         }
 
         public async Task<List<Category>> GetAllCategoriesAsync()
-            => (await _categoryRepository.GetAllCategoriesAsync())
-                .OrderBy(c => c.Name)
-                .ToList();
+        {
+            try
+            {
+                 return (await _categoryRepository.GetAllCategoriesAsync())
+                    .Where(c => !string.IsNullOrWhiteSpace(c.Name))
+                    .OrderBy(c => c.Name)
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                throw new CategoryRetrievalException(categoryRetrievalFailed);
+            }
+        }
     }
 }
