@@ -24,6 +24,7 @@ namespace Eventflow.Application.Services
             try
             {
                 return (await _countryRepository.GetAllCountriesByContinentIdAsync(continentId))
+                    .Where(c => !string.IsNullOrWhiteSpace(c.Name))
                     .OrderBy(c => c.Name)
                     .ToList();
             }

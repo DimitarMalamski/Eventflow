@@ -93,5 +93,27 @@ namespace Eventflow.Tests.Services
                 _countryService.GetCountriesByContinentIdAsync(id));
 
         }
+
+        [TestMethod]
+        public async Task GetCountriesByContinentIdAsync_ShouldIgnoreNullOrWhitespaceNames()
+        {
+            var mixedCountries = new List<Country>
+            {
+                new Country { Id = 1, Name = "Germany" },
+                new Country { Id = 2, Name = "" },
+                new Country { Id = 3, Name = "  " },
+                new Country { Id = 4, Name = "France" }
+            };
+
+            _mockCountryRepository
+                .Setup(repo => repo.GetAllCountriesByContinentIdAsync(1))
+                .ReturnsAsync(mixedCountries);
+
+            var result = await _countryService.GetCountriesByContinentIdAsync(1);
+
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("France", result[0].Name);
+            Assert.AreEqual("Germany", result[1].Name);
+        }
     }
 }
