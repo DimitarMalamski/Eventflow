@@ -79,7 +79,33 @@ namespace Eventflow.Tests.Services
                 .ThrowsAsync(new Exception("Fail!"));
 
             // Act
+            await _continentService.OrderContinentByNameAsync();
+        }
+
+        [TestMethod]
+        public async Task OrderContinentByNameAsync_ShouldIgnoreNullOrWhitespaceNames()
+        {
+            // Arrange
+            var mixedContinents = new List<Continent>()
+            {
+                new Continent { Id = 1, Name = "Europe" },
+                new Continent { Id = 3, Name = "  " },
+                new Continent { Id = 4, Name = "Africa" },
+                new Continent { Id = 2, Name = string.Empty!}
+            };
+
+            _mockContinentRepository
+                .Setup(repo => repo.GetAllContinentsAsync())
+                .ReturnsAsync(mixedContinents);
+
+            // Act
             var result = await _continentService.OrderContinentByNameAsync();
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("Africa", result[0].Name);
+            Assert.AreEqual("Europe", result[1].Name);
         }
     }
 }

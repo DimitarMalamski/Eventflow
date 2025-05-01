@@ -19,6 +19,7 @@ namespace Eventflow.Application.Services
             try
             {
                 return (await _continentRepository.GetAllContinentsAsync())
+                    .Where(c => !string.IsNullOrWhiteSpace(c.Name))
                     .OrderBy(c => c.Name)
                     .ToList();
             }
