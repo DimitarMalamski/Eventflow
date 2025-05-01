@@ -10,6 +10,10 @@
         {
             public const string statusRetrievalFailed = "Failed to retrieve status options from the repository.";
         }
+        public static class ContinentService
+        {
+            public const string continentRetrievalFailed = "Failed to retrieve continents from the repository.";
+        }
         public static class Login
         {
             public const string loginInputCannotBeNull = "Login input or password cannot be empty.";

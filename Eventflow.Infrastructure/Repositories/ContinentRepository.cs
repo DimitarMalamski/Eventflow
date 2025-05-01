@@ -12,7 +12,6 @@ namespace Eventflow.Infrastructure.Repositories
         {
             _dbHelper = dbHelper;
         }
-
         public async Task<List<Continent>> GetAllContinentsAsync()
         {
             string query = "SELECT Id, Name FROM Continent";
@@ -32,7 +31,6 @@ namespace Eventflow.Infrastructure.Repositories
 
             return continents;
         }
-
         public async Task<int> GetOrInsertContinentAsync(string continentName)
         {
             string checkIfContinentExistsQuery = "SELECT Id FROM Continent WHERE Name = @Name";
