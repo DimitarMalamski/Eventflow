@@ -1,4 +1,5 @@
-﻿using Eventflow.Domain.Interfaces.Repositories;
+﻿using Eventflow.Domain.Enums;
+using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
 using Eventflow.Infrastructure.Data.Interfaces;
 using System.Data;
@@ -177,6 +178,31 @@ namespace Eventflow.Infrastructure.Repositories
             };
 
             await _dbHelper.ExecuteNonQueryAsync(updateIsCompleteStatusQuery, parameters);
+        }
+        public async Task<bool> UserHasAccessToEventAsync(int eventId, int userId)
+        {
+            string hasAccesstoEventQuery = @"
+                    SELECT 1
+                    WHERE EXISTS (
+                        SELECT 1
+                        FROM PersonalEvent
+                        WHERE Id = @EventId AND UserId = @UserId
+                    )
+                    OR EXISTS (
+                        SELECT 1
+                        FROM Invite
+                        WHERE PersonalEventId = @EventId AND InvitedUserId = @UserId AND StatusId = @AcceptedStatusId
+                    )";
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "@EventId", eventId },
+                { "@UserId", userId },
+                { "@AcceptedStatusId", (int)InviteStatus.Accepted }
+            };
+
+            var result = await _dbHelper.ExecuteScalarAsync(hasAccesstoEventQuery, parameters);
+            return result != null;
         }
     }
 }

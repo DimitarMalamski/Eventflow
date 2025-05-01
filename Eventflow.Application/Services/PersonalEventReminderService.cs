@@ -1,10 +1,12 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Domain.Enums;
+using Eventflow.Domain.Exceptions;
 using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Models;
 using Eventflow.Domain.Models.ViewModels;
-using static Eventflow.Application.Mapper.ViewModelMapper.PersonalReminder;
 using static Eventflow.Application.Helper.StringMatchHelper;
+using static Eventflow.Application.Mapper.ViewModelMapper.PersonalReminder;
+using static Eventflow.Domain.Common.CustomErrorMessages.PersonalEventReminderService;
 
 namespace Eventflow.Application.Services
 {
@@ -15,12 +17,38 @@ namespace Eventflow.Application.Services
         public PersonalEventReminderService(IPersonalEventReminderRepository personalEventReminderRepository,
             IPersonalEventRepository personalEventRepository)
         {
-            _personalEventReminderRepository = personalEventReminderRepository;
-            _personalEventRepository = personalEventRepository;
+            _personalEventReminderRepository = personalEventReminderRepository
+                ?? throw new ArgumentNullException(nameof(personalEventReminderRepository));
+            _personalEventRepository = personalEventRepository
+                ?? throw new ArgumentNullException(nameof(personalEventRepository));
         }
 
-        public async Task CreatePersonalEventReminderAsync(PersonalEventReminder reminder)
-            => await _personalEventReminderRepository.CreatePersonalReminderAsync(reminder);
+        public async Task CreatePersonalEventReminderAsync(PersonalEventReminder reminder, int userId)
+        {
+            if (reminder == null)
+            {
+                throw new ArgumentNullException(nameof(reminder), personalEventReminderCannotBeNull);
+            }
+
+            if (string.IsNullOrWhiteSpace(reminder.Title))
+            {
+                throw new InvalidReminderInputException(personalEventRemindedrTitleCannotBeNull);
+            }
+
+            if (reminder.Date < DateTime.Today)
+            {
+                throw new InvalidReminderInputException(personalEventReminderDataCannotBeInThePast);
+            }
+
+            bool hasAccess = await _personalEventRepository.UserHasAccessToEventAsync(reminder.PersonalEventId, userId);
+
+            if (!hasAccess)
+            {
+                throw new UnauthorizedReminderAccessException(personalEventReminderHasNoAccessToCreate);
+            }
+
+            await _personalEventReminderRepository.CreatePersonalReminderAsync(reminder);
+        }
         public async Task<PaginatedRemindersViewModel> GetPaginatedFilteredPersonalRemindersAsync(int userId,
             ReminderStatus status,
             string? search,

@@ -7,6 +7,14 @@
             public const string userUsernameCannotBeNull = "Username cannot be null or empty.";
         }
 
+        public static class PersonalEventReminderService
+        {
+            public const string personalEventReminderCannotBeNull = "PersonalEventReminder cannot be null.";
+            public const string personalEventRemindedrTitleCannotBeNull = "Reminder title cannot be empty.";
+            public const string personalEventReminderDataCannotBeInThePast = "Reminder date cannot be in the past.";
+            public const string personalEventReminderHasNoAccessToCreate = "You are not allowed to create a reminder for this event.";
+        }
+
         public static class CategoryService
         {
             public const string categoryRetrievalFailed = "Failed to retrieve categories from the repository.";
