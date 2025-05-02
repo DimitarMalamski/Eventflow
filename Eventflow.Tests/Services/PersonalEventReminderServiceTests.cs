@@ -637,6 +637,230 @@ namespace Eventflow.Tests.Services
             Assert.AreEqual(0, unreadPersonalEventRemindersCount);
         }
 
+        [TestMethod]
+        public async Task GetPaginatedLikedRemindersAsync_ReturnsEmpty_WhenNoReminders()
+        {
+            // Arrange
+            _mockPersonalEventReminderRepository
+                .Setup(repo => repo.GetLikedRemindersByUserAsync(It.IsAny<int>()))
+                .ReturnsAsync(new List<PersonalEventReminder>());
 
+            // Act
+            var result = await _personalEventReminderService.GetPaginatedLikedRemindersAsync(
+                userId: 1, 
+                search: null, 
+                sortBy: null, 
+                page: 1,
+                pageSize: 10);
+
+            // Assert
+            Assert.AreEqual(0, result.PersonalReminders.Count);
+            Assert.AreEqual(1, result.TotalPages);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public async Task GetPaginatedLikedRemindersAsync_Throws_WhenPageIsLessThanOne()
+        {
+            // Act
+            await _personalEventReminderService.GetPaginatedLikedRemindersAsync(
+                userId: 1, 
+                search: null, 
+                sortBy: null, 
+                page: 0,
+                pageSize: 10);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public async Task GetPaginatedLikedRemindersAsync_Throws_WhenPageSizeIsZero()
+        {
+            // Act
+            await _personalEventReminderService.GetPaginatedLikedRemindersAsync(
+                userId: 1,
+                search: null, 
+                sortBy: null, 
+                page: 1, 
+                pageSize: 0);
+        }
+
+        [TestMethod]
+        public async Task GetPaginatedLikedRemindersAsync_AppliesSearchFilter()
+        {
+            // Arrange
+            var personalEventReminders = new List<PersonalEventReminder>
+            {
+                new PersonalEventReminder { Title = "Gym", Date = DateTime.Today, IsLiked = true },
+                new PersonalEventReminder { Title = "Cook Eggs", Date = DateTime.Today, IsLiked = true }
+            };
+
+            _mockPersonalEventReminderRepository
+                .Setup(repo => repo.GetLikedRemindersByUserAsync(It.IsAny<int>()))
+                .ReturnsAsync(personalEventReminders);
+
+            // Act
+            var result = await _personalEventReminderService.GetPaginatedLikedRemindersAsync(
+                userId: 1,
+                search: "eggs",
+                sortBy: null, 
+                page: 1, 
+                pageSize: 10);
+
+            // Assert
+            Assert.AreEqual(1, result.PersonalReminders.Count);
+            Assert.AreEqual("Cook Eggs", result.PersonalReminders[0].Title);
+        }
+
+        [TestMethod]
+        public async Task GetPaginatedLikedRemindersAsync_SortsByDate()
+        {
+            // Arrange
+            var personalEventReminders = new List<PersonalEventReminder>
+            {
+                new PersonalEventReminder { Title = "C", Date = new DateTime(2025, 1, 3), IsLiked = true },
+                new PersonalEventReminder { Title = "A", Date = new DateTime(2025, 1, 1), IsLiked = true },
+                new PersonalEventReminder { Title = "B", Date = new DateTime(2025, 1, 2), IsLiked = true }
+            };
+
+            _mockPersonalEventReminderRepository
+                .Setup(repo => repo.GetLikedRemindersByUserAsync(It.IsAny<int>()))
+                .ReturnsAsync(personalEventReminders);
+
+            // Act
+            var result = await _personalEventReminderService.GetPaginatedLikedRemindersAsync(
+                userId: 1, 
+                search: null, 
+                sortBy: "date", 
+                page: 1, 
+                pageSize: 10);
+
+            // Assert
+            Assert.AreEqual("A", result.PersonalReminders[0].Title);
+            Assert.AreEqual("C", result.PersonalReminders[result.PersonalReminders.Count - 1].Title);
+        }
+
+        [TestMethod]
+        public async Task GetPaginatedLikedRemindersAsync_ReturnsCorrectSlice()
+        {
+            // Arrange
+            var personalEventReminders = new List<PersonalEventReminder>
+            {
+                new PersonalEventReminder { Title = "1", IsLiked = true },
+                new PersonalEventReminder { Title = "2", IsLiked = true },
+                new PersonalEventReminder { Title = "3", IsLiked = true }
+            };
+
+            _mockPersonalEventReminderRepository
+                .Setup(repo => repo.GetLikedRemindersByUserAsync(It.IsAny<int>()))
+                .ReturnsAsync(personalEventReminders);
+
+            // Act
+            var result = await _personalEventReminderService.GetPaginatedLikedRemindersAsync(
+                userId: 1,
+                search: null, 
+                sortBy: "id", 
+                page: 2, 
+                pageSize: 1);
+
+            // Assert
+            Assert.AreEqual("2", result.PersonalReminders[0].Title);
+            Assert.AreEqual(3, result.TotalPages);
+            Assert.AreEqual(2, result.CurrentPage);
+        }
+
+        [TestMethod]
+        public async Task GetPaginatedLikedRemindersAsync_FallsBackToDefaultSort_WhenSortByIsNull()
+        {
+            // Arrange
+            var personalEventLikedReminders = new List<PersonalEventReminder>
+            {
+                new PersonalEventReminder { Id = 3, Title = "C", IsLiked = true },
+                new PersonalEventReminder { Id = 1, Title = "A", IsLiked = true },
+                new PersonalEventReminder { Id = 2, Title = "B", IsLiked = true }
+            };
+
+            _mockPersonalEventReminderRepository
+                .Setup(repo => repo.GetLikedRemindersByUserAsync(It.IsAny<int>()))
+                .ReturnsAsync(personalEventLikedReminders);
+
+            // Act
+            var result = await _personalEventReminderService.GetPaginatedLikedRemindersAsync(
+                userId: 1, 
+                search: null, 
+                sortBy: null, 
+                page: 1, 
+                pageSize: 10);
+
+            Assert.AreEqual(1, result.PersonalReminders[0].Id);
+        }
+
+        [TestMethod]
+        public async Task GetPaginatedLikedRemindersAsync_Filters_ByPersonalEventTitle()
+        {
+            // Arrange
+            var personalEventLikedReminders = new List<PersonalEventReminder>
+            {
+                new PersonalEventReminder
+                {
+                    Title = "Reminder 1",
+                    PersonalEvent = new PersonalEvent { Title = "Yoga Class" },
+                    IsLiked = true
+                },
+                new PersonalEventReminder
+                {
+                    Title = "Reminder 2",
+                    PersonalEvent = new PersonalEvent { Title = "Meeting" },
+                    IsLiked = true
+                }
+            };
+
+            _mockPersonalEventReminderRepository
+                .Setup(repo => repo.GetLikedRemindersByUserAsync(It.IsAny<int>()))
+                .ReturnsAsync(personalEventLikedReminders);
+
+            // Act
+            var result = await _personalEventReminderService.GetPaginatedLikedRemindersAsync(
+                userId: 1, 
+                search: "yoga", 
+                sortBy: null, 
+                page: 1, 
+                pageSize: 10);
+
+            // Assert
+            Assert.AreEqual(1, result.PersonalReminders.Count);
+            Assert.AreEqual("Reminder 1", result.PersonalReminders[0].Title);
+        }
+
+        [TestMethod]
+        public async Task GetPaginatedLikedRemindersAsync_DoesNotThrow_WhenPersonalEventIsNull()
+        {
+            // Arrange
+            var personalEventLikedReminders = new List<PersonalEventReminder>
+            {
+                new PersonalEventReminder
+                {
+                    Title = "Reminder without event",
+                    Description = "Tests",
+                    Date = DateTime.Today,
+                    IsLiked = true,
+                    PersonalEvent = null
+                }
+            };
+
+            _mockPersonalEventReminderRepository
+                .Setup(repo => repo.GetLikedRemindersByUserAsync(It.IsAny<int>()))
+                .ReturnsAsync(personalEventLikedReminders);
+
+            // Act
+            var result = await _personalEventReminderService.GetPaginatedLikedRemindersAsync(
+                userId: 1,
+                search: "anything",
+                sortBy: null,
+                page: 1,
+                pageSize: 10);
+
+            // Assert
+            Assert.AreEqual(0, result.PersonalReminders.Count);
+        }
     }
 }
