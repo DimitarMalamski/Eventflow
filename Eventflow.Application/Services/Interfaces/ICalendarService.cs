@@ -8,5 +8,6 @@ namespace Eventflow.Application.Services.Interfaces
         public CalendarViewModel GenerateCalendar(int year, int month);
         public Task<CalendarViewModel> GenerateUserCalendarAsync(int userId, int year, int month);
         public Task<CalendarViewModel> GenerateNationalHolidayCalendarAsync(int countryId, int year, int month);
+        public CalendarViewModel GenerateEmptyCalendar(int year, int month);
     }
 }

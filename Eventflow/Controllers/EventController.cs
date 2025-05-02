@@ -145,6 +145,30 @@ namespace Eventflow.Controllers
             return RedirectToAction("MyEvents");
         }
 
+        [HttpGet]
+        [RequireUserOrAdmin]
+        public async Task<IActionResult> LoadPersonalCalendarPartial(int? month, int? year)
+        {
+            int userId = GetUserId(HttpContext.Session);
+            var (normalizedYear, normalizedMonth) = _calendarNavigationService.Normalize(year, month);
+
+            var ownEvents = await _personalEventService.GetEventsWithCategoryNamesAsync(userId, normalizedYear, normalizedMonth);
+            var invitedEvents = await _personalEventService.GetAcceptedInvitedEventsAsync(userId, normalizedYear, normalizedMonth);
+            var combinedEvents = ownEvents.Concat(invitedEvents).ToList();
+
+            var model = new CalendarComponentViewModel
+            {
+                Calendar = _calendarService.GenerateCalendar(normalizedYear, normalizedMonth, combinedEvents),
+                Navigation = new CalendarNavigationViewModel
+                {
+                    CurrentMonth = normalizedMonth,
+                    CurrentYear = normalizedYear
+                }
+            };
+
+            return PartialView("~/Views/Shared/Partials/Calendar/_CalendarWrapper.cshtml", model);
+        }
+
         private async Task<CalendarPageViewModel> ComposeMyEventsViewModel(int userId, int year, int month)
         {
             var (normalizedYear, normalizedMonth) = _calendarNavigationService.Normalize(year, month);

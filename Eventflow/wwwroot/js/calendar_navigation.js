@@ -9,13 +9,26 @@
             const countrySelect = document.getElementById("countrySelect");
             const countryId = countrySelect?.value;
 
+            const view = document.getElementById("calendarView")?.value;
+
             let url = "";
 
-            if (countryId) {
-                url = `/Calendar/LoadCalendarByCountryPartial?countryId=${countryId}&month=${month}&year=${year}`;
-            } else {
-                url = `/Calendar/LoadCalendarPartial?month=${month}&year=${year}`;
+            if (view === "national") {
+                if (!countryId || countryId === "0") {
+                    url = `/Calendar/LoadEmptyCalendarPartial?month=${month}&year=${year}`;
+                } else {
+                    url = `/Calendar/LoadCalendarByCountryPartial?countryId=${countryId}&month=${month}&year=${year}`;
+                }
+            } else if (view === "personal") {
+                url = `/Event/LoadPersonalCalendarPartial?month=${month}&year=${year}`;
             }
+
+            if (!url) {
+                console.warn("Calendar navigation blocked: view or params missing.");
+                return;
+            }
+
+            console.log("Navigating to calendar URL:", url);
 
             fetch(url)
                 .then(res => res.text())

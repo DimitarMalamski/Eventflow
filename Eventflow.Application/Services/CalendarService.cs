@@ -121,6 +121,58 @@ namespace Eventflow.Application.Services
         {
             return GenerateCalendar(year, month, new List<PersonalEventWithCategoryNameViewModel>());
         }
+        public CalendarViewModel GenerateEmptyCalendar(int year, int month)
+        {
+            var firstDay = new DateTime(year, month, 1);
+            int daysInMonth = DateTime.DaysInMonth(year, month);
+            int startDayWeek = firstDay.DayOfWeek == DayOfWeek.Sunday ? 6 : (int)firstDay.DayOfWeek - 1;
+
+            var model = new CalendarViewModel
+            {
+                Year = year,
+                Month = month
+            };
+
+            for (int i = 0; i < startDayWeek; i++)
+            {
+                model.Days.Add(new CalendarDay
+                {
+                    DayNumber = null,
+                    Date = null,
+                    IsToday = false,
+                    NationalEvents = new List<NationalEventViewModel>(),
+                    PersonalEvents = new List<PersonalEventWithCategoryNameViewModel>()
+                });
+            }
+
+            for (int day = 1; day <= daysInMonth; day++)
+            {
+                var date = new DateTime(year, month, day);
+
+                model.Days.Add(new CalendarDay
+                {
+                    DayNumber = day,
+                    Date = date,
+                    IsToday = date.Date == DateTime.Today.Date,
+                    NationalEvents = new List<NationalEventViewModel>(),
+                    PersonalEvents = new List<PersonalEventWithCategoryNameViewModel>()
+                });
+            }
+
+            while (model.Days.Count % 7 != 0)
+            {
+                model.Days.Add(new CalendarDay
+                {
+                    DayNumber = null,
+                    Date = null,
+                    IsToday = false,
+                    NationalEvents = new List<NationalEventViewModel>(),
+                    PersonalEvents = new List<PersonalEventWithCategoryNameViewModel>()
+                });
+            }
+
+            return model;
+        }
         public async Task<CalendarViewModel> GenerateNationalHolidayCalendarAsync(int countryId, int year, int month)
         {
             var nationalEvents = await _nationalEventService.GetNationalHolidaysForCountryAsync(countryId, year, month);

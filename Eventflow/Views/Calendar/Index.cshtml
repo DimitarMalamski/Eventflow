@@ -5,6 +5,8 @@
     Layout = "~/Views/Shared/_CalendarLayout.cshtml";
 }
 
+<input type="hidden" id="calendarView" value="national" />
+
 <div class="w-100" style="max-width: 1100px;">
     <div id="calendarOuterWrapper">
         @await Html.PartialAsync("~/Views/Shared/Partials/Calendar/_CalendarWrapper.cshtml", new CalendarComponentViewModel
