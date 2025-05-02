@@ -7,8 +7,8 @@ namespace Eventflow.Application.Services.Interfaces
     public interface IPersonalEventReminderService
     {
         public Task CreatePersonalEventReminderAsync(PersonalEventReminder reminder, int userId);
-        public Task<bool> MarkPersonalEventReminderAsReadAsync(int reminderId, int userId);
-        public Task<bool?> ToggleLikeAsync(int reminderId, int userId);
+        public Task MarkPersonalEventReminderAsReadAsync(int reminderId, int userId);
+        public Task<bool> ToggleLikeAsync(int reminderId, int userId);
         public Task<PaginatedRemindersViewModel> GetPaginatedFilteredPersonalRemindersAsync(
             int userId,
             ReminderStatus status,

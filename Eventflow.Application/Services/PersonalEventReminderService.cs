@@ -59,26 +59,35 @@ namespace Eventflow.Application.Services
             var personalReminders = await GetPersonalRemindersByStatusAsync(userId, status);
             return PaginateAndWrap(personalReminders, search, sortBy, page, pageSize);
         }
-        public async Task<bool> MarkPersonalEventReminderAsReadAsync(int reminderId, int userId)
+        public async Task MarkPersonalEventReminderAsReadAsync(int reminderId, int userId)
         {
             var personalReminder = await _personalEventReminderRepository.GetPersonalReminderByIdAsync(reminderId);
 
+            if (personalReminder == null)
+            {
+                throw new ReminderNotFoundException(ReminderNotFound(reminderId));
+            }
+
             if (!UserOwnsPersonalReminder(personalReminder, userId))
             {
-                return false;
+                throw new UnauthorizedReminderAccessException(personalReminderMarkAsReadNotAllowed);
             }
 
             await _personalEventReminderRepository.MarkPersonalReminderAsReadAsync(reminderId, userId);
-            return true;
         }
-        public async Task<bool?> ToggleLikeAsync(int reminderId, int userId)
+        public async Task<bool> ToggleLikeAsync(int reminderId, int userId)
         {
             var personalReminder = await _personalEventReminderRepository
                 .GetPersonalReminderByIdAsync(reminderId);
 
-            if (personalReminder == null || personalReminder.UserId != userId)
+            if (personalReminder == null)
             {
-                return null;
+                throw new ReminderNotFoundException(ReminderNotFound(reminderId));
+            }
+
+            if (personalReminder.UserId != userId)
+            {
+                throw new UnauthorizedReminderAccessException(personalReminderToggleLikeNotAllowed);
             }
 
             if (personalReminder.IsLiked)
@@ -111,9 +120,11 @@ namespace Eventflow.Application.Services
         }
         private async Task<List<PersonalEventReminder>> GetPersonalRemindersByStatusAsync(int userId, ReminderStatus status)
         {
-            return status == ReminderStatus.Read
+            var result = status == ReminderStatus.Read
                 ? await _personalEventReminderRepository.GetReadPersonalRemindersWithin3DaysAsync(userId)
                 : await _personalEventReminderRepository.GetUnreadPersonalRemindersForTodayAsync(userId);
+
+            return result ?? new List<PersonalEventReminder>();
         }
         private List<PersonalEventReminder> FilterPersonalReminders(List<PersonalEventReminder> personalReminders, string? search)
         {
@@ -148,15 +159,27 @@ namespace Eventflow.Application.Services
             int page, 
             int pageSize)
         {
-            if (!string.IsNullOrWhiteSpace(search))
+            if (page < 1)
             {
-                personalReminders = FilterPersonalReminders(personalReminders.ToList(), search);
+                throw new ArgumentException(pageMustBeGreaterThanZero, nameof(page));
             }
 
-            var sorted = SortPersonalReminders(personalReminders.ToList(), sortBy);
+            if (pageSize <= 0)
+            {
+                throw new ArgumentException(pageSizeMustBeGreaterThanZero, nameof(pageSize));
+            }
+
+            var personalReminderList = personalReminders.ToList();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                personalReminderList = FilterPersonalReminders(personalReminderList, search);
+            }
+
+            var sorted = SortPersonalReminders(personalReminderList, sortBy);
 
             var totalCount = sorted.Count;
-            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+            var totalPages = Math.Max(1, (int)Math.Ceiling(totalCount / (double)pageSize));
 
             var paginated = sorted
                 .Skip((page - 1) * pageSize)

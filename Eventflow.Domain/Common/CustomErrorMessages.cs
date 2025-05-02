@@ -13,6 +13,11 @@
             public const string personalEventRemindedrTitleCannotBeNull = "Reminder title cannot be empty.";
             public const string personalEventReminderDataCannotBeInThePast = "Reminder date cannot be in the past.";
             public const string personalEventReminderHasNoAccessToCreate = "You are not allowed to create a reminder for this event.";
+            public const string pageMustBeGreaterThanZero = "Page number must be greater than or equal to 1.";
+            public const string pageSizeMustBeGreaterThanZero = "Page size must be greater than 0.";
+            public static string ReminderNotFound(int reminderId) => $"Reminder with ID {reminderId} was not found.";
+            public const string personalReminderMarkAsReadNotAllowed = "You are not allowed to mark this reminder as read.";
+            public const string personalReminderToggleLikeNotAllowed = "You are not allowed to like or unlike this reminder.";
         }
 
         public static class CategoryService

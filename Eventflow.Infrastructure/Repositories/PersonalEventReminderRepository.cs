@@ -195,7 +195,8 @@ namespace Eventflow.Infrastructure.Repositories
             string markPersonalReminderAsReadQuery = @"UPDATE PersonalEventReminder SET IsRead = 1,
                         ReadAt = GETDATE()
                         WHERE Id = @Id 
-                        AND UserId = @UserId";
+                        AND UserId = @UserId
+                        AND IsRead = 0";
 
             var parameters = new Dictionary<string, object>()
             {
@@ -234,7 +235,9 @@ namespace Eventflow.Infrastructure.Repositories
                 { "@UserId", userId }
             };
 
-            int count = (int)await _dbHelper.ExecuteScalarAsync(hasUnreadPersonalRemindersForTodayQuery, parameters);
+            var result = await _dbHelper.ExecuteScalarAsync(hasUnreadPersonalRemindersForTodayQuery, parameters);
+
+            int count = result != null ? Convert.ToInt32(result) : 0;
             return count > 0;
         }
         public async Task<List<PersonalEventReminder>> GetLikedRemindersByUserAsync(int userId)

@@ -19,7 +19,8 @@ namespace Eventflow.Application.Mapper
                 IsLiked = r.IsLiked,
             };
             public static List<ReminderBoxViewModel> ToBoxViewModelList(IEnumerable<PersonalEventReminder> reminders)
-                => reminders.Select(ToBoxViewModel).ToList();
+                => reminders?.Select(ToBoxViewModel).ToList()
+                    ?? new List<ReminderBoxViewModel>();
         }
     }
 }
