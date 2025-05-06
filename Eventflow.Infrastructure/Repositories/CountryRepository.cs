@@ -53,6 +53,36 @@ namespace Eventflow.Infrastructure.Repositories
 
             return countries;
         }
+        public async Task<Country?> GetCountryByIdAsync(int countryId)
+        {
+            string getCountryByIdQuery = @"
+                    SELECT Id, Name, FlagUrl, ContinentId, ISOCode
+                    FROM Country
+                    WHERE Id = @CountryId";
+
+            var parameters = new Dictionary<string, object>()
+            {
+                { "@CountryId", countryId }
+            };
+
+            var dt = await _dbHelper.ExecuteQueryAsync(getCountryByIdQuery, parameters);
+
+            if (dt.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            var row = dt.Rows[0];
+
+            return new Country
+            {
+                Id = Convert.ToInt32(row["Id"]),
+                Name = row["Name"].ToString()!,
+                FlagUrl = row["FlagUrl"].ToString()!,
+                ContinentId = Convert.ToInt32(row["ContinentId"]),
+                ISOCode = row["ISOCode"].ToString()!
+            };
+        }
         public async Task<Country> GetCountryByISOCodeAsync(string isoCode)
         {
             try

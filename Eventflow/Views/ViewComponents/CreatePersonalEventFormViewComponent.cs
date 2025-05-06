@@ -1,4 +1,4 @@
-﻿using Eventflow.ViewModels;
+﻿using Eventflow.ViewModels.PersonalEvent.Form;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Eventflow.Views.ViewComponents

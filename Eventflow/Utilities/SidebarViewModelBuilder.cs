@@ -1,4 +1,4 @@
-﻿using Eventflow.ViewModels;
+﻿using Eventflow.ViewModels.Shared.Component;
 
 namespace Eventflow.Utilities
 {

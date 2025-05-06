@@ -1,5 +1,7 @@
 ﻿@using Eventflow.Domain.Models.Common
 @using Eventflow.ViewModels
+@using Eventflow.ViewModels.Reminder.Page
+@using Eventflow.ViewModels.Shared
 @model ReminderPageViewModel
 
 @{
@@ -21,9 +23,9 @@
                     Id = "state",
                     DefaultOptionLabel = null,
                     SelectedValue = Model.CurrentStatus.ToString().ToLower(),
-                    Options = new List<DropdownOption> {
-                        new DropdownOption { Id = "unread", Name = "Unread" },
-                        new DropdownOption { Id = "read", Name = "Read" }
+                    Options = new List<DropdownOptionViewModel> {
+                        new DropdownOptionViewModel { Id = "unread", Name = "Unread" },
+                        new DropdownOptionViewModel { Id = "read", Name = "Read" }
                     }
                 })
             </form>

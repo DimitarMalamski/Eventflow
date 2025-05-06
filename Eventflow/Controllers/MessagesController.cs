@@ -1,6 +1,6 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Attributes;
-using Eventflow.ViewModels;
+using Eventflow.ViewModels.Messages.Component;
 using Microsoft.AspNetCore.Mvc;
 using static Eventflow.Utilities.SessionHelper;
 

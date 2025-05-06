@@ -1,6 +1,10 @@
 ﻿@using Eventflow.Domain.Models.Common
 @using Eventflow.Domain.Models.Entities
-@using Eventflow.ViewModels
+@using Eventflow.ViewModels;
+@using Eventflow.ViewModels.Category
+@using Eventflow.ViewModels.PersonalEvent.Component
+@using Eventflow.ViewModels.PersonalEvent.Form
+@using Eventflow.ViewModels.Shared
 @model CreatePersonalEventViewModel
 
 <form asp-action="@(Model.Id.HasValue ? "Edit" : "Create")" method="post">
@@ -37,8 +41,8 @@
         Name = nameof(Model.CategoryId),
         DefaultOptionLabel = "Select",        
         SelectedValue = Model.CategoryId?.ToString(),
-        Options = (Model.Categories ?? new List<Category>())
-                .Select(c => new DropdownOption {
+        Options = (Model.Categories ?? new List<CategoryViewModel>())
+                .Select(c => new DropdownOptionViewModel {
                     Id = c.Id.ToString(),
                     Name = c.Name
                 })

@@ -176,9 +176,30 @@ namespace Eventflow.Tests.Services
             // Arrange
             var personalEventReminders = new List<PersonalEventReminder>
             {
-                new PersonalEventReminder { Title = "Buy Milk", Date = DateTime.Today },
-                new PersonalEventReminder { Title = "Dentist Appointment", Date = DateTime.Today },
-                new PersonalEventReminder { Title = "Workout", Date = DateTime.Today }
+                new PersonalEventReminder
+                {
+                    Id = 1,
+                    Title = "Buy Milk",
+                    Date = DateTime.Today,
+                    Status = ReminderStatus.Unread,
+                    PersonalEvent = new PersonalEvent { Title = "Groceries" }
+                },
+                new PersonalEventReminder
+                {
+                    Id = 2,
+                    Title = "Dentist Appointment",
+                    Date = DateTime.Today,
+                    Status = ReminderStatus.Unread,
+                    PersonalEvent = new PersonalEvent { Title = "Health" }
+                },
+                new PersonalEventReminder
+                {
+                    Id = 3,
+                    Title = "Workout",
+                    Date = DateTime.Today,
+                    Status = ReminderStatus.Unread,
+                    PersonalEvent = new PersonalEvent { Title = "Fitness" }
+                }
             };
 
             _mockPersonalEventReminderRepository

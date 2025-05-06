@@ -1,5 +1,7 @@
 ﻿@using Eventflow.Domain.Models.Common
 @using Eventflow.ViewModels
+@using Eventflow.ViewModels.Shared
+@using Eventflow.ViewModels.Shared.Component
 @model SidebarViewModel
 
 <div class="nav-buttons flex-grow-1 d-flex flex-column justify-content-center align-items-center gap-3">
@@ -14,7 +16,7 @@
                     Name = "continent",
                     Id = "continentSelect",
                     DefaultOptionLabel = "Select Continent",
-                    Options = Model.Continents.Select(c => new DropdownOption
+                    Options = Model.Continents.Select(c => new DropdownOptionViewModel
                     {
                         Id = c.Id.ToString(),
                         Name = c.Name
@@ -29,7 +31,7 @@
                     Name = "country",
                     Id = "countrySelect",
                     DefaultOptionLabel = "Select Country",
-                    Options = new List<DropdownOption>()
+                    Options = new List<DropdownOptionViewModel>()
                 })
             </div>
 
@@ -45,7 +47,7 @@
             @if (!string.IsNullOrEmpty(btn.NotificationDotId))
             {
                 <span id="@btn.NotificationDotId"
-                      class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle d-none">
+                      class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
                     <span class="visually-hidden">
                         New alerts
                     </span>

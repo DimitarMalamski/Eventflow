@@ -9,5 +9,6 @@ namespace Eventflow.Domain.Interfaces.Repositories
         public Task<List<Country>> GetAllCountriesByContinentIdAsync(int continentId);
         public Task InsertHolidayAsync(int countryId, string name, string date, string description);
         public Task<Country> GetCountryByISOCodeAsync(string isoCode);
+        public Task<Country?> GetCountryByIdAsync(int countryId);
     }
 }

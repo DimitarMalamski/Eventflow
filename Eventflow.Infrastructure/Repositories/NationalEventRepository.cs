@@ -1,5 +1,5 @@
 ﻿using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Domain.Models.DTOs;
+using Eventflow.Domain.Models.Entities;
 using Eventflow.Infrastructure.Data.Interfaces;
 using System.Data;
 
@@ -12,12 +12,11 @@ namespace Eventflow.Infrastructure.Repositories
         {
             _dbHelper = dbHelper;
         }
-        public async Task<List<NationalEventDto>> GetNationalHolidaysForCountryAsync(int countryId, int year, int month)
+        public async Task<List<NationalEvent>> GetNationalHolidaysForCountryAsync(int countryId, int year, int month)
         {
             string query = @"
-                SELECT ne.Title, ne.Description, ne.Date, ne.CountryId, c.Name AS CountryName
+                SELECT ne.Title, ne.Description, ne.Date, ne.CountryId
                 FROM NationalEvent ne
-                INNER JOIN Country c ON ne.CountryId = c.Id
                 WHERE ne.CountryId = @CountryId
                 AND MONTH(ne.Date) = @Month";
 
@@ -35,13 +34,12 @@ namespace Eventflow.Infrastructure.Repositories
                 int safeDay = Math.Min(originalDate.Day, DateTime.DaysInMonth(year, month));
                 var correctedDate = new DateTime(year, month, safeDay);
 
-                return new NationalEventDto
+                return new NationalEvent
                 {
                     Title = row["Title"].ToString()!,
                     Description = row["Description"]?.ToString() ?? "None",
                     Date = correctedDate,
                     CountryId = Convert.ToInt32(row["CountryId"]),
-                    CountryName = row["CountryName"].ToString()!
                 };
             }).ToList();
         }

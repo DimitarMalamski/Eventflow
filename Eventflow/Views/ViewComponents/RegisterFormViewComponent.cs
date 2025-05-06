@@ -1,4 +1,4 @@
-﻿using Eventflow.ViewModels;
+﻿using Eventflow.ViewModels.Account.Form;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Eventflow.Views.ViewComponents

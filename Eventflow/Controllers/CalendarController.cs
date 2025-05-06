@@ -1,5 +1,8 @@
 ﻿using Eventflow.Application.Services.Interfaces;
-using Eventflow.ViewModels;
+using Eventflow.ViewModels.Calendar;
+using Eventflow.ViewModels.Calendar.Component;
+using Eventflow.ViewModels.Calendar.Page;
+using Eventflow.ViewModels.Continent;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Eventflow.Controllers
@@ -35,7 +38,7 @@ namespace Eventflow.Controllers
             {
                 Year = calendarDto.Year,
                 Month = calendarDto.Month,
-                Days = calendarDto.Days.Select(day => new CalendarDay
+                Days = calendarDto.Days.Select(day => new CalendarDayViewModel
                 {
                     DayNumber = day.DayNumber,
                     IsToday = day.IsToday,
@@ -68,7 +71,13 @@ namespace Eventflow.Controllers
 
             var model = new CalendarPageViewModel
             {
-                Continents = await _continentService.OrderContinentByNameAsync(),
+                Continents = (await _continentService.OrderContinentByNameAsync())
+                    .Select(c => new ContinentViewModel
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    })
+                    .ToList(),
                 Calendar = calendarViewModel,
                 Navigation = new CalendarNavigationViewModel
                 {
@@ -93,7 +102,7 @@ namespace Eventflow.Controllers
             {
                 Year = calendarDto.Year,
                 Month = calendarDto.Month,
-                Days = calendarDto.Days.Select(day => new CalendarDay
+                Days = calendarDto.Days.Select(day => new CalendarDayViewModel
                 {
                     DayNumber = day.DayNumber,
                     IsToday = day.IsToday,
@@ -146,7 +155,7 @@ namespace Eventflow.Controllers
             {
                 Year = calendarDto.Year,
                 Month = calendarDto.Month,
-                Days = calendarDto.Days.Select(day => new CalendarDay
+                Days = calendarDto.Days.Select(day => new CalendarDayViewModel
                 {
                     DayNumber = day.DayNumber,
                     IsToday = day.IsToday,

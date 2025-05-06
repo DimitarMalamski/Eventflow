@@ -1,4 +1,4 @@
-using Eventflow.ViewModels;
+using Eventflow.ViewModels.System;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

@@ -1,11 +1,12 @@
-﻿using Eventflow.ViewModels;
+﻿using Eventflow.ViewModels.Calendar;
+using Eventflow.ViewModels.Calendar.Component;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Eventflow.Views.ViewComponents
 {
     public class CalendarRowViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke(List<CalendarDay> days, int startIndex)
+        public IViewComponentResult Invoke(List<CalendarDayViewModel> days, int startIndex)
         {
             var modal = new CalendarRowViewModel()
             {

@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Eventflow.Domain\Eventflow.Domain.csproj" />
+    <ProjectReference Include="..\Eventflow.DTOs\Eventflow.DTOs.csproj" />
   </ItemGroup>
 
   <ItemGroup>

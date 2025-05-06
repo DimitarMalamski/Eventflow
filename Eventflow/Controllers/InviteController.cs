@@ -1,9 +1,13 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Attributes;
 using Eventflow.Domain.Enums;
+using Eventflow.Domain.Helper;
 using Eventflow.Domain.Models.Entities;
-using Eventflow.Infrastructure.Helper;
-using Eventflow.ViewModels;
+using Eventflow.ViewModels.Invite.Component;
+using Eventflow.ViewModels.Invite.Enums;
+using Eventflow.ViewModels.Invite.Page;
+using Eventflow.ViewModels.Invite.Request;
+using Eventflow.ViewModels.Shared;
 using Microsoft.AspNetCore.Mvc;
 using static Eventflow.Utilities.SessionHelper;
 
@@ -26,7 +30,7 @@ namespace Eventflow.Controllers
         [HttpPost]
         [Route("Invite/Send")]
         [RequireUserOrAdmin]
-        public async Task<IActionResult> Send([FromBody] InviteRequestModel model)
+        public async Task<IActionResult> Send([FromBody] InviteRequestViewModel model)
         {
             if (string.IsNullOrEmpty(model.Username) || model.EventId <= 0)
             {
@@ -115,10 +119,17 @@ namespace Eventflow.Controllers
             var invites = await _inviteService.GetInvitesByUserAndStatusAsync(userId, statusId);
             var statuses = await _statusService.GetAllStatusOptionsAsync();
 
+            var statusOptionsViewModel = statuses.Select(s => new DropdownOptionViewModel
+            {
+                Id = s.Id,
+                Name = s.Name,
+            })
+            .ToList();
+
             var model = new InvitePageViewModel
             {
-                CurrentStatus = (InviteStatus)statusId,
-                StatusOptions = statuses,
+                CurrentStatus = (InviteStatusEnum)statusId,
+                StatusOptions = statusOptionsViewModel,
                 Invites = invites.Select(invite => new InviteBoxViewModel
                 {
                     InviteId = invite.Id,

@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eventflow.Infrastructure", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eventflow.Tests", "..\Eventflow.Tests\Eventflow.Tests.csproj", "{3AF80090-3738-474C-9848-DBCC44976F69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eventflow.ViewModels", "..\Eventflow.ViewModels\Eventflow.ViewModels.csproj", "{A664BFEA-A187-4F6B-8536-CF1877707C38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eventflow.DTOs", "..\Eventflow.DTOs\Eventflow.DTOs.csproj", "{1652C859-79AD-4B67-B670-27B8A149311A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{3AF80090-3738-474C-9848-DBCC44976F69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AF80090-3738-474C-9848-DBCC44976F69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AF80090-3738-474C-9848-DBCC44976F69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A664BFEA-A187-4F6B-8536-CF1877707C38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A664BFEA-A187-4F6B-8536-CF1877707C38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A664BFEA-A187-4F6B-8536-CF1877707C38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A664BFEA-A187-4F6B-8536-CF1877707C38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1652C859-79AD-4B67-B670-27B8A149311A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1652C859-79AD-4B67-B670-27B8A149311A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1652C859-79AD-4B67-B670-27B8A149311A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1652C859-79AD-4B67-B670-27B8A149311A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

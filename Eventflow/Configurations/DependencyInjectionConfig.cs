@@ -1,7 +1,6 @@
 ﻿using Eventflow.Application.Services;
 using Eventflow.Application.Services.Interfaces;
 using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.infrastructure.Repositories;
 using Eventflow.Infrastructure.Data;
 using Eventflow.Infrastructure.Data.Interfaces;
 using Eventflow.Infrastructure.Repositories;

@@ -2,6 +2,8 @@
 @using Eventflow.Domain.Models.Entities
 @using Eventflow.ViewModels
 @using static Eventflow.Utilities.SidebarHelper;
+@using Eventflow.ViewModels.Calendar.Page;
+@using Eventflow.ViewModels.Continent
 
 @{
     Layout = null;
@@ -17,11 +19,14 @@
     int? selectedCountryId = null;
 
     var pageModel = Model as CalendarPageViewModel;
-    var continents = pageModel?.Continents ?? new List<Continent>();
+    var continents = pageModel?.Continents ?? new List<ContinentViewModel>();
 
     if (pageModel != null) {
         selectedCountryId = pageModel.SelectedCountryId;
     }
+
+    var hasUnreadReminders = pageModel?.SidebarViewModel?.Buttons?.Any(b => b.NotificationDotId == "reminders-notification-dot") ?? false;
+    var hasPendingInvites = pageModel?.SidebarViewModel?.Buttons?.Any(b => b.NotificationDotId == "invites-notification-dot") ?? false;
 
     ViewData["Title"] ??= "Eventflow";
 }
@@ -56,7 +61,9 @@
                 {
                     context = sidebarContext,
                     continents = continents,
-                    selectedCountryId = selectedCountryId
+                    selectedCountryId = selectedCountryId,
+                    hasUnreadReminders = hasUnreadReminders,
+                    hasPendingInvites = hasPendingInvites
                 })
         </div>
 

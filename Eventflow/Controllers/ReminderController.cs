@@ -4,8 +4,11 @@ using Eventflow.Domain.Enums;
 using Eventflow.Domain.Exceptions;
 using Eventflow.Domain.Models.DTOs;
 using Eventflow.Domain.Models.Entities;
-using Eventflow.ViewModels;
+using Eventflow.ViewModels.Reminder.Component;
+using Eventflow.ViewModels.Reminder.Page;
+using Eventflow.ViewModels.Reminder.Request;
 using Microsoft.AspNetCore.Mvc;
+using static Eventflow.Utilities.EnumMapper;
 using static Eventflow.Utilities.SessionHelper;
 
 namespace Eventflow.Controllers
@@ -60,7 +63,7 @@ namespace Eventflow.Controllers
                     Title = r.Title,
                     Description = r.Description,
                     Date = r.Date,
-                    Status = r.Status,
+                    Status = ToViewModelStatus(r.Status),
                     EventTitle = r.EventTitle ?? "Unknown",
                     IsLiked = r.IsLiked
                 }).ToList()
@@ -68,7 +71,7 @@ namespace Eventflow.Controllers
 
             var model = new ReminderPageViewModel
             {
-                CurrentStatus = reminderStatus,
+                CurrentStatus = ToViewModelStatus(reminderStatus),
                 Reminders = vm.PersonalReminders,
                 TotalPages = vm.TotalPages,
                 CurrentPage = vm.CurrentPage,
@@ -205,7 +208,7 @@ namespace Eventflow.Controllers
                     Title = r.Title,
                     Description = r.Description,
                     Date = r.Date,
-                    Status = r.Status,
+                    Status = ToViewModelStatus(r.Status),
                     EventTitle = r.EventTitle ?? "Unknown",
                     IsLiked = r.IsLiked
                 })
@@ -213,7 +216,7 @@ namespace Eventflow.Controllers
 
                 var model = new ReminderPageViewModel
                 {
-                    CurrentStatus = status,
+                    CurrentStatus = ToViewModelStatus(status),
                     Reminders = vm,
                     TotalPages = dto.TotalPages,
                     CurrentPage = dto.CurrentPage,

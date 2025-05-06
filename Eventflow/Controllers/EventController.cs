@@ -2,7 +2,13 @@
 using Eventflow.Attributes;
 using Eventflow.Domain.Models.Entities;
 using Eventflow.Utilities;
-using Eventflow.ViewModels;
+using Eventflow.ViewModels.Calendar;
+using Eventflow.ViewModels.Calendar.Component;
+using Eventflow.ViewModels.Calendar.Page;
+using Eventflow.ViewModels.Category;
+using Eventflow.ViewModels.Continent;
+using Eventflow.ViewModels.PersonalEvent.Form;
+using Eventflow.ViewModels.Shared.Component;
 using Microsoft.AspNetCore.Mvc;
 using static Eventflow.Utilities.SessionHelper;
 
@@ -58,7 +64,13 @@ namespace Eventflow.Controllers
             var model = new CreatePersonalEventViewModel
             {
                 Date = DateTime.Now,
-                Categories = await _categoryService.GetAllCategoriesAsync()
+                Categories = (await _categoryService.GetAllCategoriesAsync())
+                    .Select(c => new CategoryViewModel
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                    })
+                    .ToList()
             };
 
             return View(model);
@@ -72,7 +84,14 @@ namespace Eventflow.Controllers
 
             if (!ModelState.IsValid)
             {
-                model.Categories = await _categoryService.GetAllCategoriesAsync();
+                model.Categories = (await _categoryService.GetAllCategoriesAsync())
+                    .Select(c => new CategoryViewModel
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                    })
+                    .ToList();
+
                 return View(model);
             }
 
@@ -110,7 +129,13 @@ namespace Eventflow.Controllers
                 Description = personalEvent.Description,
                 Date = personalEvent.Date,
                 CategoryId = personalEvent.CategoryId,
-                Categories = await _categoryService.GetAllCategoriesAsync()
+                Categories = (await _categoryService.GetAllCategoriesAsync())
+                    .Select(c => new CategoryViewModel
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                    })
+                    .ToList()
             };
 
             return View("Edit", model);
@@ -122,7 +147,14 @@ namespace Eventflow.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Categories = await _categoryService.GetAllCategoriesAsync();
+                model.Categories = (await _categoryService.GetAllCategoriesAsync())
+                    .Select(c => new CategoryViewModel
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                    })
+                    .ToList();
+
                 return View("Create", model);
             }
 
@@ -162,7 +194,7 @@ namespace Eventflow.Controllers
             {
                 Year = calendarDto.Year,
                 Month = calendarDto.Month,
-                Days = calendarDto.Days.Select(day => new CalendarDay
+                Days = calendarDto.Days.Select(day => new CalendarDayViewModel
                 {
                     DayNumber = day.DayNumber,
                     IsToday = day.IsToday,
@@ -205,7 +237,6 @@ namespace Eventflow.Controllers
 
             return PartialView("~/Views/Shared/Partials/Calendar/_CalendarWrapper.cshtml", model);
         }
-
         private async Task<CalendarPageViewModel> ComposeMyEventsViewModel(int userId, int year, int month)
         {
             var (normalizedYear, normalizedMonth) = _calendarNavigationService.Normalize(year, month);
@@ -220,7 +251,7 @@ namespace Eventflow.Controllers
             {
                 Year = calendarDto.Year,
                 Month = calendarDto.Month,
-                Days = calendarDto.Days.Select(day => new CalendarDay
+                Days = calendarDto.Days.Select(day => new CalendarDayViewModel
                 {
                     DayNumber = day.DayNumber,
                     IsToday = day.IsToday,
@@ -256,7 +287,13 @@ namespace Eventflow.Controllers
 
             return new CalendarPageViewModel
             {
-                Continents = await _continentService.OrderContinentByNameAsync(),
+                Continents = (await _continentService.OrderContinentByNameAsync())
+                    .Select(c => new ContinentViewModel
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    })
+                    .ToList(),
                 Calendar = calendarViewModel,
                 Navigation = new CalendarNavigationViewModel
                 {

@@ -1,5 +1,6 @@
-﻿using Eventflow.Domain.Models.DTOs;
-using Eventflow.Domain.Models.Entities;
+﻿using Eventflow.Domain.Models.Entities;
+using Eventflow.DTOs.DTOs;
+using Eventflow.DTOs.Enums;
 
 namespace Eventflow.Application.Mapper
 {
@@ -14,7 +15,7 @@ namespace Eventflow.Application.Mapper
                 Title = r.Title,
                 Description = r.Description,
                 Date = r.Date,
-                Status = r.Status,
+                Status = (ReminderStatusEnum)(int)r.Status,
                 EventTitle = r.PersonalEvent?.Title ?? "Unknown",
                 IsLiked = r.IsLiked,
             };

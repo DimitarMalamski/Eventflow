@@ -3,7 +3,7 @@ using Eventflow.Domain.Models.Entities;
 using Eventflow.Infrastructure.Data.Interfaces;
 using System.Data;
 
-namespace Eventflow.infrastructure.Repositories
+namespace Eventflow.Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {

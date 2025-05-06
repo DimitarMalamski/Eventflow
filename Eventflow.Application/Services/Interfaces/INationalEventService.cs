@@ -1,4 +1,4 @@
-﻿using Eventflow.Domain.Models.DTOs;
+﻿using Eventflow.DTOs.DTOs;
 
 namespace Eventflow.Application.Services.Interfaces
 {

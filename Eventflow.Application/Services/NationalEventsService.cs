@@ -1,18 +1,35 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Domain.Models.DTOs;
+using Eventflow.DTOs.DTOs;
 
 namespace Eventflow.Application.Services
 {
     public class NationalEventsService : INationalEventService
     {
         private readonly INationalEventRepository _nationalEventRepository;
-        public NationalEventsService(INationalEventRepository nationalEventRepository)
+        private readonly ICountryRepository _countryRepository;
+        public NationalEventsService(INationalEventRepository nationalEventRepository,
+            ICountryRepository countryRepository)
         {
             _nationalEventRepository = nationalEventRepository;
+            _countryRepository = countryRepository;
         }
         public async Task<List<NationalEventDto>> GetNationalHolidaysForCountryAsync(int countryId, int year, int month)
-            => await _nationalEventRepository.GetNationalHolidaysForCountryAsync(countryId, year, month);
+        {
+            var nationalEvents = await _nationalEventRepository.GetNationalHolidaysForCountryAsync(countryId, year, month);
+
+            var country = await _countryRepository.GetCountryByIdAsync(countryId);
+
+            return nationalEvents.Select(ne => new NationalEventDto
+            {
+                Title = ne.Title,
+                Description = ne.Description ?? "No description.",
+                Date = ne.Date,
+                CountryId = ne.CountryId,
+                CountryName = country?.Name ?? "Unknown"
+            })
+            .ToList();
+        }
 
         //public async Task PopulateNationalHolidaysAsync()
         //{

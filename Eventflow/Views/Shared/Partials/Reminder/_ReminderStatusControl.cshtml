@@ -1,8 +1,9 @@
 ﻿@using Eventflow.Domain.Enums
 @using Eventflow.ViewModels
+@using Eventflow.ViewModels.Reminder.Component
 @model ReminderBoxViewModel
 
-@if (Model.Status == ReminderStatus.Unread)
+@if ((int)Model.Status == (int)ReminderStatus.Unread)
 {
     <button type="button"
             class="btn btn-outline-primary btn-sm mark-as-read-btn"

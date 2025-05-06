@@ -13,7 +13,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Eventflow.Application\Eventflow.Application.csproj" />
+    <ProjectReference Include="..\Eventflow.Domain\Eventflow.Domain.csproj" />
+    <ProjectReference Include="..\Eventflow.DTOs\Eventflow.DTOs.csproj" />
     <ProjectReference Include="..\Eventflow.Infrastructure\Eventflow.Infrastructure.csproj" />
+    <ProjectReference Include="..\Eventflow.ViewModels\Eventflow.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

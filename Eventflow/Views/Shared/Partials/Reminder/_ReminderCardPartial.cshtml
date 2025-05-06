@@ -1,9 +1,9 @@
 ﻿@using Eventflow.Domain.Enums
-@using Eventflow.ViewModels
+@using Eventflow.ViewModels.Reminder.Component
 @model ReminderBoxViewModel
 
 @{
-    bool isUnread = Model.Status == ReminderStatus.Unread;
+    bool isUnread = (int)Model.Status == (int)ReminderStatus.Unread;
 }
 
 <div class="reminder-wrapper position-relative" id="reminder-wrapper-@Model.Id">
