@@ -1,5 +1,5 @@
-﻿using Eventflow.Domain.Models.Models;
-using Eventflow.Domain.Models.ViewModels;
+﻿using Eventflow.Domain.Models.DTOs;
+using Eventflow.Domain.Models.Entities;
 
 namespace Eventflow.Application.Mapper
 {
@@ -7,7 +7,7 @@ namespace Eventflow.Application.Mapper
     {
         public static class PersonalReminder
         {
-            public static ReminderBoxViewModel ToBoxViewModel(PersonalEventReminder r) => new ReminderBoxViewModel()
+            public static ReminderDto ToBoxViewModel(PersonalEventReminder r) => new ReminderDto()
             {
                 Id = r.Id,
                 EventId = r.PersonalEventId,
@@ -18,9 +18,9 @@ namespace Eventflow.Application.Mapper
                 EventTitle = r.PersonalEvent?.Title ?? "Unknown",
                 IsLiked = r.IsLiked,
             };
-            public static List<ReminderBoxViewModel> ToBoxViewModelList(IEnumerable<PersonalEventReminder> reminders)
+            public static List<ReminderDto> ToReminderDtoList(IEnumerable<PersonalEventReminder> reminders)
                 => reminders?.Select(ToBoxViewModel).ToList()
-                    ?? new List<ReminderBoxViewModel>();
+                    ?? new List<ReminderDto>();
         }
     }
 }

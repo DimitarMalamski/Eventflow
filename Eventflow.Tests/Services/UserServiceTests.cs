@@ -1,7 +1,7 @@
 ﻿using Eventflow.Application.Services;
 using Eventflow.Domain.Exceptions;
 using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Domain.Models.Models;
+using Eventflow.Domain.Models.Entities;
 using Moq;
 using static Eventflow.Application.Security.PasswordHasher;
 using static Eventflow.Domain.Common.ValidationConstants.User;

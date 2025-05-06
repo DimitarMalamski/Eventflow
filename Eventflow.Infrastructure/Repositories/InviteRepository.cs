@@ -1,9 +1,9 @@
 ﻿using Eventflow.Domain.Enums;
 using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Domain.Models.Models;
+using Eventflow.Domain.Models.Entities;
 using Eventflow.Infrastructure.Data.Interfaces;
-using System.Data;
 using Eventflow.Infrastructure.Helper;
+using System.Data;
 
 namespace Eventflow.Infrastructure.Repositories
 {

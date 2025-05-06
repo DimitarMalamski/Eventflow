@@ -1,11 +1,14 @@
-﻿using Eventflow.Domain.Models.ViewModels;
+﻿using Eventflow.ViewModels;
 
 namespace Eventflow.Utilities
 {
     public static class SidebarViewModelBuilder
     {
-        public static List<SidebarButtonViewModel> Build(string context,
-            bool isLoggedIn
+        public static List<SidebarButtonViewModel> Build(
+            string context,
+            bool isLoggedIn,
+            bool hasUnreadReminders = false,
+            bool hasPendingInvites = false
             )
         {
             var buttons = new List<SidebarButtonViewModel>();
@@ -37,7 +40,9 @@ namespace Eventflow.Utilities
                         Label = "My messages",
                         Url = "/Messages/Index",
                         CssClass = "btn btn-primary w-100 position-relative",
-                        NotificationDotId = "messages-notification-dot"
+                        NotificationDotId = (hasUnreadReminders || hasPendingInvites)
+                            ? "messages-notification-dot"
+                            : null
                     });
 
                     buttons.Add(new SidebarButtonViewModel
@@ -54,14 +59,14 @@ namespace Eventflow.Utilities
                         Label = "Invites",
                         Url = "/Invite/Index",
                         CssClass = "btn btn-primary w-100",
-                        NotificationDotId = "invites-notification-dot"
+                        NotificationDotId = hasPendingInvites ? "invites-notification-dot" : null
                     });
                     buttons.Add(new SidebarButtonViewModel
                     {
                         Label = "Reminders", 
                         Url = "/Reminder/Index",
                         CssClass = "btn btn-primary w-100",
-                        NotificationDotId = "reminders-notification-dot"
+                        NotificationDotId = hasUnreadReminders ? "reminders-notification-dot" : null
                     });
                     buttons.Add(new SidebarButtonViewModel
                     { 

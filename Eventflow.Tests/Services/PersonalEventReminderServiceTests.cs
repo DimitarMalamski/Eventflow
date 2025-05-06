@@ -2,7 +2,7 @@
 using Eventflow.Domain.Enums;
 using Eventflow.Domain.Exceptions;
 using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Domain.Models.Models;
+using Eventflow.Domain.Models.Entities;
 using Moq;
 
 namespace Eventflow.Tests.Services

@@ -2,8 +2,8 @@
 using Eventflow.Domain.Enums;
 using Eventflow.Domain.Exceptions;
 using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Domain.Models.Models;
-using Eventflow.Domain.Models.ViewModels;
+using Eventflow.Domain.Models.DTOs;
+using Eventflow.Domain.Models.Entities;
 using static Eventflow.Application.Helper.StringMatchHelper;
 using static Eventflow.Application.Mapper.ViewModelMapper.PersonalReminder;
 using static Eventflow.Domain.Common.CustomErrorMessages.PersonalEventReminderService;
@@ -49,7 +49,7 @@ namespace Eventflow.Application.Services
 
             await _personalEventReminderRepository.CreatePersonalReminderAsync(reminder);
         }
-        public async Task<PaginatedRemindersViewModel> GetPaginatedFilteredPersonalRemindersAsync(int userId,
+        public async Task<PaginatedReminderDto> GetPaginatedFilteredPersonalRemindersAsync(int userId,
             ReminderStatus status,
             string? search,
             string? sortBy,
@@ -105,7 +105,7 @@ namespace Eventflow.Application.Services
             => (await _personalEventReminderRepository.GetLikedRemindersByUserAsync(userId)).Count;
         public async Task<int> CountUnreadRemindersForTodayAsync(int userId)
             => (await _personalEventReminderRepository.GetUnreadPersonalRemindersForTodayAsync(userId)).Count;
-        public async Task<PaginatedRemindersViewModel> GetPaginatedLikedRemindersAsync(int userId,
+        public async Task<PaginatedReminderDto> GetPaginatedLikedRemindersAsync(int userId,
             string? search, 
             string? sortBy,
             int page, 
@@ -153,7 +153,7 @@ namespace Eventflow.Application.Services
                 _ => personalReminders.OrderBy(r => r.Id).ToList()
             };
         }
-        private PaginatedRemindersViewModel PaginateAndWrap(IEnumerable<PersonalEventReminder> personalReminders,
+        private PaginatedReminderDto PaginateAndWrap(IEnumerable<PersonalEventReminder> personalReminders,
             string? search, 
             string? sortBy, 
             int page, 
@@ -186,9 +186,9 @@ namespace Eventflow.Application.Services
                 .Take(pageSize)
                 .ToList();
 
-            return new PaginatedRemindersViewModel
+            return new PaginatedReminderDto
             {
-                PersonalReminders = ToBoxViewModelList(paginated),
+                PersonalReminders = ToReminderDtoList(paginated),
                 TotalPages = totalPages,
                 CurrentPage = page
             };

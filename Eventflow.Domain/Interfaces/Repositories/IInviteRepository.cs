@@ -1,5 +1,5 @@
 ﻿using Eventflow.Domain.Enums;
-using Eventflow.Domain.Models.Models;
+using Eventflow.Domain.Models.Entities;
 
 namespace Eventflow.Domain.Interfaces.Repositories
 {

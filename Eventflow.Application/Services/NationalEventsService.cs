@@ -1,6 +1,6 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Domain.Models.ViewModels;
+using Eventflow.Domain.Models.DTOs;
 
 namespace Eventflow.Application.Services
 {
@@ -11,7 +11,7 @@ namespace Eventflow.Application.Services
         {
             _nationalEventRepository = nationalEventRepository;
         }
-        public async Task<List<NationalEventViewModel>> GetNationalHolidaysForCountryAsync(int countryId, int year, int month)
+        public async Task<List<NationalEventDto>> GetNationalHolidaysForCountryAsync(int countryId, int year, int month)
             => await _nationalEventRepository.GetNationalHolidaysForCountryAsync(countryId, year, month);
 
         //public async Task PopulateNationalHolidaysAsync()

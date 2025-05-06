@@ -1,5 +1,4 @@
-﻿using Eventflow.Domain.Models.Models;
-using Eventflow.Domain.Models.ViewModels;
+﻿using Eventflow.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Eventflow.Views.ViewComponents

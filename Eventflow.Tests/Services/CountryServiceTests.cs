@@ -1,7 +1,7 @@
 ﻿using Eventflow.Application.Services;
 using Eventflow.Domain.Exceptions;
 using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Domain.Models.Models;
+using Eventflow.Domain.Models.Entities;
 using Moq;
 
 namespace Eventflow.Tests.Services
@@ -97,6 +97,7 @@ namespace Eventflow.Tests.Services
         [TestMethod]
         public async Task GetCountriesByContinentIdAsync_ShouldIgnoreNullOrWhitespaceNames()
         {
+            // Arrange
             var mixedCountries = new List<Country>
             {
                 new Country { Id = 1, Name = "Germany" },
@@ -109,8 +110,10 @@ namespace Eventflow.Tests.Services
                 .Setup(repo => repo.GetAllCountriesByContinentIdAsync(1))
                 .ReturnsAsync(mixedCountries);
 
+            // Act
             var result = await _countryService.GetCountriesByContinentIdAsync(1);
 
+            // Assert
             Assert.AreEqual(2, result.Count);
             Assert.AreEqual("France", result[0].Name);
             Assert.AreEqual("Germany", result[1].Name);

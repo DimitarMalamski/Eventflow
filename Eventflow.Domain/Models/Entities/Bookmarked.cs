@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Eventflow.Domain.Models.Models
+namespace Eventflow.Domain.Models.Entities
 {
     public class Bookmarked
     {

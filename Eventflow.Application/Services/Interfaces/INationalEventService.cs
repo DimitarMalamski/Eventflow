@@ -1,9 +1,9 @@
-﻿using Eventflow.Domain.Models.ViewModels;
+﻿using Eventflow.Domain.Models.DTOs;
 
 namespace Eventflow.Application.Services.Interfaces
 {
     public interface INationalEventService
     {
-        public Task<List<NationalEventViewModel>> GetNationalHolidaysForCountryAsync(int countryId, int year, int month);
+        public Task<List<NationalEventDto>> GetNationalHolidaysForCountryAsync(int countryId, int year, int month);
     }
 }

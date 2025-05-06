@@ -1,7 +1,6 @@
 ﻿using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Domain.Models.Models;
+using Eventflow.Domain.Models.Entities;
 using Eventflow.Infrastructure.Data.Interfaces;
-using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace Eventflow.Infrastructure.Repositories

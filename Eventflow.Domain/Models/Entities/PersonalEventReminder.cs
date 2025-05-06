@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using static Eventflow.Domain.Common.ValidationConstants.PersonalEventReminder;
 
-namespace Eventflow.Domain.Models.Models
+namespace Eventflow.Domain.Models.Entities
 {
     public class PersonalEventReminder
     {

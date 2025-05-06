@@ -1,7 +1,7 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Domain.Models.Models;
-using Eventflow.Domain.Models.ViewModels;
+using Eventflow.Domain.Models.DTOs;
+using Eventflow.Domain.Models.Entities;
 
 namespace Eventflow.Application.Services
 {
@@ -20,7 +20,7 @@ namespace Eventflow.Application.Services
         }
         public async Task CreateAsync(PersonalEvent personalEvent)
             => await _personalEventRepository.CreateEventAsync(personalEvent);
-        public async Task<List<PersonalEventWithCategoryNameViewModel>> GetAcceptedInvitedEventsAsync(int userId, int year, int month)
+        public async Task<List<PersonalEventWithCategoryNameDto>> GetAcceptedInvitedEventsAsync(int userId, int year, int month)
         {
             var acceptedEvents = await _personalEventRepository.GetAcceptedInvitedEventsAsync(userId);
 
@@ -31,14 +31,14 @@ namespace Eventflow.Application.Services
             var categories = await _categoryRepository.GetAllCategoriesAsync();
             var categoryMap = categories.ToDictionary(c => c.Id, c => c.Name);
 
-            var model = new List<PersonalEventWithCategoryNameViewModel>();
+            var dtoList = new List<PersonalEventWithCategoryNameDto>();
 
             foreach (var e in filteredEvents)
             {
                 var creator = await _userRepository.GetUserByIdAsync(e.UserId);
                 var participantUsernames = await _userRepository.GetUsernamesByEventIdAsync(e.Id);
 
-                model.Add(new PersonalEventWithCategoryNameViewModel
+                dtoList.Add(new PersonalEventWithCategoryNameDto
                 {
                     Id = e.Id,
                     Title = e.Title,
@@ -53,15 +53,15 @@ namespace Eventflow.Application.Services
                     IsInvited = true,
                     CreatorUsername = creator?.Username ?? "Unknown",
                     IsCreator = e.UserId == userId,
-                    ParticipantUsernames = participantUsernames,
+                    ParticipantUsernames = participantUsernames
                 });
             }
 
-            return model;
+            return dtoList;
         }
         public async Task<PersonalEvent?> GetPersonalEventByIdAsync(int id)
             => await _personalEventRepository.GetPersonalEventByIdAsync(id);
-        public async Task<List<PersonalEventWithCategoryNameViewModel>> GetEventsWithCategoryNamesAsync(int userId, int year, int month)
+        public async Task<List<PersonalEventWithCategoryNameDto>> GetEventsWithCategoryNamesAsync(int userId, int year, int month)
         {
             var personalEvents = (await _personalEventRepository.GetByUserAndMonthAsync(userId, year, month))
                 .Where(e => e.Date.Date >= DateTime.Today)
@@ -70,13 +70,13 @@ namespace Eventflow.Application.Services
             var categories = await _categoryRepository.GetAllCategoriesAsync();
             var categoryMap = categories.ToDictionary(c => c.Id, c => c.Name);
 
-            var personalEventsWithCategoryName = new List<PersonalEventWithCategoryNameViewModel>();
+            var personalEventsWithCategoryName = new List<PersonalEventWithCategoryNameDto>();
 
             foreach (var pe in personalEvents)
             {
                 var perticipantsUsernames = await _userRepository.GetUsernamesByEventIdAsync(pe.Id);
 
-                personalEventsWithCategoryName.Add(new PersonalEventWithCategoryNameViewModel
+                personalEventsWithCategoryName.Add(new PersonalEventWithCategoryNameDto
                 {
                     Id = pe.Id,
                     Title = pe.Title,

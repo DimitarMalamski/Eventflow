@@ -1,9 +1,9 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Attributes;
 using Eventflow.Domain.Enums;
-using Eventflow.Domain.Models.Models;
-using Eventflow.Domain.Models.ViewModels;
+using Eventflow.Domain.Models.Entities;
 using Eventflow.Infrastructure.Helper;
+using Eventflow.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using static Eventflow.Utilities.SessionHelper;
 

@@ -1,8 +1,8 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Attributes;
-using Eventflow.Domain.Models.Models;
-using Eventflow.Domain.Models.ViewModels;
+using Eventflow.Domain.Models.Entities;
 using Eventflow.Utilities;
+using Eventflow.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using static Eventflow.Utilities.SessionHelper;
 
@@ -156,9 +156,46 @@ namespace Eventflow.Controllers
             var invitedEvents = await _personalEventService.GetAcceptedInvitedEventsAsync(userId, normalizedYear, normalizedMonth);
             var combinedEvents = ownEvents.Concat(invitedEvents).ToList();
 
+            var calendarDto = _calendarService.GenerateCalendar(normalizedYear, normalizedMonth, combinedEvents);
+
+            var calendarViewModel = new CalendarViewModel
+            {
+                Year = calendarDto.Year,
+                Month = calendarDto.Month,
+                Days = calendarDto.Days.Select(day => new CalendarDay
+                {
+                    DayNumber = day.DayNumber,
+                    IsToday = day.IsToday,
+                    Date = day.Date,
+                    PersonalEvents = day.PersonalEvents.Select(e => new PersonalEventWithCategoryNameViewModel
+                    {
+                        Id = e.Id,
+                        Title = e.Title,
+                        Description = e.Description,
+                        Date = e.Date,
+                        IsCompleted = e.IsCompleted,
+                        CategoryId = e.CategoryId,
+                        CategoryName = e.CategoryName,
+                        UserId = e.UserId,
+                        IsInvited = e.IsInvited,
+                        CreatorUsername = e.CreatorUsername,
+                        IsCreator = e.IsCreator,
+                        ParticipantUsernames = e.ParticipantUsernames
+                    }).ToList(),
+                    NationalEvents = day.NationalEvents.Select(n => new NationalEventViewModel
+                    {
+                        Title = n.Title,
+                        Description = n.Description,
+                        Date = n.Date,
+                        CountryId = n.CountryId,
+                        CountryName = n.CountryName
+                    }).ToList()
+                }).ToList()
+            };
+
             var model = new CalendarComponentViewModel
             {
-                Calendar = _calendarService.GenerateCalendar(normalizedYear, normalizedMonth, combinedEvents),
+                Calendar = calendarViewModel,
                 Navigation = new CalendarNavigationViewModel
                 {
                     CurrentMonth = normalizedMonth,
@@ -177,13 +214,50 @@ namespace Eventflow.Controllers
             var invitedEvents = await _personalEventService.GetAcceptedInvitedEventsAsync(userId, normalizedYear, normalizedMonth);
             var combinedEvents = ownEvents.Concat(invitedEvents).ToList();
 
+            var calendarDto = _calendarService.GenerateCalendar(normalizedYear, normalizedMonth, combinedEvents);
+
+            var calendarViewModel = new CalendarViewModel
+            {
+                Year = calendarDto.Year,
+                Month = calendarDto.Month,
+                Days = calendarDto.Days.Select(day => new CalendarDay
+                {
+                    DayNumber = day.DayNumber,
+                    IsToday = day.IsToday,
+                    Date = day.Date,
+                    PersonalEvents = day.PersonalEvents.Select(e => new PersonalEventWithCategoryNameViewModel
+                    {
+                        Id = e.Id,
+                        Title = e.Title,
+                        Description = e.Description,
+                        Date = e.Date,
+                        IsCompleted = e.IsCompleted,
+                        CategoryId = e.CategoryId,
+                        CategoryName = e.CategoryName,
+                        UserId = e.UserId,
+                        IsInvited = e.IsInvited,
+                        CreatorUsername = e.CreatorUsername,
+                        IsCreator = e.IsCreator,
+                        ParticipantUsernames = e.ParticipantUsernames
+                    }).ToList(),
+                    NationalEvents = day.NationalEvents.Select(n => new NationalEventViewModel
+                    {
+                        Title = n.Title,
+                        Description = n.Description,
+                        Date = n.Date,
+                        CountryId = n.CountryId,
+                        CountryName = n.CountryName
+                    }).ToList()
+                }).ToList()
+            };
+
             bool hasUnreadReminders = await _personalEventReminderService.HasUnreadRemindersForTodayAsync(userId);
             bool hasPendingInvites = await _inviteService.HasPendingInvitesAsync(userId);
 
             return new CalendarPageViewModel
             {
                 Continents = await _continentService.OrderContinentByNameAsync(),
-                Calendar = _calendarService.GenerateCalendar(normalizedYear, normalizedMonth, combinedEvents),
+                Calendar = calendarViewModel,
                 Navigation = new CalendarNavigationViewModel
                 {
                     CurrentMonth = normalizedMonth,
@@ -194,7 +268,9 @@ namespace Eventflow.Controllers
                     Context = "MyEvents",
                     Buttons = SidebarViewModelBuilder.Build(
                         context: "MyEvents",
-                        isLoggedIn: true
+                        isLoggedIn: true,
+                        hasUnreadReminders: hasUnreadReminders,
+                        hasPendingInvites: hasPendingInvites
                     )
                 }
             };

@@ -2,8 +2,9 @@
 using Eventflow.Attributes;
 using Eventflow.Domain.Enums;
 using Eventflow.Domain.Exceptions;
-using Eventflow.Domain.Models.Models;
-using Eventflow.Domain.Models.ViewModels;
+using Eventflow.Domain.Models.DTOs;
+using Eventflow.Domain.Models.Entities;
+using Eventflow.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using static Eventflow.Utilities.SessionHelper;
 
@@ -34,26 +35,43 @@ namespace Eventflow.Controllers
             int userId = GetUserId(HttpContext.Session);
             var reminderStatus = ParseStatus(state);
 
-            PaginatedRemindersViewModel result;
+            PaginatedReminderDto dto;
 
             if (filterBy == "liked")
             {
-                result = await _personalEventReminderService.GetPaginatedLikedRemindersAsync(
+                dto = await _personalEventReminderService.GetPaginatedLikedRemindersAsync(
                     userId, search, sortBy, page: 1, PageSize);
             }
             else
             {
                 ReminderStatus status = reminderStatus;
-                result = await _personalEventReminderService
+                dto = await _personalEventReminderService
                     .GetPaginatedFilteredPersonalRemindersAsync(userId, status, search, sortBy, page: 1, PageSize);
             }
+
+            var vm = new PaginatedRemindersViewModel
+            {
+                CurrentPage = dto.CurrentPage,
+                TotalPages = dto.TotalPages,
+                PersonalReminders = dto.PersonalReminders.Select(r => new ReminderBoxViewModel
+                {
+                    Id = r.Id,
+                    EventId = r.EventId,
+                    Title = r.Title,
+                    Description = r.Description,
+                    Date = r.Date,
+                    Status = r.Status,
+                    EventTitle = r.EventTitle ?? "Unknown",
+                    IsLiked = r.IsLiked
+                }).ToList()
+            };
 
             var model = new ReminderPageViewModel
             {
                 CurrentStatus = reminderStatus,
-                Reminders = result.PersonalReminders,
-                TotalPages = result.TotalPages,
-                CurrentPage = result.CurrentPage,
+                Reminders = vm.PersonalReminders,
+                TotalPages = vm.TotalPages,
+                CurrentPage = vm.CurrentPage,
                 SearchTerm = search,
                 SortBy = sortBy
             };
@@ -86,7 +104,7 @@ namespace Eventflow.Controllers
 
         [HttpPost]
         [RequireUserOrAdmin]
-        public async Task<IActionResult> Create([FromBody] ReminderRequestModel model)
+        public async Task<IActionResult> Create([FromBody] ReminderRequestViewModel model)
         {
             if (model.PersonalEventId <= 0)
             {
@@ -177,15 +195,28 @@ namespace Eventflow.Controllers
             {
                 ReminderStatus status = ParseStatus(state);
 
-                var paginatedResult = await _personalEventReminderService
+                var dto = await _personalEventReminderService
                         .GetPaginatedFilteredPersonalRemindersAsync(userId, status, search, sortBy, page, PageSize);
+
+                var vm = dto.PersonalReminders.Select(r => new ReminderBoxViewModel
+                {
+                    Id = r.Id,
+                    EventId = r.EventId,
+                    Title = r.Title,
+                    Description = r.Description,
+                    Date = r.Date,
+                    Status = r.Status,
+                    EventTitle = r.EventTitle ?? "Unknown",
+                    IsLiked = r.IsLiked
+                })
+                .ToList();
 
                 var model = new ReminderPageViewModel
                 {
                     CurrentStatus = status,
-                    Reminders = paginatedResult.PersonalReminders,
-                    TotalPages = paginatedResult.TotalPages,
-                    CurrentPage = paginatedResult.CurrentPage,
+                    Reminders = vm,
+                    TotalPages = dto.TotalPages,
+                    CurrentPage = dto.CurrentPage,
                     SearchTerm = search,
                     SortBy = sortBy
                 };

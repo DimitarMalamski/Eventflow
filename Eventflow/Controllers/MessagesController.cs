@@ -1,7 +1,6 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Attributes;
-using Eventflow.Domain.Models.ViewModels;
-using Eventflow.Utilities;
+using Eventflow.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using static Eventflow.Utilities.SessionHelper;
 

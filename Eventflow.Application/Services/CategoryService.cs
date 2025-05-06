@@ -1,7 +1,7 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Domain.Exceptions;
 using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Domain.Models.Models;
+using Eventflow.Domain.Models.Entities;
 using static Eventflow.Domain.Common.CustomErrorMessages.CategoryService;
 
 namespace Eventflow.Application.Services

@@ -1,7 +1,7 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Domain.Enums;
 using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Domain.Models.Models;
+using Eventflow.Domain.Models.Entities;
 
 namespace Eventflow.Application.Services
 {

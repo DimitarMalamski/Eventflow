@@ -1,7 +1,6 @@
 ﻿using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Domain.Models.ViewModels;
+using Eventflow.Domain.Models.DTOs;
 using Eventflow.Infrastructure.Data.Interfaces;
-using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace Eventflow.Infrastructure.Repositories
@@ -13,20 +12,20 @@ namespace Eventflow.Infrastructure.Repositories
         {
             _dbHelper = dbHelper;
         }
-        public async Task<List<NationalEventViewModel>> GetNationalHolidaysForCountryAsync(int countryId, int year, int month)
+        public async Task<List<NationalEventDto>> GetNationalHolidaysForCountryAsync(int countryId, int year, int month)
         {
             string query = @"
-        SELECT ne.Title, ne.Description, ne.Date, ne.CountryId, c.Name AS CountryName
-        FROM NationalEvent ne
-        INNER JOIN Country c ON ne.CountryId = c.Id
-        WHERE ne.CountryId = @CountryId
-        AND MONTH(ne.Date) = @Month";
+                SELECT ne.Title, ne.Description, ne.Date, ne.CountryId, c.Name AS CountryName
+                FROM NationalEvent ne
+                INNER JOIN Country c ON ne.CountryId = c.Id
+                WHERE ne.CountryId = @CountryId
+                AND MONTH(ne.Date) = @Month";
 
             var parameters = new Dictionary<string, object>
-    {
-        { "@CountryId", countryId },
-        { "@Month", month }
-    };
+            {
+                { "@CountryId", countryId },
+                { "@Month", month }
+            };
 
             var table = await _dbHelper.ExecuteQueryAsync(query, parameters);
 
@@ -36,11 +35,11 @@ namespace Eventflow.Infrastructure.Repositories
                 int safeDay = Math.Min(originalDate.Day, DateTime.DaysInMonth(year, month));
                 var correctedDate = new DateTime(year, month, safeDay);
 
-                return new NationalEventViewModel
+                return new NationalEventDto
                 {
                     Title = row["Title"].ToString()!,
                     Description = row["Description"]?.ToString() ?? "None",
-                    Date = correctedDate, // 🔁 Correct year
+                    Date = correctedDate,
                     CountryId = Convert.ToInt32(row["CountryId"]),
                     CountryName = row["CountryName"].ToString()!
                 };

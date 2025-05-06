@@ -1,13 +1,13 @@
-﻿using Eventflow.Domain.Models.ViewModels;
+﻿using Eventflow.Domain.Models.DTOs;
 
 namespace Eventflow.Application.Services.Interfaces
 {
     public interface ICalendarService
     {
-        public CalendarViewModel GenerateCalendar(int year, int month, List<PersonalEventWithCategoryNameViewModel> personalEvents);
-        public CalendarViewModel GenerateCalendar(int year, int month);
-        public Task<CalendarViewModel> GenerateUserCalendarAsync(int userId, int year, int month);
-        public Task<CalendarViewModel> GenerateNationalHolidayCalendarAsync(int countryId, int year, int month);
-        public CalendarViewModel GenerateEmptyCalendar(int year, int month);
+        public CalendarDto GenerateCalendar(int year, int month, List<PersonalEventWithCategoryNameDto> personalEvents);
+        public CalendarDto GenerateCalendar(int year, int month);
+        public Task<CalendarDto> GenerateUserCalendarAsync(int userId, int year, int month);
+        public Task<CalendarDto> GenerateNationalHolidayCalendarAsync(int countryId, int year, int month);
+        public CalendarDto GenerateEmptyCalendar(int year, int month);
     }
 }

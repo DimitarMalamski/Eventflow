@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static Eventflow.Domain.Common.ValidationConstants.PersonalEvent;
 
-namespace Eventflow.Domain.Models.Models
+namespace Eventflow.Domain.Models.Entities
 {
     public class PersonalEvent
     {

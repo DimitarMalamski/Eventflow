@@ -1,12 +1,12 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Domain.Exceptions;
 using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Domain.Models.Models;
+using Eventflow.Domain.Models.Entities;
 using static Eventflow.Application.Helper.InputValidator;
 using static Eventflow.Application.Security.PasswordHasher;
-using static Eventflow.Domain.Common.CustomErrorMessages.UserService;
 using static Eventflow.Domain.Common.CustomErrorMessages.Login;
 using static Eventflow.Domain.Common.CustomErrorMessages.Register;
+using static Eventflow.Domain.Common.CustomErrorMessages.UserService;
 using Role = Eventflow.Domain.Enums.Role;
 
 namespace Eventflow.Application.Services
