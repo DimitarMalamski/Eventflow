@@ -69,7 +69,7 @@ namespace Eventflow.Tests.Services
             Assert.AreEqual(0, result.Count);
         }
 
-        [TestMethod]
+        [TestMethod] // TODO
         [ExpectedException(typeof(CountryRetrievalException))]
         public async Task GetCountriesByContinentIdAsync_ShouldThrowException_WhenRepositoryThrows()
         {

@@ -1,5 +1,6 @@
 ﻿using Eventflow.Domain.Enums;
 using Eventflow.Domain.Models.Entities;
+using Eventflow.DTOs.DTOs;
 
 namespace Eventflow.Application.Services.Interfaces
 {
@@ -15,5 +16,13 @@ namespace Eventflow.Application.Services.Interfaces
         public Task<bool> HasUserAcceptedInviteAsync(int userId, int personalEventId);
         public Task<int> CountPendingInvitesAsync(int userId);
         public Task LeaveEventAsync(int userId, int eventId);
+        public Task<PaginatedInvitesDto> GetPaginatedFilteredInvitesAsync(
+            int userId,
+            int statusId,
+            string? search,
+            string? sortBy,
+            int page,
+            int pageSize
+        );
     }
 }

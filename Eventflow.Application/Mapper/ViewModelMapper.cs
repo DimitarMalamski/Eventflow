@@ -23,5 +23,21 @@ namespace Eventflow.Application.Mapper
                 => reminders?.Select(ToBoxViewModel).ToList()
                     ?? new List<ReminderDto>();
         }
+
+        public static class InviteMapper {
+            public static InviteDto ToBoxViewModel(Invite invite) => new InviteDto
+            {
+                Id = invite.Id,
+                EventTitle = invite.PersonalEvent?.Title ?? "[No Title]",
+                InvitedByUsername = invite.PersonalEvent?.User?.Username ?? "[Unknown User]",
+                EventDescription = invite.PersonalEvent?.Description,
+                EventDate = invite.PersonalEvent?.Date ?? DateTime.MinValue,
+                CreatedAt = invite.CreatedAt,
+                StatusId = invite.StatusId
+            };
+            public static List<InviteDto> ToInviteDtoList(IEnumerable<Invite> invites)
+                => invites?.Select(ToBoxViewModel).ToList()
+                    ?? new List<InviteDto>();
+        }
     }
 }

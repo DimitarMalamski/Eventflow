@@ -2,6 +2,10 @@
 using Eventflow.Domain.Enums;
 using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Entities;
+using Eventflow.DTOs.DTOs;
+using static Eventflow.Application.Helper.StringMatchHelper;
+using static Eventflow.Application.Mapper.ViewModelMapper.InviteMapper;
+using static Eventflow.Domain.Common.CustomErrorMessages.InviteService;
 
 namespace Eventflow.Application.Services
 {
@@ -29,7 +33,22 @@ namespace Eventflow.Application.Services
             => await _inviteRepository.GetAllInvitesByUserIdAsync(userId);
         public async Task<List<Invite>> GetInvitesByUserAndStatusAsync(int userId, int statusId)
             => await _inviteRepository.GetInvitesByUserAndStatusAsync(userId, statusId);
-        public async Task<bool> HasPendingInvitesAsync(int userId)
+      public async Task<PaginatedInvitesDto> GetPaginatedFilteredInvitesAsync(
+        int userId, 
+        int statusId,
+        string? search,
+        string? sortBy,
+        int page,
+        int pageSize)
+      {
+         var invites = await _inviteRepository.GetInvitesByUserAndStatusAsync(userId, statusId);
+
+         var inviteDto = ToInviteDtoList(invites);
+
+         return PaginateAndWrap(inviteDto, search, sortBy, page, pageSize);
+
+      }
+      public async Task<bool> HasPendingInvitesAsync(int userId)
             => await _inviteRepository.HasPendingInvitesAsync(userId);
         public async Task<bool> HasUserAcceptedInviteAsync(int userId, int personalEventId)
             => await _inviteRepository.HasUserAcceptedInviteAsync(userId, personalEventId);
@@ -39,5 +58,69 @@ namespace Eventflow.Application.Services
             => await _inviteRepository.MarkInviteAsLeftAsync(userId, eventId);
         public async Task UpdateInviteStatusAsync(int inviteId, int statusId)
             => await _inviteRepository.UpdateInviteStatusAsync(inviteId, statusId);
+        private List<InviteDto> FilterInvites(List<InviteDto> invites, string? search)
+        {
+            if (string.IsNullOrWhiteSpace(search))
+            {
+                return invites;
+            }
+
+            return invites
+                .Where(r =>
+                    Match(r.EventTitle, search) ||
+                    Match(r.EventDescription, search) ||
+                    Match(r.InvitedByUsername, search))
+                .ToList();
+        }
+        private List<InviteDto> SortInvites(List<InviteDto> invites, string? sortBy)
+        {
+            return sortBy?.ToLower() switch
+            {
+                "event" => invites.OrderBy(i => i.EventTitle).ToList(),
+                "date" => invites.OrderBy(i => i.EventDate).ToList(),
+                "inviter" => invites.OrderBy(i => i.InvitedByUsername).ToList(),
+                _ => invites.OrderBy(r => r.Id).ToList()
+            };
+        }
+        private PaginatedInvitesDto PaginateAndWrap(IEnumerable<InviteDto> invites,
+            string? search, 
+            string? sortBy, 
+            int page, 
+            int pageSize)
+        {
+            if (page < 1)
+            {
+                throw new ArgumentException(pageMustBeGreaterThanZero, nameof(page));
+            }
+
+            if (pageSize <= 0)
+            {
+                throw new ArgumentException(pageSizeMustBeGreaterThanZero, nameof(pageSize));
+            }
+
+            var InvitesList = invites.ToList();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                InvitesList = FilterInvites(InvitesList, search);
+            }
+
+            var sorted = SortInvites(InvitesList, sortBy);
+
+            var totalCount = sorted.Count;
+            var totalPages = Math.Max(1, (int)Math.Ceiling(totalCount / (double)pageSize));
+
+            var paginated = sorted
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return new PaginatedInvitesDto
+            {
+                Invites = paginated,
+                TotalPages = totalPages,
+                CurrentPage = page
+            };
+        }
     }
 }

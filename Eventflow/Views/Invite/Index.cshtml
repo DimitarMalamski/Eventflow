@@ -1,5 +1,4 @@
-﻿@using Eventflow.ViewModels;
-@using Eventflow.ViewModels.Invite.Page
+﻿@using Eventflow.ViewModels.Invite.Page
 @using Eventflow.ViewModels.Shared
 @model InvitePageViewModel
 
@@ -10,33 +9,58 @@
 
 <div class="container">
     <div class="row align-items-center mb-4">
-    <div class="col-md-9 d-flex justify-content-center">
-        <h4 class="mb-0">My Invites</h4>
+        <div class="col-md-9 d-flex justify-content-center">
+            <h4 class="mb-0">My Invites</h4>
+        </div>
+
+        <div class="col-md-3">
+            <form method="get" asp-controller="Invite" asp-action="Index">
+                @await Component.InvokeAsync("Dropdown", new DropdownViewModel {
+                    Label = "Status",
+                    Name = "statusId",
+                    Id = "statusId",
+                    SelectedValue = ((int)Model.CurrentStatus).ToString(),
+                    Options = Model.StatusOptions
+                })
+            </form>
+        </div>
     </div>
 
-    <div class="col-md-3">
-        <form method="get" asp-controller="Invite" asp-action="Index">
-            @await Component.InvokeAsync("Dropdown", new DropdownViewModel {
-                Label = "Status",
-                Name = "statusId",
-                Id = "statusId",
-                DefaultOptionLabel = null,
-                SelectedValue = Model.CurrentStatus.ToString(),
-                Options = Model.StatusOptions
-            })
-        </form>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <input type="text"
+                   id="inviteSearchInput"
+                   class="form-control"
+                   placeholder="Search by title, description, or inviter"
+                   value="@Model.SearchTerm" />
+        </div>
+
+        <div class="col-md-3">
+            <select id="inviteSortDropdown" class="form-select">
+                <option value="">Sort By (Default)</option>
+                <option value="event" selected="@(Model.SortBy == "event")">Event Title</option>
+                <option value="date" selected="@(Model.SortBy == "date")">Event Date</option>
+                <option value="inviter" selected="@(Model.SortBy == "inviter")">Invited By</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <button type="button" id="applyInviteFiltersBtn" class="btn btn-primary w-100">
+                Apply Filters
+            </button>
+        </div>
     </div>
+
+    <div id="inviteListContainer" class="reminder-scrollbox">
+        @await Html.PartialAsync("~/Views/Shared/Partials/Invite/_InviteListPartial.cshtml", Model)
+    </div>
+
+    <form id="antiForgeryForm" style="display: none;">
+        @Html.AntiForgeryToken()
+    </form>
 </div>
 
-    @if (!Model.Invites.Any())
-    {
-        <p class="text-muted">No invites found.</p>
-    }
-    else
-    {
-        foreach (var invite in Model.Invites)
-        {
-            @await Html.PartialAsync("~/Views/Shared/Partials/Invite/_InviteCardPartial.cshtml", invite)
-        }
-    }
-</div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/reminder_styles.css" />
+    <link rel="stylesheet" href="~/css/reminder_card.css" />
+}

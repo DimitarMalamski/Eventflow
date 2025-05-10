@@ -75,7 +75,7 @@ namespace Eventflow.Tests.Services
             // Arrange
             _mockStatusRepository
                 .Setup(repo => repo.GetAllStatusOptionsAsync())
-                .ThrowsAsync(new Exception("Fail"));
+                .ThrowsAsync(new StatusRetrievalException("Fail"));
 
             // Act
             await _statusService.GetAllStatusOptionsAsync();

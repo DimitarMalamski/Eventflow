@@ -18,6 +18,7 @@ namespace Eventflow.Controllers
         private readonly IUserService _userService;
         private readonly IInviteService _inviteService;
         private readonly IStatusService _statusService;
+        private const int PageSize = 5;
         public InviteController(IUserService userService,
             IInviteService inviteService,
             IStatusService statusService)
@@ -177,6 +178,45 @@ namespace Eventflow.Controllers
 
             TempData["Message"] = "You’ve successfully left the event.";
             return RedirectToAction("MyEvents", "Event");
+        }
+
+        public async Task<IActionResult> GetInvitesPartial(
+            int statusId = 1,
+            int page = 1,
+            string? search = null,
+            string? sortBy = null
+        )
+        {
+            int userId = GetUserId(HttpContext.Session);
+
+            var dto = await _inviteService.GetPaginatedFilteredInvitesAsync(
+                userId,
+                statusId,
+                search,
+                sortBy,
+                page,
+                PageSize
+            );
+
+            var model = new InvitePageViewModel {
+                CurrentStatus = (InviteStatusEnum)statusId,
+                Invites = dto.Invites.Select(i => new InviteBoxViewModel 
+                {
+                    InviteId = i.Id,
+                    EventTitle = i.EventTitle,
+                    InvitedByUsername = i.InvitedByUsername,
+                    EventDescription = i.EventDescription,
+                    EventDate = i.EventDate,
+                    CreatedAt = i.CreatedAt,
+                    StatusId = i.StatusId
+                }).ToList(),
+                TotalPages = dto.TotalPages,
+                CurrentPage = dto.CurrentPage,
+                SearchTerm = search,
+                SortBy = sortBy
+            };
+
+            return PartialView("~/Views/Shared/Partials/Invite/_InviteListPartial.cshtml", model);
         }
     }
 }

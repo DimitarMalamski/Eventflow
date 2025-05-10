@@ -1,4 +1,4 @@
-﻿namespace Eventflow.Domain.Models.DTOs
+﻿namespace Eventflow.DTOs.DTOs
 {
     public class PersonalEventWithCategoryNameDto
     {

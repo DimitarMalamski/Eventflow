@@ -1,15 +1,14 @@
-@using Eventflow.ViewModels;
 @using Eventflow.ViewModels.Invite.Page
 @using Eventflow.ViewModels.Shared
 @model InvitePageViewModel
 
 @if (Model.Invites?.Any() == true)
 {
-    foreach (var invites in Model.Invites)
+    foreach (var invite in Model.Invites)
     {
-        if (invites != null)
+        if (invite != null)
         {
-            @await Html.PartialAsync("~/Views/Shared/Partials/Reminder/_InviteCardPartial.cshtml", invites)
+            @await Html.PartialAsync("~/Views/Shared/Partials/Invite/_InviteCardPartial.cshtml", invite)
         }
     }
 
@@ -19,10 +18,10 @@
         TotalPages = Model.TotalPages,
         SearchTerm = Model.SearchTerm,
         SortBy = Model.SortBy,
-        State = "Invite" ?? null
+        State = ((int)Model.CurrentStatus).ToString()
     })
 }
 else
 {
-    @await Html.PartialAsync("~/Views/Shared/Partials/Reminder/_InviteEmptyStatePartial.cshtml")
+    @await Html.PartialAsync("~/Views/Shared/Partials/Invite/_InviteEmptyStatePartial.cshtml")
 }

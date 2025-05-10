@@ -6,7 +6,6 @@
         {
             public const string userUsernameCannotBeNull = "Username cannot be null or empty.";
         }
-
         public static class PersonalEventReminderService
         {
             public const string personalEventReminderCannotBeNull = "PersonalEventReminder cannot be null.";
@@ -19,7 +18,10 @@
             public const string personalReminderMarkAsReadNotAllowed = "You are not allowed to mark this reminder as read.";
             public const string personalReminderToggleLikeNotAllowed = "You are not allowed to like or unlike this reminder.";
         }
-
+        public static class InviteService {
+            public const string pageMustBeGreaterThanZero = "Page number must be greater than or equal to 1.";
+            public const string pageSizeMustBeGreaterThanZero = "Page size must be greater than 0.";
+        }
         public static class CategoryService
         {
             public const string categoryRetrievalFailed = "Failed to retrieve categories from the repository.";

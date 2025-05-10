@@ -2,8 +2,8 @@
 using Eventflow.Attributes;
 using Eventflow.Domain.Enums;
 using Eventflow.Domain.Exceptions;
-using Eventflow.Domain.Models.DTOs;
 using Eventflow.Domain.Models.Entities;
+using Eventflow.DTOs.DTOs;
 using Eventflow.ViewModels.Reminder.Component;
 using Eventflow.ViewModels.Reminder.Page;
 using Eventflow.ViewModels.Reminder.Request;

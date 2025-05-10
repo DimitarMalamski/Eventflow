@@ -10,6 +10,7 @@ using Eventflow.ViewModels.Continent;
 using Eventflow.ViewModels.PersonalEvent.Form;
 using Eventflow.ViewModels.Shared.Component;
 using Microsoft.AspNetCore.Mvc;
+using Eventflow.DTOs.DTOs;
 using static Eventflow.Utilities.SessionHelper;
 
 namespace Eventflow.Controllers

@@ -1,6 +1,4 @@
-﻿using Eventflow.DTOs.DTOs;
-
-namespace Eventflow.Domain.Models.DTOs
+﻿namespace Eventflow.DTOs.DTOs
 {
     public class CalendarDto
     {

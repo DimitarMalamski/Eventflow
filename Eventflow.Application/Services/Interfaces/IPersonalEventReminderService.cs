@@ -1,6 +1,6 @@
 ﻿using Eventflow.Domain.Enums;
-using Eventflow.Domain.Models.DTOs;
 using Eventflow.Domain.Models.Entities;
+using Eventflow.DTOs.DTOs;
 
 namespace Eventflow.Application.Services.Interfaces
 {

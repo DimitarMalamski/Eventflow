@@ -2,8 +2,8 @@
 using Eventflow.Domain.Enums;
 using Eventflow.Domain.Exceptions;
 using Eventflow.Domain.Interfaces.Repositories;
-using Eventflow.Domain.Models.DTOs;
 using Eventflow.Domain.Models.Entities;
+using Eventflow.DTOs.DTOs;
 using static Eventflow.Application.Helper.StringMatchHelper;
 using static Eventflow.Application.Mapper.ViewModelMapper.PersonalReminder;
 using static Eventflow.Domain.Common.CustomErrorMessages.PersonalEventReminderService;
