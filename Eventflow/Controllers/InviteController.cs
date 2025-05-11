@@ -111,7 +111,7 @@ namespace Eventflow.Controllers
 
         [HttpGet]
         [RequireUserOrAdmin]
-        public async Task<IActionResult> Index(int statusId = 0)
+        public async Task<IActionResult> Index(int statusId = 1)
         {
             int userId = GetUserId(HttpContext.Session);
 
@@ -152,14 +152,11 @@ namespace Eventflow.Controllers
         {
             if (inviteId <= 0 || (statusId != 2 && statusId != 3))
             {
-                TempData["Error"] = "Invalid response.";
-                return RedirectToAction("Index", new { statusId = 1 });
+                return BadRequest();
             }
 
             await _inviteService.UpdateInviteStatusAsync(inviteId, statusId);
-
-            TempData["Success"] = statusId == 2 ? "Invite accepted!" : "Invite declined.";
-            return RedirectToAction("Index", new { statusId = 1 });
+            return Ok();
         }
 
         [HttpPost]

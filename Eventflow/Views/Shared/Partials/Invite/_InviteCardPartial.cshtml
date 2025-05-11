@@ -11,49 +11,55 @@
     string statusBadgeClass = isAccepted ? "bg-success" : "bg-danger";
 }
 
-<div class="card mb-4 shadow-sm border">
-    <div class="card-body d-flex justify-content-between align-items-center">
-        <div class="me-4">
-            <h5 class="card-title">
-                @Model.EventTitle 
-                <small class="text-muted fw-normal ms-2">
-                    – @Model.CreatedAt.ToString("MMMM dd, yyyy")
-                </small>
-            </h5>
+<div id="reminder-wrapper-@Model.InviteId" class="reminder-wrapper">
+    <div id="reminder-@Model.InviteId" class="reminder-card card mb-4 shadow-sm border">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <div class="me-4">
+                <h5 class="card-title">
+                    @Model.EventTitle
+                    <small class="text-muted fw-normal ms-2">
+                        – @Model.CreatedAt.ToString("MMMM dd, yyyy")
+                    </small>
+                </h5>
 
-            <h6 class="card-subtitle mb-2 text-muted">
-                Invited by: 
-                <strong>
-                    @Model.InvitedByUsername
-                </strong>
-            </h6>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    Invited by:
+                    <strong>@Model.InvitedByUsername</strong>
+                </h6>
 
-            <p class="card-text mb-1">
-                @Model.EventDescription
-            </p>
+                <p class="card-text mb-1">
+                    @Model.EventDescription
+                </p>
 
-            <p class="text-secondary mb-2">
-                <i class="bi bi-calendar-event"></i>
-                @Model.EventDate.ToString("MMMM dd, yyyy")
-            </p>
-        </div>
+                <p class="text-secondary mb-2">
+                    <i class="bi bi-calendar-event"></i>
+                    @Model.EventDate.ToString("MMMM dd, yyyy")
+                </p>
+            </div>
 
-        <div class="ms-auto d-flex gap-3 align-items-center">
-            @if (isPending)
-            {         
-                <form method="post" asp-controller="Invite" asp-action="Respond" class="d-flex gap-3">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="inviteId" value="@Model.InviteId" />
-                    <button type="submit" name="statusId" value="2" class="btn btn-success px-4 py-2 fs-6" aria-label="Accept Invite">Accept</button>
-                    <button type="submit" name="statusId" value="3" class="btn btn-danger px-4 py-2 fs-6" aria-label="Decline Invite">Decline</button>
-                </form>
-            }
-            else
-            {
-                <span class="badge @statusBadgeClass px-3 py-2 fs-6">
-                    @statusLabel
-                </span>
-            }
+            <div class="ms-auto d-flex gap-3 align-items-center">
+                @if (isPending)
+                {
+                    <button type="button"
+                        class="btn btn-success invite-response-btn"
+                        data-id="@Model.InviteId"
+                        data-status="2">
+                    Accept
+                    </button>
+                    <button type="button"
+                        class="btn btn-danger invite-response-btn"
+                        data-id="@Model.InviteId"
+                        data-status="3">
+                    Decline
+                    </button>
+                }
+                else
+                {
+                    <span class="badge @statusBadgeClass px-3 py-2 fs-6">
+                        @statusLabel
+                    </span>
+                }
+            </div>
         </div>
     </div>
 </div>
