@@ -49,6 +49,9 @@ function openEventModal(event) {
         reminderBtn.style.display = "inline-block";
     }
 
+    document.getElementById("modal-event-category-wrapper").style.display = "block";
+    document.getElementById("modal-event-participants-wrapper").style.display = "flex";
+
     const modal = new bootstrap.Modal(document.getElementById('eventModal'));
     modal.show();
 }
@@ -87,7 +90,6 @@ function bindModalActionButtons() {
 function bindEventClickHandlers() {
     document.querySelectorAll(".calendar-event").forEach(btn => {
         btn.addEventListener("click", function () {
-            console.log("📅 Event clicked:", this.dataset.id)
 
             const type = this.dataset.type;
 
@@ -98,6 +100,12 @@ function bindEventClickHandlers() {
                 document.getElementById("modal-event-category").innerText = "National Holiday";
                 document.getElementById("modal-event-creator").innerText = this.dataset.country;
 
+                document.getElementById("modal-event-category-wrapper").style.display = "none";
+                const participantsWrapper = document.getElementById("modal-event-participants-wrapper");
+                if (participantsWrapper) {
+                    participantsWrapper.style.setProperty("display", "none", "important");
+                }
+
                 document.getElementById("edit-button").style.display = "none";
                 document.getElementById("invite-button").style.display = "none";
                 document.getElementById("reminder-button").style.display = "none";
@@ -106,6 +114,8 @@ function bindEventClickHandlers() {
                 new bootstrap.Modal(document.getElementById('eventModal')).show();
                 return;
             }
+
+            console.log("📅 Persoanl Event clicked:", this.dataset.id)
 
             const event = {
                 id: this.dataset.id,
