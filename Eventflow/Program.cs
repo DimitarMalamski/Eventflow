@@ -1,6 +1,7 @@
-using Eventflow.Application.Services;
+using Eventflow.Application.Startup;
 using Eventflow.Authentication;
 using Eventflow.Configurations;
+using Eventflow.Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,12 @@ builder.Services.AddSession(option =>
 builder.Services.RegisterServices();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+    await DbSeeder.SeedAdminUserAsync(userRepository);
+}
 
 //using (var scope = app.Services.CreateScope())
 //{

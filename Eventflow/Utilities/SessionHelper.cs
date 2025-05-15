@@ -30,6 +30,11 @@
         {
             return GetUserRoleId(session) != 0;
         }
+
+        public static string? GetUserRoleName(ISession session) {
+            var roleId = GetUserRoleId(session);
+            return GetRoleName(roleId);
+        }
         private static string GetRoleName(int roleId)
         {
             return roleId switch

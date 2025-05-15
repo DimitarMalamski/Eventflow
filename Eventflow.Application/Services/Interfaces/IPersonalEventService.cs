@@ -10,5 +10,7 @@ namespace Eventflow.Application.Services.Interfaces
         public Task<PersonalEvent?> GetPersonalEventByIdAsync(int id);
         public Task UpdatePersonalEventAsync(PersonalEvent personalEvent);
         public Task<List<PersonalEventWithCategoryNameDto>> GetAcceptedInvitedEventsAsync(int userId, int year, int month);
+        public Task<int> GetPersonalEventsCountAsync();
+        public Task<List<RecentPersonalEventDto>> GetRecentPersonalEventsAsync(int count);
     }
 }

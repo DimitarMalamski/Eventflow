@@ -12,6 +12,7 @@
                 ("Invite", "Index") => "Invite",
                 ("Reminder", "Index") => "Reminder",
                 ("Messages", "Index") => "Messages",
+                ("Admin", "Index") => "Admin",
                 _ => "Calendar"
             };
         }

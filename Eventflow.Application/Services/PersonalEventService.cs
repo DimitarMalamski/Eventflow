@@ -98,5 +98,20 @@ namespace Eventflow.Application.Services
         }
         public async Task UpdatePersonalEventAsync(PersonalEvent personalEvent)
             => await _personalEventRepository.UpdatePersonalEventAsync(personalEvent);
-    }
+        public async Task<int> GetPersonalEventsCountAsync()
+            => await _personalEventRepository.GetPersonalEventsCountAsync();
+        public async Task<List<RecentPersonalEventDto>> GetRecentPersonalEventsAsync(int count)
+        {
+            var personalEvents = await _personalEventRepository.GetRecentPersonalEventsAsync(count);
+
+            var userIds = personalEvents.Select(e => e.UserId).Distinct().ToList();
+            var userMap = await _userRepository.GetUsernamesByIdsAsync(userIds);
+
+            return personalEvents.Select(pe => new RecentPersonalEventDto {
+                Title = pe.Title,
+                CreatorUsername = userMap.TryGetValue(pe.UserId, out var username) ? username : "Unknown"
+            })
+            .ToList();
+        }
+   }
 }

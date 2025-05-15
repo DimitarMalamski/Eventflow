@@ -149,5 +149,61 @@ namespace Eventflow.Infrastructure.Repositories
             Email = row["Email"].ToString()!,
             RoleId = Convert.ToInt32(row["RoleId"])
         };
-    }
+        public async Task<int> GetUserCountAsync()
+        {
+            string getUserCountQuery = @"SELECT COUNT(*) FROM [User]";
+
+            var count = await _dbHelper.ExecuteScalarAsync(getUserCountQuery);
+
+            return Convert.ToInt32(count);
+        }
+        public async Task<List<User>> GetRecentUsersAsync(int count)
+        {
+            string getRecentUsersQuery = @"
+                        SELECT TOP (@Count) *
+                        FROM [User]
+                        ORDER BY [Id] DESC";
+            
+            var parameters = new Dictionary<string, object?>() {
+                { "@Count", count }
+            };
+
+            var dt = await _dbHelper.ExecuteQueryAsync(getRecentUsersQuery, parameters);
+
+            List<User> users = new List<User>();
+
+            foreach (DataRow row in dt.Rows) {
+                users.Add(MapUser(row));
+            }
+
+            return users;
+        }
+        public async Task<Dictionary<int, string>> GetUsernamesByIdsAsync(List<int> userIds)
+        { 
+            if (userIds == null || 
+                userIds.Count == 0) {
+                return new Dictionary<int, string>();
+            }
+
+            var paramList = userIds
+                .Select((id, index) => $"@Id{index}")
+                .ToList();
+
+            string getUserUsernamesByIdsQuery = $"SELECT Id, Username FROM [User] WHERE Id IN ({string.Join(",", paramList)})";
+
+            var parameters = userIds
+                .Select((id, index) => new KeyValuePair<string, object>($"@Id{index}", id))
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            var dt = await _dbHelper.ExecuteQueryAsync(getUserUsernamesByIdsQuery, parameters);
+
+            var map = new Dictionary<int, string>();
+
+            foreach (DataRow row in dt.Rows) {
+                map[Convert.ToInt32(row["Id"])] = row["Username"].ToString()!;
+            }
+
+            return map;
+        }
+   }
 }

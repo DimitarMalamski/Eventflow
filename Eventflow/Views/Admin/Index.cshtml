@@ -1,0 +1,66 @@
+@using Eventflow.ViewModels.Admin
+@model AdminDashboardViewModel
+
+@{
+    Layout = "~/Views/Shared/_CalendarLayout.cshtml";
+}
+    <!-- Main Content -->
+    <div class="flex-grow-1 p-4">
+        <h1 class="mb-4">Admin Dashboard</h1>
+
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <div class="card text-white bg-primary h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Users</h5>
+                        <p class="display-4">@Model.TotalUsers</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="card text-white bg-success h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Events</h5>
+                        <p class="display-4">@Model.TotalEvents</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        Recent Users
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var user in Model.RecentUsers)
+                        {
+                            <li class="list-group-item">
+                                <strong>@user.Username</strong><br />
+                                <small class="text-muted">@user.Email</small>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6 mt-4 mt-md-0">
+                <div class="card h-100">
+                    <div class="card-header">
+                        Recent Events
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var ev in Model.RecentEvents)
+                        {
+                            <li class="list-group-item">
+                                <strong>@ev.Title</strong><br />
+                                <small class="text-muted">by @ev.CreatorUsername</small>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

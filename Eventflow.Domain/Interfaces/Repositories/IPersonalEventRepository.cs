@@ -10,5 +10,7 @@ namespace Eventflow.Domain.Interfaces.Repositories
         public Task UpdatePersonalEventAsync(PersonalEvent personalEvent);
         public Task<List<PersonalEvent>> GetAcceptedInvitedEventsAsync(int userId);
         public Task<bool> UserHasAccessToEventAsync(int eventId, int userId);
+        public Task<int> GetPersonalEventsCountAsync();
+        public Task<List<PersonalEvent>> GetRecentPersonalEventsAsync(int count);
     }
 }

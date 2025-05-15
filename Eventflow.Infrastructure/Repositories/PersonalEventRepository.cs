@@ -3,6 +3,7 @@ using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Entities;
 using Eventflow.Infrastructure.Data.Interfaces;
 using System.Data;
+using System.Data.Common;
 
 namespace Eventflow.Infrastructure.Repositories
 {
@@ -204,5 +205,42 @@ namespace Eventflow.Infrastructure.Repositories
             var result = await _dbHelper.ExecuteScalarAsync(hasAccesstoEventQuery, parameters);
             return result != null;
         }
-    }
+        public async Task<int> GetPersonalEventsCountAsync()
+        {
+            string getPersonalEventCountQuery = @"SELECT COUNT(*) FROM [PersonalEvent]";
+
+            var count = await _dbHelper.ExecuteScalarAsync(getPersonalEventCountQuery);
+
+            return Convert.ToInt32(count);
+        }
+        public async Task<List<PersonalEvent>> GetRecentPersonalEventsAsync(int count)
+        {
+            string recentPersonalEventQuery = @"
+                        SELECT TOP(@Count) *
+                        FROM PersonalEvent
+                        ORDER BY [Date] DESC";
+            
+            var parameters = new Dictionary<string, object>() {
+                { "@Count", count }
+            };
+
+            var dt = await _dbHelper.ExecuteQueryAsync(recentPersonalEventQuery, parameters);
+
+            var result = new List<PersonalEvent>();
+
+            foreach (DataRow row in dt.Rows) {
+                result.Add(new PersonalEvent {
+                    Id = Convert.ToInt32(row["Id"]),
+                    Title = row["Title"].ToString()!,
+                    Description = row["Description"] == DBNull.Value ? null : row["Description"].ToString(),
+                    Date = Convert.ToDateTime(row["Date"]),
+                    UserId = Convert.ToInt32(row["UserId"]),
+                    CategoryId = row["CategoryId"] == DBNull.Value ? null : Convert.ToInt32(row["CategoryId"]),
+                    IsCompleted = Convert.ToBoolean(row["IsCompleted"])
+                });
+            }
+
+            return result;
+        }
+   }
 }

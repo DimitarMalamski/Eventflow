@@ -35,6 +35,10 @@ namespace Eventflow.Controllers
             {
                 SetUserSession(HttpContext.Session, user.Id, user.Username, user.RoleId);
 
+                if (user.RoleId == 1) {
+                    return RedirectToAction("Index", "Admin");
+                }
+
                 return RedirectToAction("Index", "Calendar");
             }
 

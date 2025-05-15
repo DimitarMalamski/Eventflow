@@ -95,6 +95,36 @@ namespace Eventflow.Utilities
                         CssClass = "btn btn-primary w-100"
                     });
                 break;
+
+                case "Admin":
+                    buttons.Add(new SidebarButtonViewModel
+                    {
+                        Label = "Dashboard",
+                        Url = "/Admin",
+                        CssClass = "btn btn-primary w-100"
+                    });
+
+                    buttons.Add(new SidebarButtonViewModel
+                    {
+                        Label = "Manage Users",
+                        Url = "/Admin/Users",
+                        CssClass = "btn btn-primary w-100"
+                    });
+
+                    buttons.Add(new SidebarButtonViewModel
+                    {
+                        Label = "Manage Events",
+                        Url = "/Admin/Events",
+                        CssClass = "btn btn-primary w-100"
+                    });
+
+                    buttons.Add(new SidebarButtonViewModel
+                    {
+                        Label = "Site Settings",
+                        Url = "/Admin/Settings",
+                        CssClass = "btn btn-primary w-100"
+                    });
+                break;
             }
 
             return buttons;

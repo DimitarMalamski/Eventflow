@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Eventflow.Utilities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Eventflow.Attributes
@@ -8,9 +9,9 @@ namespace Eventflow.Attributes
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var session = context.HttpContext.Session;
-            var role = session.GetString("Role");
+            var roleName = SessionHelper.GetUserRoleName(session);
 
-            if (string.IsNullOrEmpty(role) || (role != "User" && role != "Admin"))
+            if (string.IsNullOrEmpty(roleName) || (roleName != "User" && roleName != "Admin"))
             {
                 context.Result = new RedirectToActionResult("Login", "Account", null);
                 return;
