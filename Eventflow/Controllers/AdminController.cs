@@ -1,5 +1,6 @@
 using Eventflow.Application.Services.Interfaces;
 using Eventflow.Attributes;
+using Eventflow.DTOs.DTOs;
 using Eventflow.ViewModels.Admin;
 using Eventflow.ViewModels.Admin.Component;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,49 @@ namespace Eventflow.Controllers {
          };
 
          return View(vm);
+      }
+      [RequireAdmin]
+      public async Task<IActionResult> Users(string search = "",
+         string role = "All",
+         string status = "All") {
+            var userDtos = await _userService.GetAllUsersAsync();
+
+            var filtered = userDtos
+               .Where(u =>
+                     (string.IsNullOrWhiteSpace(search) || u.Username.Contains(search, StringComparison.OrdinalIgnoreCase)) &&
+                     (role == "All" || u.RoleName == role) &&
+                     (status == "All" || u.Status == status))
+               .ToList();
+
+            var vm = new ManageUsersViewModel
+            {
+               Users = filtered.Select(dto => new AdminUserViewModel {
+                  Id = dto.Id,
+                  Username = dto.Username,
+                  Email = dto.Email,
+                  RoleName = dto.RoleName,
+                  Status = dto.Status
+               }).ToList(),
+               SearchTerm = search,
+               SelectedRole = role,
+               SelectedStatus = status
+            };
+
+            return View(vm);
+      }
+
+      [HttpPost]
+      [RequireAdmin]
+      public async Task<IActionResult> UpdateUser([FromBody] UserEditDto dto) {
+         try {
+            bool update = await _userService.UpdateUserAsync(dto);
+            return Json(new {
+               success = update 
+            });
+         }
+         catch (Exception ex) {
+            return Json(new { success = false, message = ex.Message });
+         }
       }
    }
 }

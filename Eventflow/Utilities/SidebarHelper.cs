@@ -13,12 +13,13 @@
                 ("Reminder", "Index") => "Reminder",
                 ("Messages", "Index") => "Messages",
                 ("Admin", "Index") => "Admin",
+                ("Admin", "Users") => "Users",
                 _ => "Calendar"
             };
         }
         public static bool NeedsVerticalCentering(string controller)
         {
-            var noVerticalCenterPage = new[] { "Invite", "Reminder", "Messages" };
+            var noVerticalCenterPage = new[] { "Invite", "Reminder", "Messages", "Admin" };
             return !noVerticalCenterPage.Contains(controller);
         }
     }

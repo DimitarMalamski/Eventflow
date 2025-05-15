@@ -20,6 +20,19 @@ namespace Eventflow.Application.Services
             _userRepository = userRepository
                 ?? throw new ArgumentNullException(nameof(userRepository));
         }
+        public async Task<List<AdminUserDto>> GetAllUsersAsync()
+        {
+            var users = await _userRepository.GetAllUsersAsync();
+
+            return users.Select(u => new AdminUserDto {
+                Id = u.Id,
+                Username = u.Username,
+                Email = u.Email,
+                RoleName = u.RoleId == (int)Role.Admin ? "Admin" : "User",
+                Status = u.IsBanned ? "Banned" : "Active"
+            })
+            .ToList();
+        }
         public async Task<List<RecentUserDto>> GetRecentUsersAsync(int count)
         {
             var users = await _userRepository.GetRecentUsersAsync(count);
@@ -139,5 +152,16 @@ namespace Eventflow.Application.Services
             int rowsAffected = await _userRepository.RegisterUserAsync(newUser);
             return rowsAffected > 0;
         }
-    }
+        public async Task<bool> UpdateUserAsync(UserEditDto dto)
+        {
+            var user = new User {
+                Id = dto.Id,
+                Username = dto.Username,
+                Email = dto.Email,
+                IsBanned = dto.Status.Equals("Banned", StringComparison.OrdinalIgnoreCase),
+            };
+
+            return await _userRepository.UpdateAsync(user, dto.Role);
+        }
+   }
 }

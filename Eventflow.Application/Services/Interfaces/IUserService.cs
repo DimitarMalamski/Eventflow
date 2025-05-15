@@ -1,4 +1,5 @@
-﻿using Eventflow.Domain.Models.Entities;
+﻿using System.ComponentModel;
+using Eventflow.Domain.Models.Entities;
 using Eventflow.DTOs.DTOs;
 
 namespace Eventflow.Application.Services.Interfaces
@@ -9,5 +10,7 @@ namespace Eventflow.Application.Services.Interfaces
         public Task<User?> GetUserByIdAsync(int userId);
         public Task<int> GetUserCountAsync();
         public Task<List<RecentUserDto>> GetRecentUsersAsync(int count);
+        public Task<List<AdminUserDto>> GetAllUsersAsync();
+        public Task<bool> UpdateUserAsync(UserEditDto dto);
     }
 }

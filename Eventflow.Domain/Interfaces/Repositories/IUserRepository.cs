@@ -13,5 +13,7 @@ namespace Eventflow.Domain.Interfaces.Repositories
         public Task<int> GetUserCountAsync();
         public Task<List<User>> GetRecentUsersAsync(int count);
         public Task<Dictionary<int, string>> GetUsernamesByIdsAsync(List<int> userIds);
+        public Task<List<User>> GetAllUsersAsync();
+        public Task<bool> UpdateAsync(User user, string roleName);
     }
 }

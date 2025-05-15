@@ -34,5 +34,8 @@ namespace Eventflow.Domain.Models.Entities
 
         [Required]
         public int RoleId { get; set; }
+
+        [Required]
+        public bool IsBanned { get; set; }
     }
 }

@@ -147,7 +147,8 @@ namespace Eventflow.Infrastructure.Repositories
             Firstname = row["Firstname"].ToString()!,
             Lastname = row["Lastname"].ToString() ?? "",
             Email = row["Email"].ToString()!,
-            RoleId = Convert.ToInt32(row["RoleId"])
+            RoleId = Convert.ToInt32(row["RoleId"]),
+            IsBanned = Convert.ToBoolean(row["IsBanned"])
         };
         public async Task<int> GetUserCountAsync()
         {
@@ -164,7 +165,7 @@ namespace Eventflow.Infrastructure.Repositories
                         FROM [User]
                         ORDER BY [Id] DESC";
             
-            var parameters = new Dictionary<string, object?>() {
+            var parameters = new Dictionary<string, object>() {
                 { "@Count", count }
             };
 
@@ -204,6 +205,42 @@ namespace Eventflow.Infrastructure.Repositories
             }
 
             return map;
+        }
+        public async Task<List<User>> GetAllUsersAsync()
+        {
+            string getAllUsersQuery = "SELECT * FROM [User]";
+
+            var dt = await _dbHelper.ExecuteQueryAsync(getAllUsersQuery);
+
+            var users = new List<User>();
+
+            foreach (DataRow row in dt.Rows) {
+                users.Add(MapUser(row));
+            }
+
+            return users;
+        }
+        public async Task<bool> UpdateAsync(User user, string roleName)
+        {
+            string updateUserQuery = @"
+                    UPDATE [User]
+                    SET 
+                        Username = @Username,
+                        Email = @Email,
+                        RoleId = (SELECT Id FROM [Role] WHERE Name = @RoleName),
+                        IsBanned = @IsBanned
+                    WHERE Id = @Id";
+
+            var parameters = new Dictionary<string, object>() {
+                { "@Id", user.Id },
+                { "@Username", user.Username },
+                { "@Email", user.Email },
+                { "@RoleName", roleName },
+                { "@IsBanned", user.IsBanned }
+            };
+
+            int rowsAffected = await _dbHelper.ExecuteNonQueryAsync(updateUserQuery, parameters);
+            return rowsAffected > 0;
         }
    }
 }
