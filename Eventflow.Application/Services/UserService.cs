@@ -64,36 +64,40 @@ namespace Eventflow.Application.Services
         public async Task<int> GetUserCountAsync()
             => await _userRepository.GetUserCountAsync();
         public async Task<User?> LoginAsync(string loginInput, string password)
+        {
+            if (string.IsNullOrWhiteSpace(loginInput)
+                || string.IsNullOrWhiteSpace(password))
             {
-                if (string.IsNullOrWhiteSpace(loginInput)
-                    || string.IsNullOrWhiteSpace(password))
-                {
-                    throw new InvalidLoginInputException(loginInputCannotBeNull);
-                }
-
-                loginInput = loginInput.Trim().ToLower();
-                password = password.Trim();
-
-                if (!IsValidLoginInput(loginInput))
-                {
-                    throw new InvalidLoginInputException(loginInputInvalid);
-                }
-
-                if (!IsValidPassword(password))
-                {
-                    throw new InvalidLoginInputException(loginPasswordInvalid);
-                }
-
-                User? user = await _userRepository.GetUserByInputAsync(loginInput);
-
-                if (user == null 
-                    || !VerifyPassword(password, user.PasswordHash, user.Salt))
-                {
-                    return null;
-                }
-
-                return user;
+                throw new InvalidLoginInputException(loginInputCannotBeNull);
             }
+
+            loginInput = loginInput.Trim().ToLower();
+            password = password.Trim();
+
+            if (!IsValidLoginInput(loginInput))
+            {
+                throw new InvalidLoginInputException(loginInputInvalid);
+            }
+
+            if (!IsValidPassword(password))
+            {
+                throw new InvalidLoginInputException(loginPasswordInvalid);
+            }
+
+            User? user = await _userRepository.GetUserByInputAsync(loginInput);
+
+            if (user == null 
+                || !VerifyPassword(password, user.PasswordHash, user.Salt))
+            {
+                return null;
+            }
+
+            if (user.IsBanned) {
+                throw new UserBannedException(userAccountHasBeenBanned);
+            }
+
+            return user;
+        }
         public async Task<bool> RegisterAsync(string username, string password, string firstname, string? lastname, string email)
         {
             if (string.IsNullOrWhiteSpace(username)

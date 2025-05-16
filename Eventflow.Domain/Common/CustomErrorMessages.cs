@@ -46,6 +46,7 @@
             public const string loginPasswordRequired = "Password is required."; 
             public const string loginInputInvalid = $"Username/email should be at least 4 characters long";
             public const string loginPasswordInvalid = "Password must be at least 8 characters, contain an uppercase letter, a number, and a special symbol.";
+            public const string userAccountHasBeenBanned = "Your account has been banned.";
         } 
         public static class Register
         {

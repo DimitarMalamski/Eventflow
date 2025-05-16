@@ -1,4 +1,5 @@
 ﻿using Eventflow.Application.Services.Interfaces;
+using Eventflow.Domain.Exceptions;
 using Eventflow.Domain.Models.Entities;
 using Eventflow.ViewModels.Account.Form;
 using Microsoft.AspNetCore.Mvc;
@@ -29,21 +30,33 @@ namespace Eventflow.Controllers
                 return View(model);
             }
 
-            User? user = await _authService.LoginAsync(model.LoginInput, model.Password);
+            try {
+                User? user = await _authService.LoginAsync(model.LoginInput, model.Password);
             
-            if (user != null)
-            {
-                SetUserSession(HttpContext.Session, user.Id, user.Username, user.RoleId);
+                if (user != null)
+                {
+                    SetUserSession(HttpContext.Session, user.Id, user.Username, user.RoleId);
 
-                if (user.RoleId == 1) {
-                    return RedirectToAction("Index", "Admin");
+                    if (user.RoleId == 1) {
+                        return RedirectToAction("Index", "Admin");
+                    }
+
+                    return RedirectToAction("Index", "Calendar");
                 }
 
-                return RedirectToAction("Index", "Calendar");
+                ModelState.AddModelError("Password", "Invalid username or password.");
+                return View(model);
             }
+            catch (UserBannedException  ex) {
+                TempData["BanMessage"] = ex.Message;
+                return RedirectToAction("Banned");
+            }
+        }
 
-            ModelState.AddModelError("Password", "Invalid username or password.");
-            return View(model);
+        [HttpGet]
+        public IActionResult Banned() {
+            ViewBag.BanMessage = TempData["BanMessage"] ?? "You have been banned from Eventflow.";
+            return View();
         }
 
         [HttpGet]

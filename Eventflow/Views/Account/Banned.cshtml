@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "Banned";
+    Layout = "~/Views/Shared/_BannedLayout.cshtml";
+}
+
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="row w-75 align-items-center">
+        <!-- Static Image -->
+        <div class="col-md-6 text-center">
+            <img src="/images/access_denied_image-removebg-preview.png" alt="Access Denied" style="max-width: 500px; height: auto;" />
+        </div>
+
+        <!-- Message -->
+        <div class="col-md-6 text-center">
+            <h1 class="text-danger fw-bold">Access Denied</h1>
+            <p class="fs-5 text-muted mt-3">@ViewBag.BanMessage</p>
+            <a href="@Url.Action("Login", "Account")" class="btn btn-outline-secondary mt-4 px-4">Back to Login</a>
+        </div>
+    </div>
+</div>
