@@ -87,12 +87,13 @@
                               var icon = user.Status == "Banned" ? "bi-unlock-fill" : "bi-slash-circle-fill";
                               var css = user.Status == "Banned" ? "btn-success" : "btn-danger";
 
-                              <!-- Ban/Unban Icon -->
-                              <a href="@Url.Action(action, "Admin", new { id = user.Id })"
-                                 class="btn btn-sm @css px-2"
-                                 title="@label">
+                              <button type="button"
+                                    class="btn btn-sm @css px-2 btn-toggle-ban"
+                                    data-user-id="@user.Id"
+                                    data-user-status="@user.Status"
+                                    title="@label">
                                  <i class="bi @icon"></i>
-                              </a>
+                              </button>
 
                               <!-- Delete Icon -->
                               <a href="@Url.Action("DeleteUser", "Admin", new { id = user.Id })"

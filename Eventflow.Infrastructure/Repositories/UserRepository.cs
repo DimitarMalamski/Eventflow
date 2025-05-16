@@ -242,5 +242,19 @@ namespace Eventflow.Infrastructure.Repositories
             int rowsAffected = await _dbHelper.ExecuteNonQueryAsync(updateUserQuery, parameters);
             return rowsAffected > 0;
         }
+        public async Task UpdateUserBanStatusAsync(int userId, bool IsBanned)
+        {
+            string updateUserIsBannedStatusQuery = @"
+                    UPDATE [User]
+                    SET IsBanned = @IsBanned
+                    WHERE Id = @Id";
+            
+            var parameters = new Dictionary<string, object>() {
+                { "@IsBanned", IsBanned },
+                { "Id", userId }
+            };
+
+            await _dbHelper.ExecuteNonQueryAsync(updateUserIsBannedStatusQuery, parameters);
+        }
    }
 }

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Eventflow.Application.Services.Interfaces;
 using Eventflow.Attributes;
 using Eventflow.DTOs.DTOs;
@@ -80,6 +81,44 @@ namespace Eventflow.Controllers {
          catch (Exception ex) {
             return Json(new { success = false, message = ex.Message });
          }
+      }
+
+      [HttpPost]
+      [RequireAdmin]
+      public async Task<IActionResult> ToggleBan([FromBody] IdDto dto) {
+
+         int id = dto.Id;
+
+         if (id <= 0)
+         {
+            return BadRequest(new 
+            {
+               success = false,
+               message = "Invalid user ID."
+            });
+         }
+
+         var user = await _userService.GetUserByIdAsync(id);
+
+         if (user == null)
+         {
+            return Json(new 
+            {
+               success = false,
+               message = "User not found."
+            });
+         }
+
+         bool newIsBanned = !user.IsBanned;
+         await _userService.UpdateUserBanStatusAsync(id, newIsBanned);
+
+         string newStatus = newIsBanned ? "Banned" : "Active";
+
+         return Json(new 
+         {
+            success = true,
+            newStatus 
+         });
       }
    }
 }

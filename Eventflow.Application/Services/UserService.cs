@@ -163,5 +163,7 @@ namespace Eventflow.Application.Services
 
             return await _userRepository.UpdateAsync(user, dto.Role);
         }
+        public async Task UpdateUserBanStatusAsync(int userId, bool isBanned)
+            => await _userRepository.UpdateUserBanStatusAsync(userId, isBanned);
    }
 }
