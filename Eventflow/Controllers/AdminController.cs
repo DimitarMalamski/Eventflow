@@ -120,5 +120,12 @@ namespace Eventflow.Controllers {
             newStatus 
          });
       }
+
+      [HttpPost]
+      [RequireAdmin]
+      public async Task<IActionResult> DeleteUser(int id) {
+         bool deleted = await _userService.SoftDeleteUserAsync(id);
+         return deleted ? Ok() : BadRequest("Could not delete user!");
+      }
    }
 }

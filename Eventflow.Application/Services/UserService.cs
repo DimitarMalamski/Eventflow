@@ -20,6 +20,8 @@ namespace Eventflow.Application.Services
             _userRepository = userRepository
                 ?? throw new ArgumentNullException(nameof(userRepository));
         }
+        public async Task<bool> SoftDeleteUserAsync(int id)
+            => await _userRepository.SoftDeleteUserAsync(id);
         public async Task<List<AdminUserDto>> GetAllUsersAsync()
         {
             var users = await _userRepository.GetAllUsersAsync();

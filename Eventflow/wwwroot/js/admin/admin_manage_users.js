@@ -69,12 +69,13 @@ document.addEventListener("DOMContentLoaded", function () {
                             title="${banLabel}">
                             <i class="bi ${banIcon}"></i>
                         </button>
-                        <a href="/Admin/DeleteUser?id=${userId}"
-                            class="btn btn-sm btn-outline-danger px-2"
-                            onclick="return confirm('Are you sure you want to delete this user?');"
+                        <button type="button"
+                            class="btn btn-sm btn-outline-danger px-2 btn-delete-user"
+                            data-user-id="${userId}"
+                            data-username="${formObject.Username}"
                             title="Delete">
                             <i class="bi bi-trash-fill"></i>
-                        </a>`;
+                        </button>`;
                 }
 
                 actionsHtml += `</div>`;
@@ -88,6 +89,41 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     }
+
+    const deleteModal = new bootstrap.Modal(document.getElementById("deleteUserModal"));
+
+    document.querySelectorAll(".btn-delete-user").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const userId = btn.dataset.userId;
+            const username = btn.dataset.username;
+
+            document.getElementById("deleteUserId").value = userId;
+            document.getElementById("deleteUsername").textContent = username;
+
+            deleteModal.show();
+        });
+    });
+
+    document.getElementById("confirmDeleteBtn").addEventListener("click", () => {
+        const userId = document.getElementById("deleteUserId").value;
+
+        fetch(`/Admin/DeleteUser/${userId}`, {
+            method: "POST"
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Delete failed");
+            const row = document.querySelector(`tr[data-user-id="${userId}"]`);
+            if (row) {
+                row.classList.add("fade");
+                setTimeout(() => row.remove(), 300);
+            }
+            deleteModal.hide();
+        })
+        .catch(err => {
+            console.error("Delete error:", err);
+            alert("Failed to delete user.");
+        });
+    });
 
     function onEditButtonClick() {
         const btn = this;
@@ -145,5 +181,15 @@ document.addEventListener("DOMContentLoaded", function () {
     function bindRowButtons(row) {
         row.querySelector(".btn-edit-user")?.addEventListener("click", onEditButtonClick);
         row.querySelector(".btn-toggle-ban")?.addEventListener("click", onBanToggleClick);
+
+        row.querySelector(".btn-delete-user")?.addEventListener("click", () => {
+            const deleteBtn = row.querySelector(".btn-delete-user");
+            const userId = deleteBtn.dataset.userId;
+            const username = row.querySelector(".username-cell")?.textContent || "this user";
+
+            document.getElementById("deleteUserId").value = userId;
+            document.getElementById("deleteUsername").textContent = username;
+            deleteModal.show();
+    });
     }
 });

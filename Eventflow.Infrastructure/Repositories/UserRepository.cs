@@ -14,9 +14,10 @@ namespace Eventflow.Infrastructure.Repositories
         }
         public async Task<User?> GetUserByInputAsync(string input)
         {
-            string getuserQuery = @"SELECT * FROM [User] 
-                                WHERE LOWER([Username]) = LOWER(@Input)
-                                OR LOWER([Email]) = LOWER(@Input)";
+            string getuserQuery = @"SELECT * FROM [User]
+                                WHERE IsDeleted = 0
+                                AND (LOWER([Username]) = LOWER(@Input)
+                                OR LOWER([Email]) = LOWER(@Input))";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>
             {
@@ -35,8 +36,9 @@ namespace Eventflow.Infrastructure.Repositories
         public async Task<bool> UserExistsAsync(string username, string email)
         {
             string userExistsQuery = @"SELECT COUNT(*) FROM [User]
-                            WHERE LOWER(Username) = LOWER(@Username)
-                            OR LOWER(Email) = LOWER(@Email)";
+                            WHERE IsDeleted = 0
+                            AND (LOWER(Username) = LOWER(@Username)
+                            OR LOWER(Email) = LOWER(@Email))";
             Dictionary<string, object> parameters = new Dictionary<string, object>
             {
                 { "@Username", username },
@@ -67,7 +69,7 @@ namespace Eventflow.Infrastructure.Repositories
         }
         public async Task<User?> GetByUsernameAsync(string username)
         {
-            string getUserByUsernameQuery = "SELECT * FROM [User] WHERE Username = @Username";
+            string getUserByUsernameQuery = "SELECT * FROM [User] WHERE Username = @Username AND IsDeleted = 0";
 
             var parameters = new Dictionary<string, object>()
             {
@@ -85,7 +87,7 @@ namespace Eventflow.Infrastructure.Repositories
         }
         public async Task<User?> GetUserByIdAsync(int userId)
         {
-            string getUserByIdQuery = "SELECT * FROM [User] WHERE Id = @Id";
+            string getUserByIdQuery = "SELECT * FROM [User] WHERE Id = @Id AND IsDeleted = 0";
 
             var parameters = new Dictionary<string, object>()
             {
@@ -148,7 +150,8 @@ namespace Eventflow.Infrastructure.Repositories
             Lastname = row["Lastname"].ToString() ?? "",
             Email = row["Email"].ToString()!,
             RoleId = Convert.ToInt32(row["RoleId"]),
-            IsBanned = Convert.ToBoolean(row["IsBanned"])
+            IsBanned = Convert.ToBoolean(row["IsBanned"]),
+            IsDeleted = Convert.ToBoolean(row["IsDeleted"])
         };
         public async Task<int> GetUserCountAsync()
         {
@@ -163,6 +166,7 @@ namespace Eventflow.Infrastructure.Repositories
             string getRecentUsersQuery = @"
                         SELECT TOP (@Count) *
                         FROM [User]
+                        WHERE IsDeleted = 0
                         ORDER BY [Id] DESC";
             
             var parameters = new Dictionary<string, object>() {
@@ -190,7 +194,7 @@ namespace Eventflow.Infrastructure.Repositories
                 .Select((id, index) => $"@Id{index}")
                 .ToList();
 
-            string getUserUsernamesByIdsQuery = $"SELECT Id, Username FROM [User] WHERE Id IN ({string.Join(",", paramList)})";
+            string getUserUsernamesByIdsQuery = $"SELECT Id, Username FROM [User] WHERE Id IN ({string.Join(",", paramList)}) AND IsDeleted = 0";
 
             var parameters = userIds
                 .Select((id, index) => new KeyValuePair<string, object>($"@Id{index}", id))
@@ -208,7 +212,7 @@ namespace Eventflow.Infrastructure.Repositories
         }
         public async Task<List<User>> GetAllUsersAsync()
         {
-            string getAllUsersQuery = "SELECT * FROM [User]";
+            string getAllUsersQuery = "SELECT * FROM [User] WHERE IsDeleted = 0";
 
             var dt = await _dbHelper.ExecuteQueryAsync(getAllUsersQuery);
 
@@ -256,5 +260,16 @@ namespace Eventflow.Infrastructure.Repositories
 
             await _dbHelper.ExecuteNonQueryAsync(updateUserIsBannedStatusQuery, parameters);
         }
-   }
+        public async Task<bool> SoftDeleteUserAsync(int id)
+        {
+            string softDeleteUserQuery = "UPDATE [User] SET IsDeleted = 1 WHERE Id = @Id";
+
+            var parameters = new Dictionary<string, object>() {
+                { "@Id", id }
+            };
+
+            int rowsAffected = await _dbHelper.ExecuteNonQueryAsync(softDeleteUserQuery, parameters);
+            return rowsAffected > 0;
+        }
+    }
 }
