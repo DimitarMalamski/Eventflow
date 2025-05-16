@@ -15,13 +15,25 @@ namespace Eventflow.Application.Services
     public class UserService : IAuthService, IUserService
     {
         private readonly IUserRepository _userRepository;
-        public UserService(IUserRepository userRepository)
+        private readonly IInviteRepository _inviteRepository;
+        public UserService(
+            IUserRepository userRepository,
+            IInviteRepository inviteRepository)
         {
             _userRepository = userRepository
                 ?? throw new ArgumentNullException(nameof(userRepository));
+            _inviteRepository = inviteRepository
+                ?? throw new ArgumentNullException(nameof(inviteRepository));
         }
-        public async Task<bool> SoftDeleteUserAsync(int id)
-            => await _userRepository.SoftDeleteUserAsync(id);
+        public async Task<bool> SoftDeleteUserAsync(int id) {
+            bool success = await _userRepository.SoftDeleteUserAsync(id);
+
+            if (success) {
+                await _inviteRepository.AutoDeclineInvitesOfDeletedUsersAsync();
+            }
+
+            return success;
+        }
         public async Task<List<AdminUserDto>> GetAllUsersAsync()
         {
             var users = await _userRepository.GetAllUsersAsync();

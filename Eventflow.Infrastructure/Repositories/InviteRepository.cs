@@ -14,6 +14,19 @@ namespace Eventflow.Infrastructure.Repositories
         {
             _dbHelper = dbHelper;
         }
+        public async Task AutoDeclineInvitesOfDeletedUsersAsync()
+        {
+            string autoDeclineInvitesOfDeletedUserQuery = @"
+                        UPDATE Invite
+                        SET StatusId = (SELECT Id FROM Status WHERE Name = 'Declined')
+                        WHERE InvitedUserId IN (
+                            SELECT Id FROM [User]
+                            WHERE IsDeleted = 1
+                        )
+                        AND StatusId = (SELECT Id FROM Status WHERE Name = 'Pending')";
+
+            await _dbHelper.ExecuteNonQueryAsync(autoDeclineInvitesOfDeletedUserQuery);
+        }
         public async Task CreateInviteAsync(Invite invite)
         {
             string createInviteQuery = @"

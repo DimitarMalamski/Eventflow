@@ -36,6 +36,11 @@ namespace Eventflow.Application.Services
             foreach (var e in filteredEvents)
             {
                 var creator = await _userRepository.GetUserByIdAsync(e.UserId);
+
+                if (creator == null || creator.IsDeleted) {
+                    continue;
+                }
+
                 var participantUsernames = await _userRepository.GetUsernamesByEventIdAsync(e.Id);
 
                 dtoList.Add(new PersonalEventWithCategoryNameDto
@@ -74,6 +79,12 @@ namespace Eventflow.Application.Services
 
             foreach (var pe in personalEvents)
             {
+                var creator = await _userRepository.GetUserByIdAsync(pe.UserId);
+
+                if (creator == null || creator.IsDeleted) {
+                    continue;
+                }
+
                 var perticipantsUsernames = await _userRepository.GetUsernamesByEventIdAsync(pe.Id);
 
                 personalEventsWithCategoryName.Add(new PersonalEventWithCategoryNameDto

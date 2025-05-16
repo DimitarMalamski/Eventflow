@@ -15,5 +15,6 @@ namespace Eventflow.Domain.Interfaces.Repositories
         public Task<bool> HasUserAcceptedInviteAsync(int userId, int personalEventId);
         public Task MarkInviteAsLeftAsync(int userId, int eventId);
         public Task<InviteActionResult> CreateOrResetInviteAsync(Invite invite);
+        public Task AutoDeclineInvitesOfDeletedUsersAsync();
     }
 }
