@@ -39,22 +39,16 @@ namespace Eventflow.Controllers {
 
          return View(vm);
       }
+
       [RequireAdmin]
       public async Task<IActionResult> Users(string search = "",
          string role = "All",
          string status = "All") {
-            var userDtos = await _userService.GetAllUsersAsync();
-
-            var filtered = userDtos
-               .Where(u =>
-                     (string.IsNullOrWhiteSpace(search) || u.Username.Contains(search, StringComparison.OrdinalIgnoreCase)) &&
-                     (role == "All" || u.RoleName == role) &&
-                     (status == "All" || u.Status == status))
-               .ToList();
+            var filteredDtos = await _userService.GetFilteredAdminUsersAsync(search, role, status);
 
             var vm = new ManageUsersViewModel
             {
-               Users = filtered.Select(dto => new AdminUserViewModel {
+               Users = filteredDtos.Select(dto => new AdminUserViewModel {
                   Id = dto.Id,
                   Username = dto.Username,
                   Email = dto.Email,
@@ -67,6 +61,34 @@ namespace Eventflow.Controllers {
             };
 
             return View(vm);
+      }
+
+      [RequireAdmin]
+      public async Task<IActionResult> Events() {
+         var dtos = await _personalEventService.GetAllManageEventsAsync();
+
+         var vm = dtos.Select(dto => new ManageEventViewModel {
+            EventId = dto.EventId,
+            Title = dto.Title,
+            Description = dto.Description,
+            Date = dto.Date,
+            CategoryName = dto.CategoryName,
+            OwnerUsername = dto.OwnerUsername,
+            Participants = dto.Participants.Select(p => new EventParticipantViewModel
+            {
+                  Username = p.Username,
+                  Email = p.Email,
+                  Status = p.Status
+            }).ToList()
+         }).ToList();
+
+         var resultVm = new ManageEventsResultViewModel
+         {
+            Events = vm,
+            Filters = new ManageEventsFilterViewModel() // empty for now, will support filters later
+         };
+
+         return View(resultVm);
       }
 
       [HttpPost]
@@ -126,6 +148,29 @@ namespace Eventflow.Controllers {
       public async Task<IActionResult> DeleteUser(int id) {
          bool deleted = await _userService.SoftDeleteUserAsync(id);
          return deleted ? Ok() : BadRequest("Could not delete user!");
+      }
+
+      [HttpGet]
+      [RequireAdmin]
+      public async Task<IActionResult> GetFilteredUsersPartial(string search = "", string role = "All", string status = "All") {
+         var filtered = await _userService.GetFilteredAdminUsersAsync(search, role, status);
+
+         var vm = new ManageUsersViewModel
+         {
+            Users = filtered.Select(dto => new AdminUserViewModel
+            {
+                  Id = dto.Id,
+                  Username = dto.Username,
+                  Email = dto.Email,
+                  RoleName = dto.RoleName,
+                  Status = dto.Status
+            }).ToList(),
+            SearchTerm = search,
+            SelectedRole = role,
+            SelectedStatus = status
+         };
+
+         return PartialView("~/Views/Shared/Partials/Admin/User/_UserTablePartial.cshtml", vm);
       }
    }
 }

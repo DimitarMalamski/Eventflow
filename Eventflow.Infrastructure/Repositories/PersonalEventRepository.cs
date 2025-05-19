@@ -3,7 +3,6 @@ using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Entities;
 using Eventflow.Infrastructure.Data.Interfaces;
 using System.Data;
-using System.Data.Common;
 
 namespace Eventflow.Infrastructure.Repositories
 {
@@ -237,6 +236,28 @@ namespace Eventflow.Infrastructure.Repositories
                     UserId = Convert.ToInt32(row["UserId"]),
                     CategoryId = row["CategoryId"] == DBNull.Value ? null : Convert.ToInt32(row["CategoryId"]),
                     IsCompleted = Convert.ToBoolean(row["IsCompleted"])
+                });
+            }
+
+            return result;
+        }
+        public async Task<List<PersonalEvent>> GetAllPersonalEventsAsync()
+        {
+            string getAllPersonalEventsQuery = @"SELECT * FROM [PersonalEvent]";
+
+            var dt = await _dbHelper.ExecuteQueryAsync(getAllPersonalEventsQuery);
+
+            var result = new List<PersonalEvent>();
+
+            foreach (DataRow row in dt.Rows) {
+                result.Add(new PersonalEvent {
+                    Id = Convert.ToInt32(row["Id"]),
+                    Title = row["Title"].ToString()!,
+                    Description = row["Description"] == DBNull.Value ? "None" : row["Description"].ToString()!,
+                    Date = Convert.ToDateTime(row["Date"]),
+                    IsCompleted = Convert.ToBoolean(row["IsCompleted"]),
+                    UserId = Convert.ToInt32(row["UserId"]),
+                    CategoryId = row["CategoryId"] != DBNull.Value ? Convert.ToInt32(row["CategoryId"]) : null
                 });
             }
 

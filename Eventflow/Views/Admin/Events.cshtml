@@ -1,0 +1,45 @@
+@using Eventflow.ViewModels.Admin.Component
+@model ManageEventsResultViewModel
+
+@{
+    ViewData["Title"] = "Manage Events";
+    Layout = "~/Views/Shared/_CalendarLayout.cshtml";
+}
+
+<h1 class="mb-4">Manage Events</h1>
+
+<form id="eventFilterForm" method="get" class="row g-3 mb-4 align-items-end">
+    <div class="col-md-3 col-sm-6">
+        <label for="search" class="form-label">Search</label>
+        <input type="text" name="SearchTerm" id="search" value="@Model.Filters.SearchTerm" class="form-control" placeholder="Event title or description" />
+    </div>
+
+    <div class="col-md-2 col-sm-6">
+        <label for="category" class="form-label">Category</label>
+        <select name="CategoryId" id="category" class="form-select">
+            <option value="">All Categories</option>
+            @foreach (var cat in Model.Filters.Categories)
+            {
+                <option value="@cat.Id" selected="@(cat.Id == Model.Filters.CategoryId)">@(cat.Name)</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-2 col-sm-6">
+        <label for="owner" class="form-label">Owner</label>
+        <input type="text" name="OwnerUsername" id="owner" value="@Model.Filters.OwnerUsername" class="form-control" placeholder="Username" />
+    </div>
+
+    <div class="col-md-2 col-sm-6">
+        <label for="date" class="form-label">Date</label>
+        <input type="date" name="Date" id="date" value="@(Model.Filters.Date?.ToString("yyyy-MM-dd"))" class="form-control" />
+    </div>
+
+    <div class="col-md-3 col-sm-12 text-end">
+        <button class="btn btn-primary w-100" type="submit" style="margin-top: 1.9rem;">Filter</button>
+    </div>
+</form>
+
+<div id="event-table-container" style="max-height: 500px; overflow-y: auto; border: 1px solid #dee2e6;">
+    @Html.Partial("~/Views/Shared/Partials/Admin/Event/_EventTablePartial.cshtml", Model.Events)
+</div>

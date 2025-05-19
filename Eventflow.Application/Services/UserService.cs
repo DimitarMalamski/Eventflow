@@ -16,14 +16,18 @@ namespace Eventflow.Application.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IInviteRepository _inviteRepository;
+        private readonly IRoleRepository _roleRepository;
         public UserService(
             IUserRepository userRepository,
-            IInviteRepository inviteRepository)
+            IInviteRepository inviteRepository,
+            IRoleRepository roleRepository)
         {
             _userRepository = userRepository
                 ?? throw new ArgumentNullException(nameof(userRepository));
             _inviteRepository = inviteRepository
                 ?? throw new ArgumentNullException(nameof(inviteRepository));
+            _roleRepository = roleRepository
+                ?? throw new ArgumentNullException(nameof(roleRepository));
         }
         public async Task<bool> SoftDeleteUserAsync(int id) {
             bool success = await _userRepository.SoftDeleteUserAsync(id);
@@ -183,5 +187,28 @@ namespace Eventflow.Application.Services
         }
         public async Task UpdateUserBanStatusAsync(int userId, bool isBanned)
             => await _userRepository.UpdateUserBanStatusAsync(userId, isBanned);
+        public async Task<List<AdminUserDto>> GetFilteredAdminUsersAsync(string search, string role, string status)
+        {
+            var users = await _userRepository.GetAllUsersAsync();
+
+            var rolesMap = await _roleRepository.GetRoleIdToNameMapAsync();
+
+            var result = users
+                .Select(u => new AdminUserDto {
+                    Id = u.Id,
+                    Username = u.Username,
+                    Email = u.Email,
+                    RoleName = rolesMap[u.RoleId],
+                    Status = u.IsBanned ? "Banned" : "Active"
+                })
+                .Where(u =>
+                (string.IsNullOrWhiteSpace(search) || u.Username.Contains(search, StringComparison.OrdinalIgnoreCase)) &&
+                (role == "All" || u.RoleName == role) &&
+                (status == "All" || u.Status == status)
+            )
+            .ToList();
+
+            return result;
+        }
    }
 }

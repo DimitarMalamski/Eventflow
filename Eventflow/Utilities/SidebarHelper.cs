@@ -14,6 +14,7 @@
                 ("Messages", "Index") => "Messages",
                 ("Admin", "Index") => "Admin",
                 ("Admin", "Users") => "Users",
+                ("Admin", "Events") => "Events",
                 _ => "Calendar"
             };
         }

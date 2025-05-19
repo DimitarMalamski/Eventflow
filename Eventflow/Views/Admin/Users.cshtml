@@ -8,7 +8,7 @@
 
 <h1 class="mb-4">Manage Users</h1>
 
-<form method="get" class="row g-3 mb-4 align-items-end">
+<form id="userFilterForm" method="get" class="row g-3 mb-4 align-items-end">
     <div class="col-md-4">
         <label for="search" class="form-label">Search</label>
         <input type="text" name="search" id="search" value="@Model.SearchTerm" class="form-control" placeholder="Username or email" />
@@ -34,81 +34,8 @@
     </div>
 </form>
 
-<div style="max-height: 500px; overflow-y: auto; border: 1px solid #dee2e6;">
-    <table class="table table-hover table-bordered align-middle mb-0"
-           style="width: 100%; border-collapse: collapse;">
-        <thead class="table-light">
-            <tr class="text-center">
-                <th>Username</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th style="width: 160px;">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in Model.Users)
-            {
-                <tr data-user-id="@user.Id">
-                    <td class="username-cell">@user.Username</td>
-                    <td class="email-cell">@user.Email</td>
-                    <td class="role-cell text-center" style="border: 1px solid #dee2e6; text-align: center;">
-                     <div class="d-flex justify-content-center align-items-center" style="min-height: 42px;">
-                        <span class="badge @(user.RoleName == "Admin" ? "bg-primary" : "bg-secondary")">
-                              @user.RoleName
-                        </span>
-                     </div>
-                  </td>
-
-                  <td style="border: 1px solid #dee2e6; text-align: center;">
-                     <div class="d-flex justify-content-center align-items-center" style="min-height: 42px;">
-                        <span class="badge bg-@(user.Status == "Banned" ? "danger" : "success")">
-                              @user.Status
-                        </span>
-                     </div>
-                  </td>
-                    <td style="border: 1px solid #dee2e6;">
-                     <div class="d-flex justify-content-center flex-wrap gap-1">
-                        <!-- Edit Icon -->
-                        <button type="button"
-                              class="btn btn-sm btn-warning px-2 btn-edit-user"
-                              title="Edit"
-                              data-user-id="@user.Id"
-                              data-user-username="@user.Username"
-                              data-user-email="@user.Email"
-                              data-user-role="@user.RoleName">
-                           <i class="bi bi-pencil-fill"></i>
-                        </button>
-
-                        @if (user.RoleName != "Admin")
-                        {
-                            var action = user.Status == "Banned" ? "UnbanUser" : "BanUser";
-                            var label = user.Status == "Banned" ? "Unban" : "Ban";
-                            var icon = user.Status == "Banned" ? "bi-unlock-fill" : "bi-slash-circle-fill";
-                            var css = user.Status == "Banned" ? "btn-success" : "btn-danger";
-
-                            <button type="button"
-                                class="btn btn-sm @css px-2 btn-toggle-ban"
-                                data-user-id="@user.Id"
-                                data-user-status="@user.Status"
-                                title="@label">
-                                <i class="bi @icon"></i>
-                            </button>
-
-                            <button type="button"
-                                class="btn btn-sm btn-outline-danger px-2 btn-delete-user"
-                                data-user-id="@user.Id"
-                                data-username="@user.Username"
-                                title="Delete">
-                            <i class="bi bi-trash-fill"></i>
-                            </button>
-                        }
-                     </div>
-                  </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div id="user-table-container" style="max-height: 500px; overflow-y: auto; border: 1px solid #dee2e6;">
+    @Html.Partial("~/Views/Shared/Partials/Admin/User/_UserTablePartial.cshtml", Model)
 </div>
 
 <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-hidden="true">

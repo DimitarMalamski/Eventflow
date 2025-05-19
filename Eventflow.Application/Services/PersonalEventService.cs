@@ -1,4 +1,5 @@
 ﻿using Eventflow.Application.Services.Interfaces;
+using Eventflow.Domain.Enums;
 using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Entities;
 using Eventflow.DTOs.DTOs;
@@ -10,13 +11,16 @@ namespace Eventflow.Application.Services
         private readonly IPersonalEventRepository _personalEventRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IInviteRepository _inviteRepository;
         public PersonalEventService(IPersonalEventRepository personalEventRepository,
             ICategoryRepository categoryRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IInviteRepository inviteRepository)
         {
             _personalEventRepository = personalEventRepository;
             _categoryRepository = categoryRepository;
             _userRepository = userRepository;
+            _inviteRepository = inviteRepository;
         }
         public async Task CreateAsync(PersonalEvent personalEvent)
             => await _personalEventRepository.CreateEventAsync(personalEvent);
@@ -123,6 +127,47 @@ namespace Eventflow.Application.Services
                 CreatorUsername = userMap.TryGetValue(pe.UserId, out var username) ? username : "Unknown"
             })
             .ToList();
+        }
+        public async Task<List<ManageEventDto>> GetAllManageEventsAsync()
+        {
+            var events = await _personalEventRepository.GetAllPersonalEventsAsync();
+            var users = await _userRepository.GetAllUsersAsync();
+            var categories = await _categoryRepository.GetAllCategoriesAsync();
+
+            var userDict = users.ToDictionary(u => u.Id);
+            var categoryDict = categories.ToDictionary(c => c.Id);
+
+            var result = new List<ManageEventDto>();
+
+            foreach (var ev in events) {
+                var invites = await _inviteRepository.GetInvitesByEventIdAsync(ev.Id);
+
+                var participantDtos = invites.Select(inv => {
+                    var user = userDict.GetValueOrDefault(inv.InvitedUserId);
+                    return new EventParticipantDto {
+                        UserId = inv.InvitedUserId,
+                        Username = user?.Username ?? "Unknown",
+                        Email = user?.Email ?? "Unknown",
+                        Status = Enum.GetName(typeof(InviteStatus), inv.StatusId) ?? "Unknown"
+                    };
+                }).ToList();
+
+                result.Add(new ManageEventDto {
+                    EventId = ev.Id,
+                    Title = ev.Title,
+                    Description = ev.Description ?? "No Description",
+                    Date = ev.Date,
+                    CategoryName = ev.CategoryId.HasValue && categoryDict.ContainsKey(ev.CategoryId.Value)
+                        ? categoryDict[ev.CategoryId.Value].Name
+                        : null,
+                    OwnerUsername = userDict.ContainsKey(ev.UserId)
+                        ? userDict[ev.UserId].Username
+                        : "Unknown",
+                    Participants = participantDtos
+                });
+            }
+
+            return result;
         }
    }
 }

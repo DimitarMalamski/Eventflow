@@ -14,5 +14,6 @@ namespace Eventflow.Application.Services.Interfaces
         public Task<bool> UpdateUserAsync(UserEditDto dto);
         public Task UpdateUserBanStatusAsync(int userId, bool isBanned);
         public Task<bool> SoftDeleteUserAsync(int id);
+        public Task<List<AdminUserDto>> GetFilteredAdminUsersAsync(string search, string role, string status);
     }
 }

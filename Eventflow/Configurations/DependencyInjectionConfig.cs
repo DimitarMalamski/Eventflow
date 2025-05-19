@@ -21,6 +21,7 @@ namespace Eventflow.Configurations
             services.AddScoped<IPersonalEventReminderRepository, PersonalEventReminderRepository>();
             services.AddScoped<IStatusRepository, StatusRepository>();
             services.AddScoped<INationalEventRepository, NationalEventRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
 
             // Services
             services.AddScoped<IAuthService, UserService>();

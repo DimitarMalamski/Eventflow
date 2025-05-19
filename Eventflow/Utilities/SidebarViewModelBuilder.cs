@@ -98,6 +98,7 @@ namespace Eventflow.Utilities
 
                 case "Admin":
                 case "Users":
+                case "Events":
                     buttons.Add(new SidebarButtonViewModel
                     {
                         Label = "Dashboard",

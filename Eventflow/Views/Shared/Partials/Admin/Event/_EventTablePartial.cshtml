@@ -1,0 +1,69 @@
+@model List<Eventflow.ViewModels.Admin.Component.ManageEventViewModel>
+
+<table class="table table-hover table-bordered align-middle mb-0" style="width: 100%; border-collapse: collapse;">
+    <thead class="table-light">
+        <tr class="text-center">
+            <th>Title</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Owner</th>
+            <th>Category</th>
+            <th style="width: 160px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var ev in Model)
+            {
+                var participantsJson = System.Text.Json.JsonSerializer.Serialize(ev.Participants);
+                <tr data-event-id="@ev.EventId"
+                    data-event-title="@ev.Title"
+                    data-event-description="@ev.Description"
+                    data-event-date="@ev.Date.ToString("yyyy-MM-dd")"
+                    data-event-owner="@ev.OwnerUsername"
+                    data-event-category="@ev.CategoryName ?? "None""
+                    data-event-participants='@participantsJson'>
+                    <td class="text-center">@ev.Title</td>
+                    <td class="text-center text-muted">@ev.Description</td>
+                    <td class="text-center">@ev.Date.ToString("yyyy-MM-dd")</td>
+                    <td class="text-center">@ev.OwnerUsername</td>
+                    <td class="text-center">@ev.CategoryName ?? "None"</td>
+                    <td style="border: 1px solid #dee2e6;">
+                        <div class="d-flex justify-content-center flex-wrap gap-1">
+                            <button type="button"
+                                    class="btn btn-sm btn-info px-2 btn-view-event"
+                                    title="View Details"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#viewEventModal">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                            <button type="button"
+                                    class="btn btn-sm btn-warning px-2 btn-edit-event"
+                                    title="Edit"
+                                    data-event-id="@ev.EventId">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-danger px-2 btn-delete-event"
+                                    title="Delete"
+                                    data-event-id="@ev.EventId"
+                                    data-event-title="@ev.Title">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center text-muted py-4">
+                    <i class="bi bi-exclamation-circle"></i>
+                    No events found matching your filters.
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

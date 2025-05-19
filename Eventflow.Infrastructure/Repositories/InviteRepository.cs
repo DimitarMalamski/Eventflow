@@ -127,6 +127,30 @@ namespace Eventflow.Infrastructure.Repositories
 
             return invites;
         }
+        public async Task<List<Invite>> GetInvitesByEventIdAsync(int eventId)
+        {
+            string getAllInvitesByPersonalEventQuery = @"SELECT * FROM Invite WHERE PersonalEventId = @EventId";
+
+            var parameters = new Dictionary<string, object>() {
+                { "@EventId", eventId }
+            };
+
+            var dt = await _dbHelper.ExecuteQueryAsync(getAllInvitesByPersonalEventQuery, parameters);
+
+            var result = new List<Invite>();
+
+            foreach (DataRow row in dt.Rows) {
+                result.Add(new Invite
+                {
+                    Id = Convert.ToInt32(row["Id"]),
+                    PersonalEventId = Convert.ToInt32(row["PersonalEventId"]),
+                    InvitedUserId = Convert.ToInt32(row["InvitedUserId"]),
+                    StatusId = Convert.ToInt32(row["StatusId"])
+                });
+            }
+
+            return result;
+        }
         public async Task<List<Invite>> GetInvitesByUserAndStatusAsync(int userId, int statusId)
         {
             string getInvitesByUserAndStatusQuery = @"

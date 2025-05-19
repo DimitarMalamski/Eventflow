@@ -1,4 +1,32 @@
 document.addEventListener("DOMContentLoaded", function () {
+    bindDropdownEvents();
+
+    const filterForm = document.getElementById("userFilterForm");
+
+    if (filterForm) {
+        filterForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(filterForm);
+            const params = new URLSearchParams(formData);
+
+            try {
+                const response = await fetch(`/Admin/GetFilteredUsersPartial?${params.toString()}`);
+                const html = await response.text();
+                const container = document.getElementById("user-table-container");
+                container.innerHTML = html;
+
+                container.querySelectorAll("tr[data-user-id]").forEach(row => {
+                    bindRowButtons(row);
+                });
+            } catch (err) {
+                console.error("Error fetching filtered users:", err);
+                alert("Could not load filtered results.");
+            }
+        })
+    }
+
+
     // Initial binding
     document.querySelectorAll(".btn-edit-user").forEach(btn => btn.addEventListener("click", onEditButtonClick));
     document.querySelectorAll(".btn-toggle-ban").forEach(btn => btn.addEventListener("click", onBanToggleClick));
@@ -191,5 +219,28 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("deleteUsername").textContent = username;
             deleteModal.show();
     });
+    }
+
+    function bindDropdownEvents() {
+        const form = document.getElementById("userFilterForm");
+        const roleDropdown = document.querySelector("#role");
+        const statusDropdown = document.querySelector("#status");
+
+        if (roleDropdown && !roleDropdown.dataset.bound) {
+            roleDropdown.addEventListener("change", () => form?.dispatchEvent(new Event("submit")));
+            roleDropdown.dataset.bound = "true";
+        }
+
+        if (statusDropdown && !statusDropdown.dataset.bound) {
+            statusDropdown.addEventListener("change", () => form?.dispatchEvent(new Event("submit")));
+            statusDropdown.dataset.bound = "true";
+        }
+    }
+
+    function onDropdownChange() {
+        const form = document.getElementById("userFilterForm");
+        if (form) {
+            form.dispatchEvent(new Event("submit", { bubbles: true }));
+        }
     }
 });
