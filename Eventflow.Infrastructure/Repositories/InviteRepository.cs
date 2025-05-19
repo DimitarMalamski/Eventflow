@@ -149,7 +149,9 @@ namespace Eventflow.Infrastructure.Repositories
                                         FROM Invite i
                                         INNER JOIN PersonalEvent e ON i.PersonalEventId = e.Id
                                         INNER JOIN [User] u ON e.UserId = u.Id
-                                        WHERE i.InvitedUserId = @UserId AND i.StatusId = @StatusId";
+                                        WHERE i.InvitedUserId = @UserId 
+                                        AND i.StatusId = @StatusId
+                                        AND u.IsDeleted = 0";
 
             var parameters = new Dictionary<string, object>()
             {

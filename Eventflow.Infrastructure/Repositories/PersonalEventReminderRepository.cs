@@ -38,7 +38,9 @@ namespace Eventflow.Infrastructure.Repositories
                                             e.UserId AS EventUserId
                                         FROM PersonalEventReminder r
                                         INNER JOIN PersonalEvent e ON r.PersonalEventId = e.Id
-                                        WHERE r.Id = @Id";
+                                        INNER JOIN [User] u ON e.UserId = u.Id
+                                        WHERE r.Id = @Id
+                                        AND u.IsDeleted = 0";
 
             var parameters = new Dictionary<string, object>()
             {
@@ -86,7 +88,9 @@ namespace Eventflow.Infrastructure.Repositories
                             e.CategoryId
                         FROM PersonalEventReminder r
                         INNER JOIN PersonalEvent e ON r.PersonalEventId = e.Id
-                        WHERE r.UserId = @UserId";
+                        INNER JOIn [User] u ON e.UserId = u.Id
+                        WHERE r.UserId = @UserId
+                        AND u.IsDeleted = 0";
 
             var parameters = new Dictionary<string, object>
             {
@@ -135,12 +139,14 @@ namespace Eventflow.Infrastructure.Repositories
                             e.CategoryId
                         FROM PersonalEventReminder r
                         INNER JOIN PersonalEvent e ON r.PersonalEventId = e.Id
+                        INNER JOIN [User] u ON e.UserId = u.Id
                         WHERE r.UserId = @UserId
                         AND r.IsRead = 1
                         AND (
                             r.IsLiked = 1 OR 
                             DATEDIFF(DAY, r.ReadAt, GETDATE()) <= 3
-                        );";
+                        )
+                        AND u.IsDeleted = 0;";
 
             var parameters = new Dictionary<string, object>
             {
@@ -163,9 +169,11 @@ namespace Eventflow.Infrastructure.Repositories
                             e.CategoryId
                         FROM PersonalEventReminder r
                         INNER JOIN PersonalEvent e ON r.PersonalEventId = e.Id
+                        INNER JOIN [User] u ON e.UserId = u.Id
                         WHERE r.UserId = @UserId
                         AND r.IsRead = 0
-                        AND r.Date = CAST(GETDATE() AS DATE);";
+                        AND r.Date = CAST(GETDATE() AS DATE)
+                        AND u.IsDeleted = 0;";
 
             var parameters = new Dictionary<string, object>
             {
@@ -252,7 +260,10 @@ namespace Eventflow.Infrastructure.Repositories
                            e.CategoryId
                     FROM PersonalEventReminder r
                     INNER JOIN PersonalEvent e ON r.PersonalEventId = e.Id
-                    WHERE r.UserId = @UserId AND r.IsLiked = 1;";
+                    INNER JOIN [User] u ON e.UserId = u.Id
+                    WHERE r.UserId = @UserId 
+                    AND r.IsLiked = 1
+                    AND u.IsDeleted = 0;";
 
             var parameters = new Dictionary<string, object>
             {

@@ -13,22 +13,39 @@ namespace Eventflow.Tests.Services
     public class UserServiceTests
     {
         private Mock<IUserRepository> _mockUserRepository;
+        private Mock<IInviteRepository> _mockInviteRepository;
         private UserService _userService;
 
         [TestInitialize]
         public void Setup()
         {
             _mockUserRepository = new Mock<IUserRepository>();
-            _userService = new UserService(_mockUserRepository.Object);
+            _mockInviteRepository = new Mock<IInviteRepository>();
+            _userService = new UserService( _mockUserRepository.Object, _mockInviteRepository.Object );
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Constructor_ShouldThrowException_WhenRepositoryIsNull()
+        public void Constructor_ShouldThrowException_WhenUserRepositoryIsNull()
         {
+            // Arrange
+            var mockUserRepository = new Mock<IUserRepository>();
+
             // Act
-            var service = new UserService(null!);
+            var service = new UserService( mockUserRepository.Object, null! );
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Constructor_ShouldThrowException_WhenInviteRepositoryIsNull()
+        {
+            // Arrange
+            var mockInviteRepository = new Mock<IInviteRepository>();
+
+            // Act
+            var service = new UserService(null!, mockInviteRepository.Object );
+        }
+
 
         [TestMethod]
         public async Task LoginAsync_ShouldReturnUser_WhenPasswordIsCorrect()

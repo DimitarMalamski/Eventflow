@@ -108,7 +108,8 @@ namespace Eventflow.Infrastructure.Repositories
             string getUsernamesByEventIdQuery = @"
                     SELECT u.Username
                     FROM [User] u
-                    WHERE u.Id IN (
+                    WHERE u.IsDeleted = 0
+                    AND u.Id IN (
 
                         SELECT pe.UserId
                         FROM PersonalEvent pe
