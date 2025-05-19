@@ -12,9 +12,13 @@ namespace Eventflow.Application.Services
     public class InviteService : IInviteService
     {
         private readonly IInviteRepository _inviteRepository;
-        public InviteService(IInviteRepository inviteRepository)
+        private readonly IUserRepository _userRepository;
+        public InviteService(
+            IInviteRepository inviteRepository,
+            IUserRepository userRepository)
         {
             _inviteRepository = inviteRepository;
+            _userRepository = userRepository;
         }
         public async Task AutoDeclineExpiredInvitesAsync()
         {
@@ -28,7 +32,15 @@ namespace Eventflow.Application.Services
         public async Task<int> CountPendingInvitesAsync(int userId)
             => (await _inviteRepository.GetInvitesByUserAndStatusAsync(userId, 1)).Count;
         public async Task<InviteActionResult> CreateOrResetInviteAsync(Invite invite)
-            => await _inviteRepository.CreateOrResetInviteAsync(invite);
+        {
+            var invitedUser = await _userRepository.GetUserByIdAsync(invite.InvitedUserId);
+
+            if (invitedUser == null || invitedUser.IsDeleted) {
+                throw new InvalidOperationException("Cannot invite a deleted or non-existent user.");
+            }
+
+            return await _inviteRepository.CreateOrResetInviteAsync(invite);
+        }
         public async Task<List<Invite>> GetAllInvitesByUserIdAsync(int userId)
             => await _inviteRepository.GetAllInvitesByUserIdAsync(userId);
         public async Task<List<Invite>> GetInvitesByUserAndStatusAsync(int userId, int statusId)

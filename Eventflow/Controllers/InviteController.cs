@@ -44,12 +44,12 @@ namespace Eventflow.Controllers
 
             var invitedUser = await _userService.GetUserByUsernameAsync(model.Username);
 
-            if (invitedUser == null)
+            if (invitedUser == null || invitedUser.IsDeleted)
             {
                 return Json(new
                 {
                     success = false,
-                    message = "User does not exist!"
+                    message = "User does not exist or is no longer active!"
                 });
             }
 
