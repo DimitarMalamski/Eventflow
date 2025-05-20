@@ -1,3 +1,4 @@
+@using System.Text.Json
 @model List<Eventflow.ViewModels.Admin.Component.ManageEventViewModel>
 
 <table class="table table-hover table-bordered align-middle mb-0" style="width: 100%; border-collapse: collapse;">
@@ -16,19 +17,22 @@
         {
             @foreach (var ev in Model)
             {
-                var participantsJson = System.Text.Json.JsonSerializer.Serialize(ev.Participants);
+                var participantsJson = Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                    ev.Participants,
+                    new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }
+                ));
                 <tr data-event-id="@ev.EventId"
                     data-event-title="@ev.Title"
                     data-event-description="@ev.Description"
                     data-event-date="@ev.Date.ToString("yyyy-MM-dd")"
                     data-event-owner="@ev.OwnerUsername"
-                    data-event-category="@ev.CategoryName ?? "None""
+                    data-event-category="@ev.CategoryName"
                     data-event-participants='@participantsJson'>
                     <td class="text-center">@ev.Title</td>
-                    <td class="text-center text-muted">@ev.Description</td>
+                    <td class="text-center text-muted">@(string.IsNullOrWhiteSpace(ev.Description) ? "No description" : ev.Description)</td>
                     <td class="text-center">@ev.Date.ToString("yyyy-MM-dd")</td>
                     <td class="text-center">@ev.OwnerUsername</td>
-                    <td class="text-center">@ev.CategoryName ?? "None"</td>
+                    <td class="text-center">@(string.IsNullOrWhiteSpace(ev.CategoryName) ? "None" : ev.CategoryName)</td>
                     <td style="border: 1px solid #dee2e6;">
                         <div class="d-flex justify-content-center flex-wrap gap-1">
                             <button type="button"

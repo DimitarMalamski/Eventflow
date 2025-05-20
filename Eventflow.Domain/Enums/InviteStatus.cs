@@ -1,7 +1,7 @@
 namespace Eventflow.Domain.Enums {
    public enum InviteStatus {
-      Pending = 0,
-      Accepted = 1,
-      Declined = 2
+      Pending = 1,
+      Accepted = 2,
+      Declined = 3
    }
 }

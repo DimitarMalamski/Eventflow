@@ -43,3 +43,7 @@
 <div id="event-table-container" style="max-height: 500px; overflow-y: auto; border: 1px solid #dee2e6;">
     @Html.Partial("~/Views/Shared/Partials/Admin/Event/_EventTablePartial.cshtml", Model.Events)
 </div>
+
+@Html.Partial("~/Views/Shared/Partials/Admin/Event/_EventDetailsModalPartial.cshtml")
+
+<script src="~/js/admin/admin_manage_events.js"></script>
