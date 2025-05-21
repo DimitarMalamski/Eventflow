@@ -127,30 +127,60 @@ namespace Eventflow.Infrastructure.Repositories
 
             return invites;
         }
-        public async Task<List<Invite>> GetInvitesByEventIdAsync(int eventId)
+        public async Task<Invite?> GetInviteByEventAndUserAsync(int eventId, int invitedUserId)
         {
-            string getAllInvitesByPersonalEventQuery = @"SELECT * FROM Invite WHERE PersonalEventId = @EventId";
+            string getinviteByEventAndUserQuery = @"
+                    SELECT *
+                    FROM Invite
+                    WHERE PersonalEventId = @EventId
+                    AND InvitedUserId = @UserId";
 
             var parameters = new Dictionary<string, object>() {
-                { "@EventId", eventId }
+                { "@EventId", eventId },
+                { "@UserId", invitedUserId }
             };
 
-            var dt = await _dbHelper.ExecuteQueryAsync(getAllInvitesByPersonalEventQuery, parameters);
+            var dt = await _dbHelper.ExecuteQueryAsync(getinviteByEventAndUserQuery, parameters);
 
-            var result = new List<Invite>();
-
-            foreach (DataRow row in dt.Rows) {
-                result.Add(new Invite
-                {
-                    Id = Convert.ToInt32(row["Id"]),
-                    PersonalEventId = Convert.ToInt32(row["PersonalEventId"]),
-                    InvitedUserId = Convert.ToInt32(row["InvitedUserId"]),
-                    StatusId = Convert.ToInt32(row["StatusId"])
-                });
+            if (dt.Rows.Count == 0) {
+                return null;
             }
 
-            return result;
+            var row = dt.Rows[0];
+
+            return new Invite
+            {
+                Id = Convert.ToInt32(row["Id"]),
+                PersonalEventId = Convert.ToInt32(row["PersonalEventId"]),
+                InvitedUserId = Convert.ToInt32(row["InvitedUserId"]),
+                StatusId = Convert.ToInt32(row["StatusId"]),
+                CreatedAt = Convert.ToDateTime(row["CreatedAt"])
+            };
         }
+        public async Task<List<Invite>> GetInvitesByEventIdAsync(int eventId)
+            {
+                string getAllInvitesByPersonalEventQuery = @"SELECT * FROM Invite WHERE PersonalEventId = @EventId";
+
+                var parameters = new Dictionary<string, object>() {
+                    { "@EventId", eventId }
+                };
+
+                var dt = await _dbHelper.ExecuteQueryAsync(getAllInvitesByPersonalEventQuery, parameters);
+
+                var result = new List<Invite>();
+
+                foreach (DataRow row in dt.Rows) {
+                    result.Add(new Invite
+                    {
+                        Id = Convert.ToInt32(row["Id"]),
+                        PersonalEventId = Convert.ToInt32(row["PersonalEventId"]),
+                        InvitedUserId = Convert.ToInt32(row["InvitedUserId"]),
+                        StatusId = Convert.ToInt32(row["StatusId"])
+                    });
+                }
+
+                return result;
+            }
         public async Task<List<Invite>> GetInvitesByUserAndStatusAsync(int userId, int statusId)
         {
             string getInvitesByUserAndStatusQuery = @"
@@ -285,18 +315,31 @@ namespace Eventflow.Infrastructure.Repositories
             await _dbHelper.ExecuteNonQueryAsync(markInviteAsDeclinedQuery, parameters);
 
         }
-        public async Task UpdateInviteStatusAsync(int inviteId, int statusId)
+        public async Task SoftDeleteInviteAsync(int eventId, int invitedUserId)
         {
-            string updateInviteStatusQuery = "UPDATE Invite SET StatusId = @StatusId WHERE Id = @Id";
-
-            var parameters = new Dictionary<string, object>()
-            {
-                { "@Id", inviteId },
-                { "@StatusId", statusId }
+            string deleteInviteQuery = @"DELETE FROM [Invite]
+                                        WHERE PersonalEventId = @EventId
+                                        AND InvitedUserId = @UserId";
+            
+            var parameters = new Dictionary<string, object>() {
+                { "@EventId", eventId },
+                { "@UserId", invitedUserId }
             };
 
-            await _dbHelper.ExecuteNonQueryAsync(updateInviteStatusQuery, parameters);
+            await _dbHelper.ExecuteNonQueryAsync(deleteInviteQuery, parameters);
         }
+        public async Task UpdateInviteStatusAsync(int inviteId, int statusId)
+            {
+                string updateInviteStatusQuery = "UPDATE Invite SET StatusId = @StatusId WHERE Id = @Id";
+
+                var parameters = new Dictionary<string, object>()
+                {
+                    { "@Id", inviteId },
+                    { "@StatusId", statusId }
+                };
+
+                await _dbHelper.ExecuteNonQueryAsync(updateInviteStatusQuery, parameters);
+            }
         private async Task<(int Id, int StatusId)?> GetInviteStatusAndIdAsync(int eventId, int userId)
         {
             var getInviteStatusQuery = "SELECT Id, StatusId FROM Invite WHERE PersonalEventId = @EventId AND InvitedUserId = @UserId";

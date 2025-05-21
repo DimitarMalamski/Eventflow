@@ -30,5 +30,27 @@ namespace Eventflow.Infrastructure.Repositories
 
             return categories;
         }
-    }
+
+        public async Task<Category?> GetCategoryByIdAsync(int categoryId)
+        {
+            string getCategoryByIdQuery = "SELECT * FROM [Category] WHERE Id = @Id";
+
+            var parameters = new Dictionary<string, object>() {
+                { "@Id", categoryId }
+            };
+
+            var dt = await _dbHelper.ExecuteQueryAsync(getCategoryByIdQuery, parameters);
+
+            if (dt.Rows.Count == 0) {
+                return null;
+            }
+
+            var row = dt.Rows[0];
+
+            return new Category {
+                Id = Convert.ToInt32(row["Id"]),
+                Name = row["Name"].ToString()!
+            };
+        }
+   }
 }

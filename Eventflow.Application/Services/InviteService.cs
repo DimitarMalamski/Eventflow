@@ -45,23 +45,23 @@ namespace Eventflow.Application.Services
             => await _inviteRepository.GetAllInvitesByUserIdAsync(userId);
         public async Task<List<Invite>> GetInvitesByUserAndStatusAsync(int userId, int statusId)
             => await _inviteRepository.GetInvitesByUserAndStatusAsync(userId, statusId);
-      public async Task<PaginatedInvitesDto> GetPaginatedFilteredInvitesAsync(
-        int userId, 
-        int statusId,
-        string? search,
-        string? sortBy,
-        int page,
-        int pageSize)
-      {
-         var invites = await _inviteRepository.GetInvitesByUserAndStatusAsync(userId, statusId);
+        public async Task<PaginatedInvitesDto> GetPaginatedFilteredInvitesAsync(
+            int userId, 
+            int statusId,
+            string? search,
+            string? sortBy,
+            int page,
+            int pageSize)
+        {
+            var invites = await _inviteRepository.GetInvitesByUserAndStatusAsync(userId, statusId);
 
-         var inviteDto = ToInviteDtoList(invites);
+            var inviteDto = ToInviteDtoList(invites);
 
-         return PaginateAndWrap(inviteDto, search, sortBy, page, pageSize);
+            return PaginateAndWrap(inviteDto, search, sortBy, page, pageSize);
 
-      }
-      public async Task<bool> HasPendingInvitesAsync(int userId)
-            => await _inviteRepository.HasPendingInvitesAsync(userId);
+        }
+        public async Task<bool> HasPendingInvitesAsync(int userId)
+                => await _inviteRepository.HasPendingInvitesAsync(userId);
         public async Task<bool> HasUserAcceptedInviteAsync(int userId, int personalEventId)
             => await _inviteRepository.HasUserAcceptedInviteAsync(userId, personalEventId);
         public async Task<bool> InviteExistsAsync(int eventId, int invitedUserId)
@@ -134,5 +134,26 @@ namespace Eventflow.Application.Services
                 CurrentPage = page
             };
         }
-    }
+
+        public async Task<InviteAdminDto?> GetInviteAsync(int eventId, int invitedUserId)
+        {
+            var invite = await _inviteRepository.GetInviteByEventAndUserAsync(eventId, invitedUserId);
+
+            if (invite == null) {
+                return null;
+            }
+
+            var user = await _userRepository.GetUserByIdAsync(invite.InvitedUserId);
+
+            return new InviteAdminDto {
+                Id = invite.Id,
+                EventId = invite.PersonalEventId,
+                InvitedUserId = invite.InvitedUserId,
+                StatusId = invite.StatusId,
+                Status = Enum.GetName(typeof(InviteStatus), invite.StatusId) ?? "Unknown",
+            };
+        }
+        public async Task DeleteInviteAsync(int eventId, int invitedUserId)
+            => await _inviteRepository.SoftDeleteInviteAsync(eventId, invitedUserId);
+   }
 }

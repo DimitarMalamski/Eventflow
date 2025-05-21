@@ -1,5 +1,6 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Domain.Enums;
+using Eventflow.Domain.Exceptions;
 using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Entities;
 using Eventflow.DTOs.DTOs;
@@ -168,6 +169,55 @@ namespace Eventflow.Application.Services
             }
 
             return result;
+        }
+        public async Task<ManageEventDto?> UpdateEventFromAdminAsync(EditEventDto dto)
+        {
+           var personalEvent = await _personalEventRepository.GetPersonalEventByIdAsync(dto.EventId);
+
+           if (personalEvent == null) {
+                return null;
+           }
+
+           personalEvent.Title = dto.Title;
+           personalEvent.Description = dto.Description;
+           personalEvent.Date = dto.Date;
+           personalEvent.CategoryId = dto.CategoryId;
+
+           await _personalEventRepository.UpdatePersonalEventAsync(personalEvent);
+
+           var user = await _userRepository.GetUserByIdAsync(personalEvent.UserId);
+           var category = dto.CategoryId.HasValue
+                ? await _categoryRepository.GetCategoryByIdAsync(dto.CategoryId.Value)
+                : null;
+
+           var participantDtos = await GetParticipantsByEventIdAsync(personalEvent.Id);
+
+            return new ManageEventDto
+            {
+                EventId = personalEvent.Id,
+                Title = personalEvent.Title,
+                Description = personalEvent.Description ?? "No Description",
+                Date = personalEvent.Date,
+                CategoryName = category?.Name,
+                OwnerUsername = user?.Username ?? "Unknown",
+                Participants = participantDtos
+            };
+        }
+        public async Task<List<EventParticipantDto>> GetParticipantsByEventIdAsync(int eventId)
+        {
+            var invites = await _inviteRepository.GetInvitesByEventIdAsync(eventId);
+            var allUsers = await _userRepository.GetAllUsersAsync();
+            var userDict = allUsers.ToDictionary(u => u.Id);
+
+            return invites.Select(inv => {
+                var user = userDict.GetValueOrDefault(inv.InvitedUserId);
+                return new EventParticipantDto {
+                    UserId = inv.InvitedUserId,
+                    Username = user?.Username ?? "Unknown",
+                    Email = user?.Email ?? "Unknown",
+                    Status = Enum.GetName(typeof(InviteStatus), inv.StatusId) ?? "Unknown"
+                };
+            }).ToList();
         }
    }
 }

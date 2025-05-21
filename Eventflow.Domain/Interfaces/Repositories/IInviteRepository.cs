@@ -17,5 +17,7 @@ namespace Eventflow.Domain.Interfaces.Repositories
         public Task<InviteActionResult> CreateOrResetInviteAsync(Invite invite);
         public Task AutoDeclineInvitesOfDeletedUsersAsync();
         public Task<List<Invite>> GetInvitesByEventIdAsync(int eventId);
+        public Task<Invite?> GetInviteByEventAndUserAsync(int eventId, int invitedUserId);
+        public Task SoftDeleteInviteAsync(int eventId, int invitedUserId);
     }
 }

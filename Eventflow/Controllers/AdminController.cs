@@ -1,24 +1,33 @@
 using System.Runtime.CompilerServices;
+using System.Xml;
 using Eventflow.Application.Services.Interfaces;
 using Eventflow.Attributes;
+using Eventflow.Domain.Enums;
 using Eventflow.DTOs.DTOs;
 using Eventflow.ViewModels.Admin;
 using Eventflow.ViewModels.Admin.Component;
+using Eventflow.ViewModels.Category;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Eventflow.Controllers {
    [RequireAdmin]
    public class AdminController : Controller {
       private readonly IUserService _userService;
+      private readonly ICategoryService _categoryService;
+      private readonly IPersonalEventService _personalEventService;
+      private readonly IInviteService _inviteService;
       private const int recentUsersCount = 5;
       private const int recentPersonalEventsCount = 5;
-      private readonly IPersonalEventService _personalEventService;
       public AdminController(
          IUserService userService,
-         IPersonalEventService personalEventService)
+         IPersonalEventService personalEventService,
+         ICategoryService categoryService,
+         IInviteService inviteService)
       {
          _userService = userService;
          _personalEventService = personalEventService;
+         _categoryService = categoryService;
+         _inviteService = inviteService;
       }
       public async Task<IActionResult> Index() {
          var userDtos = await _userService.GetRecentUsersAsync(recentUsersCount);
@@ -66,6 +75,7 @@ namespace Eventflow.Controllers {
       [RequireAdmin]
       public async Task<IActionResult> Events() {
          var dtos = await _personalEventService.GetAllManageEventsAsync();
+         var categories = await _categoryService.GetAllCategoriesAsync();
 
          var vm = dtos.Select(dto => new ManageEventViewModel {
             EventId = dto.EventId,
@@ -76,6 +86,7 @@ namespace Eventflow.Controllers {
             OwnerUsername = dto.OwnerUsername,
             Participants = dto.Participants.Select(p => new EventParticipantViewModel
             {
+                  UserId = p.UserId,
                   Username = p.Username,
                   Email = p.Email,
                   Status = p.Status
@@ -85,8 +96,13 @@ namespace Eventflow.Controllers {
          var resultVm = new ManageEventsResultViewModel
          {
             Events = vm,
-            Filters = new ManageEventsFilterViewModel() // empty for now, will support filters later
+            Filters = new ManageEventsFilterViewModel()
          };
+         
+         ViewBag.Categories = categories.Select(c => new CategoryViewModel {
+            Id = c.Id,
+            Name = c.Name
+         }).ToList(); 
 
          return View(resultVm);
       }
@@ -171,6 +187,92 @@ namespace Eventflow.Controllers {
          };
 
          return PartialView("~/Views/Shared/Partials/Admin/User/_UserTablePartial.cshtml", vm);
+      }
+
+      [HttpPost]
+      [RequireAdmin]
+      public async Task<IActionResult> Edit([FromBody] EditEventDto dto) {
+         if (dto == null) {
+            return BadRequest(new {
+               error = "Invalid JSON or empty DTO"
+            });
+         }
+
+         try {
+            var updated = await _personalEventService.UpdateEventFromAdminAsync(dto);
+
+            return Json(new {
+               eventId = updated!.EventId,
+               title = updated!.Title,
+               description = updated.Description,
+               date = updated.Date.ToString("yyyy-MM-dd"),
+               categoryName = updated.CategoryName
+            });
+         }
+         catch (Exception ex)
+         {
+            return StatusCode(500, new { error = ex.Message });
+         }
+      }
+
+      [HttpGet]
+      [RequireAdmin]
+      public async Task<IActionResult> GetEventParticipants(int eventId) {
+         var participantDtos = await _personalEventService.GetParticipantsByEventIdAsync(eventId);
+
+         var viewModels = participantDtos.Select(p => new EventParticipantViewModel {
+            UserId = p.UserId,
+            Username = p.Username,
+            Email = p.Email,
+            Status = p.Status
+         }).ToList();
+
+         return Json(viewModels);
+      }
+
+      [HttpPost]
+      [RequireAdmin]
+      public async Task<IActionResult> RemoveParticipant([FromBody] RemoveParticipantDto dto) {
+         if (dto == null || dto.EventId <= 0 || dto.UserId <= 0) {
+            return BadRequest(new {
+               success = false,
+               message = "Invalid request data."
+            });
+         }
+
+         var invite = await _inviteService.GetInviteAsync(dto.EventId, dto.UserId);
+
+         if (invite == null) {
+            return NotFound(new {
+               success = false,
+               message = "Invite not found."
+            });
+         }
+
+         switch ((InviteStatus)invite.StatusId) {
+            case InviteStatus.Pending:
+               await _inviteService.DeleteInviteAsync(dto.EventId, dto.UserId);
+               break;
+            case InviteStatus.Accepted:
+               await _inviteService.DeleteInviteAsync(dto.EventId, dto.UserId);
+               break;
+            case InviteStatus.Declined:
+               await _inviteService.DeleteInviteAsync(dto.EventId, dto.UserId);
+               break;
+            default:
+               return BadRequest(new {
+                  success = false,
+                  message = "Unsupported invite status."
+               });
+         }
+
+         return Json(new
+         {
+            success = true,
+            removedUserId = dto.UserId,
+            eventId = dto.EventId,
+            status = invite.Status
+         });
       }
    }
 }

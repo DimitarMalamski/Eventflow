@@ -24,5 +24,7 @@ namespace Eventflow.Application.Services.Interfaces
             int page,
             int pageSize
         );
+        public Task<InviteAdminDto?> GetInviteAsync(int eventId, int invitedUserId); 
+        public Task DeleteInviteAsync(int eventId, int invitedUserId);
     }
 }
