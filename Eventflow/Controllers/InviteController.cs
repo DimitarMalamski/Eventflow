@@ -118,7 +118,9 @@ namespace Eventflow.Controllers
             await _inviteService.AutoDeclineExpiredInvitesAsync();
 
             var invites = await _inviteService.GetInvitesByUserAndStatusAsync(userId, statusId);
-            var statuses = await _statusService.GetAllStatusOptionsAsync();
+            var statuses = (await _statusService.GetAllStatusOptionsAsync())
+                            .Where(s => s.Name != "KickedOut")
+                            .ToList();
 
             var statusOptionsViewModel = statuses.Select(s => new DropdownOptionViewModel
             {

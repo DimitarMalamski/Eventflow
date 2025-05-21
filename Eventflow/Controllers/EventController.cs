@@ -10,7 +10,6 @@ using Eventflow.ViewModels.Continent;
 using Eventflow.ViewModels.PersonalEvent.Form;
 using Eventflow.ViewModels.Shared.Component;
 using Microsoft.AspNetCore.Mvc;
-using Eventflow.DTOs.DTOs;
 using static Eventflow.Utilities.SessionHelper;
 
 namespace Eventflow.Controllers
@@ -114,13 +113,20 @@ namespace Eventflow.Controllers
         }
 
         [HttpGet]
+        [RequireUserOrAdmin]
         public async Task<IActionResult> Edit(int id)
         {
+            int userId = GetUserId(HttpContext.Session);
+
             var personalEvent = await _personalEventService.GetPersonalEventByIdAsync(id);
 
             if (personalEvent == null)
             {
                 return NotFound();
+            }
+
+            if (personalEvent.UserId != userId) {
+                return Unauthorized();
             }
 
             var model = new CreatePersonalEventViewModel

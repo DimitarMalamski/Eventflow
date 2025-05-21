@@ -1,4 +1,5 @@
 ﻿using Eventflow.Domain.Enums;
+using Eventflow.Domain.Helper;
 using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Entities;
 using Eventflow.Infrastructure.Data.Interfaces;
@@ -38,12 +39,13 @@ namespace Eventflow.Infrastructure.Repositories
                     FROM Invite i
                     INNER JOIN PersonalEvent e ON i.PersonalEventId = e.Id
                     WHERE i.InvitedUserId = @UserId
-                    AND i.StatusId = 2
+                    AND i.StatusId = @AcceptedStatus
                     AND CONVERT(date, e.Date) >= CONVERT(date, GETDATE());";
 
             var parameters = new Dictionary<string, object>
             {
-                { "@UserId", userId }
+                { "@UserId", userId },
+                { "@AcceptedStatus", InviteStatusHelper.Accepted }
             };
 
             var dt = await _dbHelper.ExecuteQueryAsync(getAllAcceptedInvitedEventsQuery, parameters);

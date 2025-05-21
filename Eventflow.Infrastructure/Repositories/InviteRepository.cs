@@ -65,6 +65,17 @@ namespace Eventflow.Infrastructure.Repositories
                 return InviteActionResult.AlreadyAccepted;
             }
 
+            if (statusId == InviteStatusHelper.KickedOut) {
+                await ResetInviteToPendingAsync(inviteId);
+                return InviteActionResult.UpdatedToPending;
+            }
+
+            if (statusId == InviteStatusHelper.Declined)
+            {
+                await ResetInviteToPendingAsync(inviteId);
+                return InviteActionResult.UpdatedToPending;
+            }
+
             await ResetInviteToPendingAsync(inviteId);
             return InviteActionResult.UpdatedToPending;
         }
@@ -204,8 +215,8 @@ namespace Eventflow.Infrastructure.Repositories
                                         INNER JOIN PersonalEvent e ON i.PersonalEventId = e.Id
                                         INNER JOIN [User] u ON e.UserId = u.Id
                                         WHERE i.InvitedUserId = @UserId 
-                                        AND i.StatusId = @StatusId
-                                        AND u.IsDeleted = 0";
+                                            AND i.StatusId = @StatusId
+                                            AND u.IsDeleted = 0";
 
             var parameters = new Dictionary<string, object>()
             {
@@ -317,13 +328,16 @@ namespace Eventflow.Infrastructure.Repositories
         }
         public async Task SoftDeleteInviteAsync(int eventId, int invitedUserId)
         {
-            string deleteInviteQuery = @"DELETE FROM [Invite]
+            string deleteInviteQuery = @"
+                                        UPDATE [Invite]
+                                        SET StatusId = @KickedOutStatus
                                         WHERE PersonalEventId = @EventId
                                         AND InvitedUserId = @UserId";
             
             var parameters = new Dictionary<string, object>() {
                 { "@EventId", eventId },
-                { "@UserId", invitedUserId }
+                { "@UserId", invitedUserId },
+                { "@KickedOutStatus", InviteStatusHelper.KickedOut }
             };
 
             await _dbHelper.ExecuteNonQueryAsync(deleteInviteQuery, parameters);

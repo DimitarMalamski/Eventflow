@@ -1,6 +1,7 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Domain.Enums;
 using Eventflow.Domain.Exceptions;
+using Eventflow.Domain.Helper;
 using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Entities;
 using Eventflow.DTOs.DTOs;
@@ -143,7 +144,9 @@ namespace Eventflow.Application.Services
             foreach (var ev in events) {
                 var invites = await _inviteRepository.GetInvitesByEventIdAsync(ev.Id);
 
-                var participantDtos = invites.Select(inv => {
+                var participantDtos = invites
+                    .Where(inv => inv.StatusId != InviteStatusHelper.Declined)
+                    .Select(inv => {
                     var user = userDict.GetValueOrDefault(inv.InvitedUserId);
                     return new EventParticipantDto {
                         UserId = inv.InvitedUserId,
@@ -205,7 +208,9 @@ namespace Eventflow.Application.Services
         }
         public async Task<List<EventParticipantDto>> GetParticipantsByEventIdAsync(int eventId)
         {
-            var invites = await _inviteRepository.GetInvitesByEventIdAsync(eventId);
+            var invites = (await _inviteRepository.GetInvitesByEventIdAsync(eventId))
+                        .Where(i => i.StatusId != InviteStatusHelper.KickedOut)
+                        .ToList();
             var allUsers = await _userRepository.GetAllUsersAsync();
             var userDict = allUsers.ToDictionary(u => u.Id);
 

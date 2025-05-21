@@ -1,5 +1,6 @@
 ﻿using Eventflow.Application.Services.Interfaces;
 using Eventflow.Domain.Enums;
+using Eventflow.Domain.Helper;
 using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Entities;
 using Eventflow.DTOs.DTOs;
@@ -54,6 +55,10 @@ namespace Eventflow.Application.Services
             int pageSize)
         {
             var invites = await _inviteRepository.GetInvitesByUserAndStatusAsync(userId, statusId);
+
+            invites = invites
+                .Where(i => i.StatusId != InviteStatusHelper.KickedOut)
+                .ToList();
 
             var inviteDto = ToInviteDtoList(invites);
 

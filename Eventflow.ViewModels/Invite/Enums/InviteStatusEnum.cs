@@ -2,8 +2,9 @@
 {
     public enum InviteStatusEnum
     {
-        Pending = 0,
-        Accepted = 1,
-        Declined = 2
+        Pending = 1,
+        Accepted = 2,
+        Declined = 3,
+        KickedOut = 4
     }
 }
