@@ -45,8 +45,34 @@
     @Html.Partial("~/Views/Shared/Partials/Admin/Event/_EventTablePartial.cshtml", Model.Events)
 </div>
 
+<div class="modal fade" id="deleteEventModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content d-flex flex-column justify-content-between">
+        <div class="modal-header">
+            <h5 class="modal-title">Confirm Deletion</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body text-center">
+            <p class="mb-0">
+                Are you sure you want to delete the event <strong id="deleteEventTitle"></strong>?
+            </p>
+            <input type="hidden" id="deleteEventId" />
+        </div>
+
+        <div class="modal-footer justify-content-center gap-3">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteEventBtn">Delete</button>
+        </div>
+    </div>
+  </div>
+</div>
+
 @Html.Partial("~/Views/Shared/Partials/Admin/Event/_EventDetailsModalPartial.cshtml")
 @Html.Partial("~/Views/Shared/Partials/Admin/Event/_EditEventModalPartial.cshtml", (List<CategoryViewModel>)ViewBag.Categories)
 
-<script src="~/js/admin/admin_manage_events.js"></script>
-<script src="~/js/admin/admin_edit_event.js"></script>
+@section Scripts {
+    <script src="~/js/admin/admin_manage_events.js"></script>
+    <script src="~/js/admin/admin_edit_event.js"></script>
+    <script src="~/js/admin/admin_delete_event.js"></script>
+}

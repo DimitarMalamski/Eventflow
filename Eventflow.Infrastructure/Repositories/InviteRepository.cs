@@ -79,7 +79,17 @@ namespace Eventflow.Infrastructure.Repositories
             await ResetInviteToPendingAsync(inviteId);
             return InviteActionResult.UpdatedToPending;
         }
-        public async Task<List<Invite>> GetAllInvitesByUserIdAsync(int userId)
+        public async Task DeleteInvitesByEventIdAsync(int eventId)
+        {
+            string deleteInvitefromEventQuery = @"DELETE FROM Invite WHERE PersonalEventId = @EventId";
+
+            var parameters = new Dictionary<string, object> {
+                { "@EventId", eventId }
+            };
+
+            await _dbHelper.ExecuteNonQueryAsync(deleteInvitefromEventQuery, parameters);
+        }
+      public async Task<List<Invite>> GetAllInvitesByUserIdAsync(int userId)
         {
             string getAllInvitedByUserQuery = "SELECT * FROM Invite WHERE InvitedUserId = @UserId";
 

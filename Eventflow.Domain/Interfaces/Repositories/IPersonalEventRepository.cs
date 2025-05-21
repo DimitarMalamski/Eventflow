@@ -13,5 +13,6 @@ namespace Eventflow.Domain.Interfaces.Repositories
         public Task<int> GetPersonalEventsCountAsync();
         public Task<List<PersonalEvent>> GetRecentPersonalEventsAsync(int count);
         public Task<List<PersonalEvent>> GetAllPersonalEventsAsync();
+        public Task SoftDeleteEventAsync(int eventId);
     }
 }

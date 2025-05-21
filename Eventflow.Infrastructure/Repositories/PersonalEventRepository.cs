@@ -3,7 +3,9 @@ using Eventflow.Domain.Helper;
 using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Entities;
 using Eventflow.Infrastructure.Data.Interfaces;
+using Microsoft.Identity.Client;
 using System.Data;
+using System.Runtime.CompilerServices;
 
 namespace Eventflow.Infrastructure.Repositories
 {
@@ -39,8 +41,9 @@ namespace Eventflow.Infrastructure.Repositories
                     FROM Invite i
                     INNER JOIN PersonalEvent e ON i.PersonalEventId = e.Id
                     WHERE i.InvitedUserId = @UserId
-                    AND i.StatusId = @AcceptedStatus
-                    AND CONVERT(date, e.Date) >= CONVERT(date, GETDATE());";
+                        AND i.StatusId = @AcceptedStatus
+                        AND CONVERT(date, e.Date) >= CONVERT(date, GETDATE())
+                        AND e.IsDeleted = 0;";
 
             var parameters = new Dictionary<string, object>
             {
@@ -70,7 +73,9 @@ namespace Eventflow.Infrastructure.Repositories
         }
         public async Task<PersonalEvent?> GetPersonalEventByIdAsync(int id)
         {
-            string getPersonalEventQuery = "SELECT * FROM PersonalEvent WHERE Id = @Id";
+            string getPersonalEventQuery = @"SELECT * FROM PersonalEvent
+                                         WHERE Id = @Id
+                                         AND IsDeleted = 0";
 
             var parameters = new Dictionary<string, object>
             {
@@ -107,7 +112,8 @@ namespace Eventflow.Infrastructure.Repositories
                     FROM PersonalEvent 
                     WHERE UserId = @UserId 
                     AND Date >= @StartDate 
-                    AND Date <= @EndDate;";
+                    AND Date <= @EndDate
+                    AND IsDeleted = 0;";
 
             var parameters = new Dictionary<string, object?>()
             {
@@ -188,13 +194,19 @@ namespace Eventflow.Infrastructure.Repositories
                     WHERE EXISTS (
                         SELECT 1
                         FROM PersonalEvent
-                        WHERE Id = @EventId AND UserId = @UserId
+                        WHERE Id = @EventId 
+                        AND UserId = @UserId
+                        AND IsDeleted = 0
                     )
                     OR EXISTS (
                         SELECT 1
-                        FROM Invite
-                        WHERE PersonalEventId = @EventId AND InvitedUserId = @UserId AND StatusId = @AcceptedStatusId
-                    )";
+                        FROM Invite i
+                        INNER JOIN PersonalEvent e ON i.PersonalEventId = e.Id
+                        WHERE i.PersonalEventId = @EventId 
+                        AND i.InvitedUserId = @UserId 
+                        AND i.StatusId = @AcceptedStatusId
+                        AND e.IsDeleted = 0
+                    );";
 
             var parameters = new Dictionary<string, object>
             {
@@ -208,7 +220,9 @@ namespace Eventflow.Infrastructure.Repositories
         }
         public async Task<int> GetPersonalEventsCountAsync()
         {
-            string getPersonalEventCountQuery = @"SELECT COUNT(*) FROM [PersonalEvent]";
+            string getPersonalEventCountQuery = @"SELECT COUNT(*) 
+                                        FROM [PersonalEvent]
+                                        WHERE IsDeleted = 0";
 
             var count = await _dbHelper.ExecuteScalarAsync(getPersonalEventCountQuery);
 
@@ -219,6 +233,7 @@ namespace Eventflow.Infrastructure.Repositories
             string recentPersonalEventQuery = @"
                         SELECT TOP(@Count) *
                         FROM PersonalEvent
+                        WHERE IsDeleted = 0
                         ORDER BY [Date] DESC";
             
             var parameters = new Dictionary<string, object>() {
@@ -245,7 +260,7 @@ namespace Eventflow.Infrastructure.Repositories
         }
         public async Task<List<PersonalEvent>> GetAllPersonalEventsAsync()
         {
-            string getAllPersonalEventsQuery = @"SELECT * FROM [PersonalEvent]";
+            string getAllPersonalEventsQuery = @"SELECT * FROM [PersonalEvent] WHERE IsDeleted = 0";
 
             var dt = await _dbHelper.ExecuteQueryAsync(getAllPersonalEventsQuery);
 
@@ -264,6 +279,18 @@ namespace Eventflow.Infrastructure.Repositories
             }
 
             return result;
+        }
+        public async Task SoftDeleteEventAsync(int eventId)
+        {
+            string softDeleteEventQuery = @"UPDATE [PersonalEvent] 
+                                        SET IsDeleted = 1
+                                        WHERE Id = @Id";
+                                    
+            var parameters = new Dictionary<string, object>() {
+                { "@Id", eventId }
+            };
+
+            await _dbHelper.ExecuteNonQueryAsync(softDeleteEventQuery, parameters);
         }
    }
 }

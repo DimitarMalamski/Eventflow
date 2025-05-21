@@ -15,5 +15,6 @@ namespace Eventflow.Application.Services.Interfaces
         public Task<List<ManageEventDto>> GetAllManageEventsAsync();
         public Task<ManageEventDto?> UpdateEventFromAdminAsync(EditEventDto dto);
         public Task<List<EventParticipantDto>> GetParticipantsByEventIdAsync(int eventId);
+        public Task<bool> SoftDeleteEventAsync(int eventId, int userId);    
     }
 }

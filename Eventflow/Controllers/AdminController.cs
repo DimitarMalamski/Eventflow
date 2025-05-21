@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Xml;
 using Eventflow.Application.Services.Interfaces;
@@ -272,6 +273,31 @@ namespace Eventflow.Controllers {
             removedUserId = dto.UserId,
             eventId = dto.EventId,
             status = invite.Status
+         });
+      }
+
+      [HttpPost]
+      [RequireAdmin]
+      public async Task<IActionResult> DeleteEvent([FromBody] IdDto dto) {
+         if (dto == null || dto.Id <= 0) {
+            return BadRequest(new {
+               success = false,
+               message = "invalid event ID."
+            });
+         }
+
+         var deleted = await _personalEventService.SoftDeleteEventAsync(dto.Id, userId: 0);
+
+         if (!deleted) {
+            return BadRequest(new {
+               success = false,
+               message = "Event not found or already deleted."
+            });
+         }
+
+         return Json(new {
+            success = true,
+            deletedEventId = dto.Id
          });
       }
    }

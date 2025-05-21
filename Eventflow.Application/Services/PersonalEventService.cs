@@ -224,5 +224,22 @@ namespace Eventflow.Application.Services
                 };
             }).ToList();
         }
+        public async Task<bool> SoftDeleteEventAsync(int eventId, int userId)
+        {
+            var personalEvent = await _personalEventRepository.GetPersonalEventByIdAsync(eventId);
+
+            if (personalEvent == null || personalEvent.IsDeleted) {
+                return false;
+            }
+
+            if (userId != 0 && personalEvent.UserId != userId) {
+                return false;
+            }
+
+            await _inviteRepository.DeleteInvitesByEventIdAsync(eventId);
+
+            await _personalEventRepository.SoftDeleteEventAsync(eventId);
+            return true;
+        }
    }
 }

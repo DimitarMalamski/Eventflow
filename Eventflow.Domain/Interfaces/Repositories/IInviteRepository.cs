@@ -19,5 +19,6 @@ namespace Eventflow.Domain.Interfaces.Repositories
         public Task<List<Invite>> GetInvitesByEventIdAsync(int eventId);
         public Task<Invite?> GetInviteByEventAndUserAsync(int eventId, int invitedUserId);
         public Task SoftDeleteInviteAsync(int eventId, int invitedUserId);
+        public Task DeleteInvitesByEventIdAsync(int eventId);
     }
 }
