@@ -234,7 +234,7 @@ namespace Eventflow.Infrastructure.Repositories
                         SELECT TOP(@Count) *
                         FROM PersonalEvent
                         WHERE IsDeleted = 0
-                        ORDER BY [Date] DESC";
+                        ORDER BY Id DESC";
             
             var parameters = new Dictionary<string, object>() {
                 { "@Count", count }
@@ -260,7 +260,9 @@ namespace Eventflow.Infrastructure.Repositories
         }
         public async Task<List<PersonalEvent>> GetAllPersonalEventsAsync()
         {
-            string getAllPersonalEventsQuery = @"SELECT * FROM [PersonalEvent] WHERE IsDeleted = 0";
+            string getAllPersonalEventsQuery = @"SELECT * FROM [PersonalEvent] 
+                                    WHERE IsDeleted = 0
+                                    ORDER BY Id DESC";
 
             var dt = await _dbHelper.ExecuteQueryAsync(getAllPersonalEventsQuery);
 

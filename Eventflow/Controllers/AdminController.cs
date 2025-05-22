@@ -9,6 +9,7 @@ using Eventflow.ViewModels.Admin;
 using Eventflow.ViewModels.Admin.Component;
 using Eventflow.ViewModels.Category;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 
 namespace Eventflow.Controllers {
    [RequireAdmin]
@@ -97,7 +98,12 @@ namespace Eventflow.Controllers {
          var resultVm = new ManageEventsResultViewModel
          {
             Events = vm,
-            Filters = new ManageEventsFilterViewModel()
+            Filters = new ManageEventsFilterViewModel {
+               Categories = categories.Select(c => new CategoryViewModel {
+                  Id = c.Id,
+                  Name = c.Name
+               }).ToList()
+            }
          };
          
          ViewBag.Categories = categories.Select(c => new CategoryViewModel {
@@ -169,7 +175,10 @@ namespace Eventflow.Controllers {
 
       [HttpGet]
       [RequireAdmin]
-      public async Task<IActionResult> GetFilteredUsersPartial(string search = "", string role = "All", string status = "All") {
+      public async Task<IActionResult> GetFilteredUsersPartial(
+         string search = "",
+         string role = "All",
+         string status = "All") {
          var filtered = await _userService.GetFilteredAdminUsersAsync(search, role, status);
 
          var vm = new ManageUsersViewModel
@@ -188,6 +197,59 @@ namespace Eventflow.Controllers {
          };
 
          return PartialView("~/Views/Shared/Partials/Admin/User/_UserTablePartial.cshtml", vm);
+      }
+
+      [HttpGet]
+      [RequireAdmin]
+      public async Task<IActionResult> GetFilteredEventsPartial(
+         string? search = "",
+         int? categoryId = null,
+         string? ownerUsername = "",
+         string date = "") {
+            var allEvents = await _personalEventService.GetAllManageEventsAsync();
+
+            var filteredEvents = allEvents.Where(e =>
+               (string.IsNullOrWhiteSpace(search) || e.Title.Contains(search, StringComparison.OrdinalIgnoreCase) || (e.Description?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false)) &&
+               (!categoryId.HasValue || e.CategoryId == categoryId) &&  
+               (string.IsNullOrWhiteSpace(ownerUsername) || e.OwnerUsername.Contains(ownerUsername, StringComparison.OrdinalIgnoreCase)) &&
+               (string.IsNullOrWhiteSpace(date) || e.Date.ToString("yyyy-MM-dd") == date)
+            ).ToList();
+
+            var viewModels = filteredEvents.Select(dto => new ManageEventViewModel
+            {
+               EventId = dto.EventId,
+               Title = dto.Title,
+               Description = dto.Description,
+               Date = dto.Date,
+               CategoryName = dto.CategoryName,
+               OwnerUsername = dto.OwnerUsername,
+               Participants = dto.Participants.Select(p => new EventParticipantViewModel
+               {
+                     UserId = p.UserId,
+                     Username = p.Username,
+                     Email = p.Email,
+                     Status = p.Status
+               }).ToList()
+            }).ToList();
+
+            var categories = await _categoryService.GetAllCategoriesAsync();
+
+            var resultVm = new ManageEventsResultViewModel {
+               Events = viewModels,
+               Filters = new ManageEventsFilterViewModel {
+                  SearchTerm = search,
+                  OwnerUsername = ownerUsername,
+                  Date = string.IsNullOrWhiteSpace(date) ? null : DateTime.Parse(date),
+                  CategoryId = categoryId,
+                  Categories = categories.Select(c => new CategoryViewModel
+                  {
+                        Id = c.Id,
+                        Name = c.Name
+                  }).ToList()
+               }
+            };
+
+            return PartialView("~/Views/Shared/Partials/Admin/Event/_EventTablePartial.cshtml", resultVm);
       }
 
       [HttpPost]

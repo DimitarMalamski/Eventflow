@@ -161,6 +161,7 @@ namespace Eventflow.Application.Services
                     Title = ev.Title,
                     Description = ev.Description ?? "No Description",
                     Date = ev.Date,
+                    CategoryId = ev.CategoryId,
                     CategoryName = ev.CategoryId.HasValue && categoryDict.ContainsKey(ev.CategoryId.Value)
                         ? categoryDict[ev.CategoryId.Value].Name
                         : null,
@@ -201,6 +202,7 @@ namespace Eventflow.Application.Services
                 Title = personalEvent.Title,
                 Description = personalEvent.Description ?? "No Description",
                 Date = personalEvent.Date,
+                CategoryId = personalEvent.CategoryId,
                 CategoryName = category?.Name,
                 OwnerUsername = user?.Username ?? "Unknown",
                 Participants = participantDtos

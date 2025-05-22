@@ -4,6 +4,7 @@ namespace Eventflow.DTOs.DTOs {
       public string Title { get; set; } = "No Title";
       public string Description { get; set; } = "No Description";
       public DateTime Date { get; set; }
+      public int? CategoryId { get; set; }
       public string? CategoryName { get; set; }
       public string OwnerUsername { get; set; } = "Unknown";
       public List<EventParticipantDto> Participants { get; set; } = new List<EventParticipantDto>();

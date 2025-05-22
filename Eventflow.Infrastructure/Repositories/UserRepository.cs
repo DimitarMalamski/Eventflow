@@ -213,7 +213,9 @@ namespace Eventflow.Infrastructure.Repositories
         }
         public async Task<List<User>> GetAllUsersAsync()
         {
-            string getAllUsersQuery = "SELECT * FROM [User] WHERE IsDeleted = 0";
+            string getAllUsersQuery = @"SELECT * FROM [User]
+                                 WHERE IsDeleted = 0
+                                 ORDER BY Id DESC";
 
             var dt = await _dbHelper.ExecuteQueryAsync(getAllUsersQuery);
 

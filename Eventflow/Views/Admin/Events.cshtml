@@ -1,5 +1,6 @@
 @using Eventflow.ViewModels.Admin.Component
 @using Eventflow.ViewModels.Category
+@using Eventflow.ViewModels.Shared
 @model ManageEventsResultViewModel
 
 @{
@@ -16,14 +17,17 @@
     </div>
 
     <div class="col-md-2 col-sm-6">
-        <label for="category" class="form-label">Category</label>
-        <select name="CategoryId" id="category" class="form-select">
-            <option value="">All Categories</option>
-            @foreach (var cat in Model.Filters.Categories)
-            {
-                <option value="@cat.Id" selected="@(cat.Id == Model.Filters.CategoryId)">@(cat.Name)</option>
-            }
-        </select>
+        @await Component.InvokeAsync("Dropdown", new DropdownViewModel {
+            Label = "Categories",
+            Name = "CategoryId",
+            Id = "category",
+            DefaultOptionLabel = "All Categories",
+            SelectedValue = Model.Filters.CategoryId?.ToString(),
+            Options = Model.Filters.Categories.Select(c => new DropdownOptionViewModel {
+                Id = c.Id.ToString(),
+                Name = c.Name
+            }).ToList()
+        })
     </div>
 
     <div class="col-md-2 col-sm-6">
@@ -37,12 +41,14 @@
     </div>
 
     <div class="col-md-3 col-sm-12 text-end">
-        <button class="btn btn-primary w-100" type="submit" style="margin-top: 1.9rem;">Filter</button>
+        <button id="resetFiltersBtn" class="btn btn-secondary w-100" type="button" style="margin-top: 1.9rem;">
+            Reset Filters
+        </button>
     </div>
 </form>
 
 <div id="event-table-container" style="max-height: 500px; overflow-y: auto; border: 1px solid #dee2e6;">
-    @Html.Partial("~/Views/Shared/Partials/Admin/Event/_EventTablePartial.cshtml", Model.Events)
+    @Html.Partial("~/Views/Shared/Partials/Admin/Event/_EventTablePartial.cshtml", Model)
 </div>
 
 <div class="modal fade" id="deleteEventModal" tabindex="-1" aria-hidden="true">
@@ -75,4 +81,5 @@
     <script src="~/js/admin/admin_manage_events.js"></script>
     <script src="~/js/admin/admin_edit_event.js"></script>
     <script src="~/js/admin/admin_delete_event.js"></script>
+    <script src="~/js/admin/admin_filter_event.js"></script>
 }

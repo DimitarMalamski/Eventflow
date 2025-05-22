@@ -1,5 +1,4 @@
-﻿@using Eventflow.ViewModels;
-@using Eventflow.ViewModels.Shared
+﻿@using Eventflow.ViewModels.Shared
 @model DropdownViewModel
 
 @{
@@ -26,26 +25,27 @@
     }
 }
 
-<div class="mb-3">
-    <label for="@id" class="form-label">@Model!.Label</label>
-    <select id="@id"
-            name="@name"
-            class="form-select @(showError ? "is-invalid" : "")">
+@if (!string.IsNullOrEmpty(Model.Label))
+{
+    <label for="@id" class="form-label">@Model.Label</label>
+}
 
-                @if(!string.IsNullOrWhiteSpace(Model.DefaultOptionLabel)) {
-                    <option value="">@Model.DefaultOptionLabel</option>
-                }
-                
-                @foreach (var option in Model.Options)
-                {
-                    <option value="@option.Id" selected="@(option.Id == selectedValue)">
-                        @option.Name
-                    </option>
-                }
-    </select>
-
-    @if (showError)
-    {
-        <span class="text-danger">@error</span>
+<select id="@id"
+        name="@name"
+        class="form-select @(showError ? "is-invalid" : "")">
+    @if (!string.IsNullOrWhiteSpace(Model.DefaultOptionLabel)) {
+        <option value="">@Model.DefaultOptionLabel</option>
     }
-</div>
+
+    @foreach (var option in Model.Options)
+    {
+        <option value="@option.Id" selected="@(option.Id == selectedValue)">
+            @option.Name
+        </option>
+    }
+</select>
+
+@if (showError)
+{
+    <span class="text-danger">@error</span>
+}

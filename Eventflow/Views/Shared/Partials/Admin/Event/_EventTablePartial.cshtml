@@ -1,5 +1,6 @@
+@using Eventflow.ViewModels.Admin.Component;
 @using System.Text.Json
-@model List<Eventflow.ViewModels.Admin.Component.ManageEventViewModel>
+@model Eventflow.ViewModels.Admin.Component.ManageEventsResultViewModel
 
 <table class="table table-hover table-bordered align-middle mb-0" style="width: 100%; border-collapse: collapse;">
     <thead class="table-light">
@@ -13,9 +14,9 @@
         </tr>
     </thead>
     <tbody>
-        @if (Model != null && Model.Any())
+        @if (Model.Events != null && Model.Events.Any())
         {
-            @foreach (var ev in Model)
+            @foreach (var ev in Model.Events)
             {
                 var participantsJson = Html.Raw(System.Text.Json.JsonSerializer.Serialize(
                     ev.Participants,
