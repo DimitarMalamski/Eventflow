@@ -15,11 +15,16 @@
                 ("Admin", "Index") => "Admin",
                 ("Admin", "Users") => "Users",
                 ("Admin", "Events") => "Events",
+                ("Admin", "CreateGlobalEvent") => "CreateGlobalEvent",
                 _ => "Calendar"
             };
         }
-        public static bool NeedsVerticalCentering(string controller)
+        public static bool NeedsVerticalCentering(string controller, string action)
         {
+            if (controller == "Admin" && action == "CreateGlobalEvent") {
+                return true;
+            }
+
             var noVerticalCenterPage = new[] { "Invite", "Reminder", "Messages", "Admin" };
             return !noVerticalCenterPage.Contains(controller);
         }

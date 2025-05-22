@@ -13,6 +13,7 @@
         public bool IsInvited { get; set; } = false;
         public string CreatorUsername { get; set; } = string.Empty;
         public bool IsCreator { get; set; }
+        public bool IsGlobal { get; set; }
         public List<string> ParticipantUsernames { get; set; } = new List<string>();
     }
 }

@@ -39,7 +39,8 @@
                     data-is-invited="@pe.IsInvited.ToString().ToLower()"
                     data-creator="@pe.CreatorUsername"
                     data-is-creator="@pe.IsCreator.ToString().ToLower()"
-                    data-participants="@string.Join(",", pe.ParticipantUsernames)">
+                    data-participants="@string.Join(",", pe.ParticipantUsernames)"
+                    data-is-global="@(pe.IsGlobal == true ? "true" : "false")">
                     📌 @pe.Title
             </li>
             }

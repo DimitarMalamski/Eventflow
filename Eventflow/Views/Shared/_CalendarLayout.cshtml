@@ -14,7 +14,7 @@
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
 
     var sidebarContext = GetSidebarContext(currentController, currentAction);
-    var needsVerticalCentering = NeedsVerticalCentering(currentController);
+    var needsVerticalCentering = NeedsVerticalCentering(currentController, currentAction);
 
     int? selectedCountryId = null;
 

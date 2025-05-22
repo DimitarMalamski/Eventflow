@@ -96,6 +96,7 @@ namespace Eventflow.Controllers
             }
 
             int userId = GetUserId(HttpContext.Session);
+            bool isAdmin = GetUserRoleId(HttpContext.Session) == 1;
 
             var newEvent = new PersonalEvent
             {
@@ -104,7 +105,8 @@ namespace Eventflow.Controllers
                 Date = model.Date,
                 CategoryId = model.CategoryId,
                 UserId = userId,
-                IsCompleted = false
+                IsCompleted = false,
+                IsGlobal = isAdmin
             };
 
             await _personalEventService.CreateAsync(newEvent);
@@ -193,7 +195,12 @@ namespace Eventflow.Controllers
 
             var ownEvents = await _personalEventService.GetEventsWithCategoryNamesAsync(userId, normalizedYear, normalizedMonth);
             var invitedEvents = await _personalEventService.GetAcceptedInvitedEventsAsync(userId, normalizedYear, normalizedMonth);
-            var combinedEvents = ownEvents.Concat(invitedEvents).ToList();
+            var globalEvents = await _personalEventService.GetGlobalEventsWithCategoryAsync(normalizedYear, normalizedMonth);
+
+            var combinedEvents = ownEvents
+                .Concat(invitedEvents)
+                .Concat(globalEvents)
+                .ToList();
 
             var calendarDto = _calendarService.GenerateCalendar(normalizedYear, normalizedMonth, combinedEvents);
 
@@ -250,7 +257,12 @@ namespace Eventflow.Controllers
 
             var ownEvents = await _personalEventService.GetEventsWithCategoryNamesAsync(userId, normalizedYear, normalizedMonth);
             var invitedEvents = await _personalEventService.GetAcceptedInvitedEventsAsync(userId, normalizedYear, normalizedMonth);
-            var combinedEvents = ownEvents.Concat(invitedEvents).ToList();
+            var globalEvents = await _personalEventService.GetGlobalEventsWithCategoryAsync(normalizedYear, normalizedMonth);
+
+            var combinedEvents = ownEvents
+                .Concat(invitedEvents)
+                .Concat(globalEvents)
+                .ToList();
 
             var calendarDto = _calendarService.GenerateCalendar(normalizedYear, normalizedMonth, combinedEvents);
 
@@ -276,6 +288,7 @@ namespace Eventflow.Controllers
                         IsInvited = e.IsInvited,
                         CreatorUsername = e.CreatorUsername,
                         IsCreator = e.IsCreator,
+                        IsGlobal = e.IsGlobal,
                         ParticipantUsernames = e.ParticipantUsernames
                     }).ToList(),
                     NationalEvents = day.NationalEvents.Select(n => new NationalEventViewModel

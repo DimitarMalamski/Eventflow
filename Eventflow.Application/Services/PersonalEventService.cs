@@ -64,6 +64,7 @@ namespace Eventflow.Application.Services
                     IsInvited = true,
                     CreatorUsername = creator?.Username ?? "Unknown",
                     IsCreator = e.UserId == userId,
+                    IsGlobal = e.IsGlobal,
                     ParticipantUsernames = participantUsernames
                 });
             }
@@ -107,6 +108,7 @@ namespace Eventflow.Application.Services
                         : "Uncategorized",
                     IsInvited = false,
                     IsCreator = pe.UserId == userId,
+                    IsGlobal = pe.IsGlobal,
                     ParticipantUsernames = perticipantsUsernames
                 });
             }
@@ -242,6 +244,34 @@ namespace Eventflow.Application.Services
 
             await _personalEventRepository.SoftDeleteEventAsync(eventId);
             return true;
+        }
+        public async Task<List<PersonalEventWithCategoryNameDto>> GetGlobalEventsWithCategoryAsync(int year, int month)
+        {
+            var entities = await _personalEventRepository.GetGlobalEventsAsync(year, month);
+
+            var categories = await _categoryRepository.GetAllCategoriesAsync();
+            var users = await _userRepository.GetAllUsersAsync();
+
+            return entities.Select(pe => {
+                var category =  categories.FirstOrDefault(c => c.Id == pe.CategoryId);
+                var user = users.FirstOrDefault(u => u.Id == pe.UserId);
+
+                return new PersonalEventWithCategoryNameDto {
+                    Id = pe.Id,
+                    Title = pe.Title,
+                    Description = pe.Description,
+                    Date = pe.Date,
+                    CategoryId = pe.CategoryId,
+                    CategoryName = category?.Name,
+                    UserId = pe.UserId,
+                    CreatorUsername = user?.Username,
+                    IsCompleted = pe.IsCompleted,
+                    IsGlobal = pe.IsGlobal,
+                    IsInvited = false,
+                    IsCreator = false,
+                    ParticipantUsernames = new List<string>()
+                };
+            }).ToList();
         }
    }
 }

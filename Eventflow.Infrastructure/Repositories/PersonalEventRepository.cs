@@ -19,8 +19,8 @@ namespace Eventflow.Infrastructure.Repositories
         public async Task CreateEventAsync(PersonalEvent personalEvent)
         {
             string insertPersonalEventQuery = @"
-                        INSERT INTO PersonalEvent (Title, Description, Date, UserId, IsCompleted, CategoryId)
-                        VALUES (@Title, @Description, @Date, @UserId, @IsCompleted, @CategoryId);";
+                        INSERT INTO PersonalEvent (Title, Description, Date, UserId, IsCompleted, CategoryId, IsDeleted, IsGlobal)
+                        VALUES (@Title, @Description, @Date, @UserId, @IsCompleted, @CategoryId, @IsDeleted, @IsGlobal);";
 
             var parameters = new Dictionary<string, object?>
             {
@@ -29,7 +29,9 @@ namespace Eventflow.Infrastructure.Repositories
                 { "@Date", personalEvent.Date },
                 { "@UserId", personalEvent.UserId },
                 { "@IsCompleted", personalEvent.IsCompleted },
-                { "@CategoryId", (object?)personalEvent.CategoryId ?? DBNull.Value }
+                { "@CategoryId", (object?)personalEvent.CategoryId ?? DBNull.Value },
+                { "@IsDeleted", personalEvent.IsDeleted },
+                { "@IsGlobal", personalEvent.IsGlobal }
             };
 
             await _dbHelper.ExecuteNonQueryAsync(insertPersonalEventQuery, parameters!);
@@ -293,6 +295,41 @@ namespace Eventflow.Infrastructure.Repositories
             };
 
             await _dbHelper.ExecuteNonQueryAsync(softDeleteEventQuery, parameters);
+        }
+        public async Task<List<PersonalEvent>> GetGlobalEventsAsync(int year, int month)
+        {
+            var start = new DateTime(year, month, 1);
+            var end = start.AddMonths(1).AddDays(-1);
+
+            string getGlobalEventsQuery = @"
+                            SELECT * FROM PersonalEvent
+                            WHERE IsGlobal = 1
+                            AND IsDeleted = 0
+                            AND Date BETWEEN @StartDate AND @EndDate";
+                        
+            var parameters = new Dictionary<string, object>() {
+                { "@StartDate", start },
+                { "@EndDate", end }
+            };
+
+            var dt = await _dbHelper.ExecuteQueryAsync(getGlobalEventsQuery, parameters);
+
+            var globalEvents = new List<PersonalEvent>();
+
+            foreach (DataRow row in dt.Rows) {
+                globalEvents.Add(new PersonalEvent {
+                    Id = Convert.ToInt32(row["Id"]),
+                    Title = row["Title"].ToString()!,
+                    Description = row["Description"]?.ToString(),
+                    Date = Convert.ToDateTime(row["Date"]),
+                    CategoryId = row["CategoryId"] != DBNull.Value ? Convert.ToInt32(row["CategoryId"]) : null,
+                    UserId = Convert.ToInt32(row["UserId"]),
+                    IsCompleted = Convert.ToBoolean(row["IsCompleted"]),
+                    IsGlobal = Convert.ToBoolean(row["IsGlobal"])
+                });
+            }
+
+            return globalEvents;
         }
    }
 }

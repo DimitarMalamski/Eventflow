@@ -26,6 +26,9 @@ namespace Eventflow.Domain.Models.Entities
         [Required]
         public bool IsDeleted { get; set; }
 
+        [Required]
+        public bool IsGlobal { get; set; }
+
         // Navigation property
         public User? User { get; set; }
     }

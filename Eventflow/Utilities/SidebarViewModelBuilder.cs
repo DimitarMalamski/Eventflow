@@ -99,6 +99,7 @@ namespace Eventflow.Utilities
                 case "Admin":
                 case "Users":
                 case "Events":
+                case "CreateGlobalEvent":
                     buttons.Add(new SidebarButtonViewModel
                     {
                         Label = "Dashboard",
@@ -122,8 +123,8 @@ namespace Eventflow.Utilities
 
                     buttons.Add(new SidebarButtonViewModel
                     {
-                        Label = "Site Settings",
-                        Url = "/Admin/Settings",
+                        Label = "Create Global Event",
+                        Url = "/Admin/CreateGlobalEvent",
                         CssClass = "btn btn-primary w-100"
                     });
                 break;

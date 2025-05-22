@@ -1,0 +1,19 @@
+@using Eventflow.ViewModels;
+@using Eventflow.ViewModels.PersonalEvent.Form
+@model CreatePersonalEventViewModel
+@{
+    Layout = "~/Views/Shared/_CalendarLayout.cshtml";
+    ViewData["Title"] = "Create Global Event";
+}
+
+<div class="w-100" style="max-width: 600px;">
+    <h2 class="text-center mb-4">Create Global Event</h2>
+
+    @await Component.InvokeAsync("CreatePersonalEventForm", Model)
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

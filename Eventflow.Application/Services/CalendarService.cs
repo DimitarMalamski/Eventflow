@@ -187,7 +187,12 @@ namespace Eventflow.Application.Services
         {
             var ownEvents = await _personalEventService.GetEventsWithCategoryNamesAsync(userId, year, month);
             var invitedEvents = await _personalEventService.GetAcceptedInvitedEventsAsync(userId, year, month);
-            var combinedEvents = ownEvents.Concat(invitedEvents).ToList();
+            var globalEvents = await _personalEventService.GetGlobalEventsWithCategoryAsync(year, month);
+
+            var combinedEvents = ownEvents
+                .Concat(invitedEvents)
+                .Concat(globalEvents)
+                .ToList();
 
             return GenerateCalendar(year, month, combinedEvents);
         }

@@ -1,15 +1,14 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
-using System.Xml;
 using Eventflow.Application.Services.Interfaces;
 using Eventflow.Attributes;
 using Eventflow.Domain.Enums;
+using Eventflow.Domain.Models.Entities;
 using Eventflow.DTOs.DTOs;
 using Eventflow.ViewModels.Admin;
 using Eventflow.ViewModels.Admin.Component;
 using Eventflow.ViewModels.Category;
+using Eventflow.ViewModels.PersonalEvent.Form;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client;
+using static Eventflow.Utilities.SessionHelper;
 
 namespace Eventflow.Controllers {
    [RequireAdmin]
@@ -361,6 +360,62 @@ namespace Eventflow.Controllers {
             success = true,
             deletedEventId = dto.Id
          });
+      }
+
+      [HttpGet]
+      [RequireAdmin] 
+      public async Task<IActionResult> CreateGlobalEvent()
+      {
+         var categories = await _categoryService.GetAllCategoriesAsync();
+
+         var model = new CreatePersonalEventViewModel
+         {
+            Date = DateTime.Now,
+            Categories = categories.Select(c => new CategoryViewModel
+            {
+                  Id = c.Id,
+                  Name = c.Name
+            }).ToList()
+         };
+
+         ViewBag.SidebarContext = "Admin";
+         return View("CreateGlobalEvent", model);
+      }
+
+      [HttpPost]
+      [RequireAdmin]
+      [ValidateAntiForgeryToken]
+      public async Task<IActionResult> CreateGlobalEvent(CreatePersonalEventViewModel model)
+      {
+         if (!ModelState.IsValid)
+         {
+            var categories = await _categoryService.GetAllCategoriesAsync();
+            model.Categories = categories.Select(c => new CategoryViewModel
+            {
+                  Id = c.Id,
+                  Name = c.Name
+            }).ToList();
+
+            ViewBag.SidebarContext = "Admin";
+            return View("CreateGlobalEvent", model);
+         }
+
+         int adminId = GetUserId(HttpContext.Session);
+
+         var newEvent = new PersonalEvent
+         {
+            Title = model.Title,
+            Description = model.Description,
+            Date = model.Date,
+            CategoryId = model.CategoryId,
+            UserId = adminId,
+            IsCompleted = false,
+            IsGlobal = true
+         };
+
+         await _personalEventService.CreateAsync(newEvent);
+
+         return RedirectToAction("Index", "Admin");
       }
    }
 }

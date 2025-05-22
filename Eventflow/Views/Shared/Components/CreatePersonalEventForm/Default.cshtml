@@ -7,7 +7,15 @@
 @using Eventflow.ViewModels.Shared
 @model CreatePersonalEventViewModel
 
-<form asp-action="@(Model.Id.HasValue ? "Edit" : "Create")" method="post">
+@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+
+    var isGlobalCreate = controller == "Admin" && action == "CreateGlobalEvent";
+    var formAction = isGlobalCreate ? "CreateGlobalEvent" : (Model.Id.HasValue ? "Edit" : "Create");
+}
+
+<form asp-action="@formAction" asp-controller="@controller" method="post">
     @Html.AntiForgeryToken()
 
     @await Component.InvokeAsync("FormInput", new FormInputModel
@@ -49,7 +57,7 @@
                 .ToList()
     })
 
-    <button type="submit" class="btn btn-success w-100">
+    <button type="submit" class="btn btn-success w-100 mt-4">
         @(Model.Id.HasValue ? "Save" : "Create")
     </button>
 </form>

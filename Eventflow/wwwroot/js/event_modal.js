@@ -5,7 +5,9 @@ function openEventModal(event) {
     document.getElementById("modal-event-title").innerText = event.title;
     document.getElementById("modal-event-description").innerText = event.description;
     document.getElementById("modal-event-date").innerText = event.date;
-    document.getElementById("modal-event-category").innerText = event.category;
+    document.getElementById("modal-event-category").innerText = 
+        event.category && event.category !== "null" ? event.category : "Uncategorized";
+        
     document.getElementById("modal-event-creator").textContent = event.creatorUsername;
 
     const participantsList = document.getElementById("modal-event-participants");
@@ -49,8 +51,22 @@ function openEventModal(event) {
         reminderBtn.style.display = "inline-block";
     }
 
+    const participantsWrapper = document.getElementById("modal-event-participants-wrapper");
+
     document.getElementById("modal-event-category-wrapper").style.display = "block";
-    document.getElementById("modal-event-participants-wrapper").style.display = "flex";
+
+    const isGlobal = event.isGlobal === true || event.isGlobal === "true";
+
+    if (isGlobal) {
+        document.getElementById("edit-button").style.display = "none";
+        document.getElementById("invite-button").style.display = "none";
+        document.getElementById("reminder-button").style.display = "none";
+        document.getElementById("leave-button").style.display = "none";
+
+        participantsWrapper.style.setProperty("display", "none", "important");
+    } else {
+        participantsWrapper.style.setProperty("display", "flex", "important");
+    }
 
     const modal = new bootstrap.Modal(document.getElementById('eventModal'));
     modal.show();
@@ -124,6 +140,7 @@ function bindEventClickHandlers() {
                 date: this.dataset.date,
                 category: this.dataset.category,
                 isInvited: this.dataset.isInvited === "true",
+                isGlobal: String(this.dataset.isGlobal).toLowerCase() === "true",
                 creatorUsername: this.dataset.creator,
                 isCreator: this.dataset.isCreator === "true",
                 participants: this.dataset.participants ? this.dataset.participants.split(",") : []
