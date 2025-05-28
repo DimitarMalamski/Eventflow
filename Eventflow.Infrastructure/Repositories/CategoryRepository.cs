@@ -30,7 +30,6 @@ namespace Eventflow.Infrastructure.Repositories
 
             return categories;
         }
-
         public async Task<Category?> GetCategoryByIdAsync(int categoryId)
         {
             string getCategoryByIdQuery = "SELECT * FROM [Category] WHERE Id = @Id";

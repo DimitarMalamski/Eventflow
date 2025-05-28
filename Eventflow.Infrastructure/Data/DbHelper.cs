@@ -35,7 +35,6 @@ namespace Eventflow.Infrastructure.Data
                 }
             }
         }
-
         public async Task<int> ExecuteNonQueryAsync(string query, Dictionary<string, object>? parameters = null)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -54,7 +53,6 @@ namespace Eventflow.Infrastructure.Data
                 return await command.ExecuteNonQueryAsync();
             }
         }
-
         public async Task<object?> ExecuteScalarAsync(string query, Dictionary<string, object>? parameters = null)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))

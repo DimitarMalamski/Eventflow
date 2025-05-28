@@ -1,8 +1,5 @@
---create database [Eventflow]
---drop database [Eventflow]
-
 -- Database Selection
-USE [Eventflow]
+USE [dbi546327_eventflow]
 GO
 
 -- Role Table
@@ -20,7 +17,9 @@ CREATE TABLE [User] (
 	[Firstname] NVARCHAR(50) NOT NULL,
 	[Lastname] NVARCHAR(50),
 	[Email] NVARCHAR(256) UNIQUE NOT NULL,
-	[RoleId] INT FOREIGN KEY REFERENCES [Role](Id) NOT NULL
+	[IsBanned] BIT DEFAULT 0,
+	[IsDeleted] BIT DEFAULT 0,
+	[RoleId] INT FOREIGN KEY REFERENCES [Role](Id) NOT NULL,
 );
 
 -- Category Table
@@ -36,6 +35,8 @@ CREATE TABLE [PersonalEvent] (
 	[Description] NVARCHAR(256),
 	[IsCompleted] BIT DEFAULT 0,
 	[Date] DATETIME NOT NULL,
+	[IsDeleted] BIT DEFAULT 0,
+	[IsGlobal] BIT DEFAULT 0,
 	[CategoryId] INT FOREIGN KEY REFERENCES [Category](Id),
 	[UserId] INT FOREIGN KEY REFERENCES [User](Id) NOT NULL
 );
@@ -46,8 +47,11 @@ CREATE TABLE [PersonalEventReminder] (
 	[Title] NVARCHAR(50) NOT NULL,
 	[Description] NVARCHAR(256),
 	[Date] DATETIME NOT NULL,
-	[IsRead] BIT,
-	[PersonalEventId] INT FOREIGN KEY REFERENCES [PersonalEvent](Id) NOT NULL
+	[ReadAt] DATETIME NOT NULL,
+	[IsRead] BIT DEFAULT 0,
+	[IsLiked] BIT DEFAULT 0,
+	[PersonalEventId] INT FOREIGN KEY REFERENCES [PersonalEvent](Id) NOT NULL,
+	[UserId] INT FOREIGN KEY REFERENCES [User](Id) NOT NULL
 );
 
 -- Continent Table
@@ -60,7 +64,8 @@ CREATE TABLE [Continent] (
 CREATE TABLE [Country] (
 	[Id] INT PRIMARY KEY IDENTITY,
 	[Name] NVARCHAR(50) NOT NULL,
-	[Flag] VARBINARY(1000) NOT NULL,
+	[FlagUrl] NVARCHAR(255),
+	[ISOCode] NVARCHAR(3),
 	[ContinentId] INT FOREIGN KEY REFERENCES [Continent](Id) NOT NULL
 );
 
@@ -75,8 +80,8 @@ CREATE TABLE [Bookmarked] (
 -- National Event Table
 CREATE TABLE [NationalEvent] (
 	[Id] INT PRIMARY KEY IDENTITY,
-	[Title] NVARCHAR(50) NOT NULL,
-	[Description] NVARCHAR(256),
+	[Title] NVARCHAR(255),
+	[Description] NVARCHAR(MAX),
 	[Date] DATETIME NOT NULL,
 	[CountryId] INT FOREIGN KEY REFERENCES [Country](Id) NOT NULL
 );
@@ -87,7 +92,9 @@ CREATE TABLE [NationalEventReminder] (
 	[Title] NVARCHAR(50) NOT NULL,
 	[Description] NVARCHAR(256),
 	[Date] DATETIME NOT NULL,
-	[IsRead] BIT,
+	[IsRead] BIT DEFAULT 0,
+	[IsLiked] BIT DEFAULT 0,
+	[ReadAt] DATETIME,
 	[NationalEventId] INT FOREIGN KEY REFERENCES [NationalEvent](Id) NOT NULL
 );
 
@@ -109,5 +116,3 @@ CREATE TABLE [Invite] (
 
 INSERT INTO Role (Name) VALUES ('Admin');
 INSERT INTO Role (Name) VALUES ('User');
-
-select * from [User]

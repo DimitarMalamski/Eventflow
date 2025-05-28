@@ -14,7 +14,6 @@ namespace Eventflow.Application.Services
             _categoryRepository = categoryRepository
                 ?? throw new ArgumentNullException(nameof(categoryRepository));
         }
-
         public async Task<List<Category>> GetAllCategoriesAsync()
         {
             try

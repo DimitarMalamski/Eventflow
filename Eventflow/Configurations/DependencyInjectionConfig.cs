@@ -37,6 +37,10 @@ namespace Eventflow.Configurations
             services.AddScoped<IStatusService, StatusService>();
             services.AddScoped<INationalEventService, NationalEventsService>();
 
+            // For injecting data in the database
+            // services.AddScoped<CountryPopulationService>();
+            // services.AddScoped<NationalEventsService>();
+
             // DB Helper
             services.AddScoped<IDbHelper, DbHelper>();
         }

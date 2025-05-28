@@ -22,7 +22,6 @@ namespace Eventflow.Application.Services
             _personalEventRepository = personalEventRepository
                 ?? throw new ArgumentNullException(nameof(personalEventRepository));
         }
-
         public async Task CreatePersonalEventReminderAsync(PersonalEventReminder reminder, int userId)
         {
             if (reminder == null)

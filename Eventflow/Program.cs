@@ -1,3 +1,4 @@
+using Eventflow.Application.Services;
 using Eventflow.Application.Startup;
 using Eventflow.Authentication;
 using Eventflow.Configurations;
@@ -31,17 +32,17 @@ using (var scope = app.Services.CreateScope())
     await DbSeeder.SeedAdminUserAsync(userRepository);
 }
 
-//using (var scope = app.Services.CreateScope())
-//{
+// using (var scope = app.Services.CreateScope())
+// {
 //    var countryPopulationService = scope.ServiceProvider.GetRequiredService<CountryPopulationService>();
 //    await countryPopulationService.PopulateCountriesAsync();
-//}
+// }
 
-//using (var scope = app.Services.CreateScope())
-//{
+// using (var scope = app.Services.CreateScope())
+// {
 //    var countryHolidayService = scope.ServiceProvider.GetRequiredService<NationalEventsService>();
 //    await countryHolidayService.PopulateNationalHolidaysAsync();
-//}
+// }
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -62,7 +63,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

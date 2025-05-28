@@ -1,5 +1,7 @@
-﻿using Eventflow.Application.Services.Interfaces;
+﻿using System.Text.Json;
+using Eventflow.Application.Services.Interfaces;
 using Eventflow.Domain.Interfaces.Repositories;
+using Eventflow.Domain.Models.ApiModels;
 using Eventflow.DTOs.DTOs;
 
 namespace Eventflow.Application.Services
@@ -8,11 +10,19 @@ namespace Eventflow.Application.Services
     {
         private readonly INationalEventRepository _nationalEventRepository;
         private readonly ICountryRepository _countryRepository;
+        private readonly IContinentRepository _continentRepository;
+        private readonly HttpClient _httpClient;
         public NationalEventsService(INationalEventRepository nationalEventRepository,
-            ICountryRepository countryRepository)
+            ICountryRepository countryRepository,
+            IContinentRepository continentRepository,
+            IHttpClientFactory httpClientFactory)
         {
             _nationalEventRepository = nationalEventRepository;
             _countryRepository = countryRepository;
+            _continentRepository = continentRepository;
+
+            _httpClient = httpClientFactory.CreateClient();
+            _httpClient.Timeout = TimeSpan.FromSeconds(30);
         }
         public async Task<List<NationalEventDto>> GetNationalHolidaysForCountryAsync(int countryId, int year, int month)
         {
@@ -31,8 +41,8 @@ namespace Eventflow.Application.Services
             .ToList();
         }
 
-        //public async Task PopulateNationalHolidaysAsync()
-        //{
+        // public async Task PopulateNationalHolidaysAsync()
+        // {
         //    try
         //    {
         //        // Get all continents
@@ -49,7 +59,7 @@ namespace Eventflow.Application.Services
         //                string countryCode = country.ISOCode; // ISOCode for the country
 
         //                // Fetch holidays from the Calendarific API for each country
-        //                string apiUrl = $"https://calendarific.com/api/v2/holidays?api_key=D8qo2d9XHcbraAZRaSenX4QFbezrh0eO&country={countryCode}&year=2023";
+        //                string apiUrl = $"https://calendarific.com/api/v2/holidays?api_key=dhROTVHBSiCVuJFTDc7sFyn9x4fQ9QNy&country={countryCode}&year=2025";
         //                var response = await _httpClient.GetStringAsync(apiUrl);
 
         //                Console.WriteLine($"Response for {countryCode}: {response}");
@@ -107,7 +117,7 @@ namespace Eventflow.Application.Services
         //    {
         //        Console.Error.WriteLine($"Error occurred while populating national holidays: {ex.Message}");
         //    }
-        //}
+        // }
         //public async Task PopulateNationalHolidaysForSingleCountryAsync()
         //{
         //    try

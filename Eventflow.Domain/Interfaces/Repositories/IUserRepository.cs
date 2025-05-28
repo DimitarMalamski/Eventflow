@@ -15,7 +15,7 @@ namespace Eventflow.Domain.Interfaces.Repositories
         public Task<Dictionary<int, string>> GetUsernamesByIdsAsync(List<int> userIds);
         public Task<List<User>> GetAllUsersAsync();
         public Task<bool> UpdateAsync(User user, string roleName);
-        public Task UpdateUserBanStatusAsync(int userId, bool IsBanned);
-        public Task<bool> SoftDeleteUserAsync(int id);
+        public Task UpdateUserBanStatusAsync(int userId, bool isBanned);
+        public Task<bool> SoftDeleteUserAsync(int userId);
     }
 }

@@ -29,8 +29,8 @@ namespace Eventflow.Application.Services
             _roleRepository = roleRepository
                 ?? throw new ArgumentNullException(nameof(roleRepository));
         }
-        public async Task<bool> SoftDeleteUserAsync(int id) {
-            bool success = await _userRepository.SoftDeleteUserAsync(id);
+        public async Task<bool> SoftDeleteUserAsync(int userId) {
+            bool success = await _userRepository.SoftDeleteUserAsync(userId);
 
             if (success) {
                 await _inviteRepository.AutoDeclineInvitesOfDeletedUsersAsync();

@@ -27,22 +27,6 @@ namespace Eventflow.Infrastructure.Repositories
 
             await _dbHelper.ExecuteNonQueryAsync(autoDeclineInvitesOfDeletedUserQuery);
         }
-        public async Task CreateInviteAsync(Invite invite)
-        {
-            string createInviteQuery = @"
-                    INSERT INTO Invite (PersonalEventId, InvitedUserId, StatusId, CreatedAt)
-                    VALUES (@PersonalEventId, @InvitedUserId, @StatusId, @CreatedAt)";
-
-            var parameters = new Dictionary<string, object>()
-            {
-                { "@PersonalEventId", invite.PersonalEventId },
-                { "@InvitedUserId", invite.InvitedUserId },
-                { "@StatusId", invite.StatusId },
-                { "@CreatedAt", invite.CreatedAt }
-            };
-
-            await _dbHelper.ExecuteNonQueryAsync(createInviteQuery, parameters);
-        }
         public async Task<InviteActionResult> CreateOrResetInviteAsync(Invite invite)
         {
             var existing = await GetInviteStatusAndIdAsync(invite.PersonalEventId, invite.InvitedUserId);
@@ -89,7 +73,7 @@ namespace Eventflow.Infrastructure.Repositories
 
             await _dbHelper.ExecuteNonQueryAsync(deleteInvitefromEventQuery, parameters);
         }
-      public async Task<List<Invite>> GetAllInvitesByUserIdAsync(int userId)
+        public async Task<List<Invite>> GetAllInvitesByUserIdAsync(int userId)
         {
             string getAllInvitedByUserQuery = "SELECT * FROM Invite WHERE InvitedUserId = @UserId";
 
