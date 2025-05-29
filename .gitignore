@@ -34,6 +34,7 @@ appsettings.json
 
 # Ignore testing artifacts
 TestResults/
+TestReports/
 Coverage/
 *.coverage
 *.trx
