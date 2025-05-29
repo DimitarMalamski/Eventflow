@@ -2,6 +2,7 @@
 using Eventflow.Application.Services.Interfaces;
 using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.ApiModels;
+using Eventflow.Domain.Models.Entities;
 using Eventflow.DTOs.DTOs;
 
 namespace Eventflow.Application.Services
@@ -10,24 +11,27 @@ namespace Eventflow.Application.Services
     {
         private readonly INationalEventRepository _nationalEventRepository;
         private readonly ICountryRepository _countryRepository;
-        private readonly IContinentRepository _continentRepository;
-        private readonly HttpClient _httpClient;
+        // private readonly IContinentRepository _continentRepository;
+        // private readonly HttpClient _httpClient;
         public NationalEventsService(INationalEventRepository nationalEventRepository,
-            ICountryRepository countryRepository,
-            IContinentRepository continentRepository,
-            IHttpClientFactory httpClientFactory)
+            ICountryRepository countryRepository)
+            // IContinentRepository continentRepository,
+            // IHttpClientFactory httpClientFactory )
         {
-            _nationalEventRepository = nationalEventRepository;
-            _countryRepository = countryRepository;
-            _continentRepository = continentRepository;
+            _nationalEventRepository = nationalEventRepository
+                ?? throw new ArgumentNullException(nameof(nationalEventRepository));
+            _countryRepository = countryRepository
+                ?? throw new ArgumentNullException(nameof(countryRepository));
+            // _continentRepository = continentRepository;
 
-            _httpClient = httpClientFactory.CreateClient();
-            _httpClient.Timeout = TimeSpan.FromSeconds(30);
+            // _httpClient = httpClientFactory.CreateClient();
+            // _httpClient.Timeout = TimeSpan.FromSeconds(30);
         }
         public async Task<List<NationalEventDto>> GetNationalHolidaysForCountryAsync(int countryId, int year, int month)
         {
-            var nationalEvents = await _nationalEventRepository.GetNationalHolidaysForCountryAsync(countryId, year, month);
-
+            var nationalEvents = (await _nationalEventRepository.GetNationalHolidaysForCountryAsync(countryId, year, month))
+                                 ?? new List<NationalEvent>();
+                                 
             var country = await _countryRepository.GetCountryByIdAsync(countryId);
 
             return nationalEvents.Select(ne => new NationalEventDto

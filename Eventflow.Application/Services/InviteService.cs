@@ -18,8 +18,10 @@ namespace Eventflow.Application.Services
             IInviteRepository inviteRepository,
             IUserRepository userRepository)
         {
-            _inviteRepository = inviteRepository;
-            _userRepository = userRepository;
+            _inviteRepository = inviteRepository
+                ?? throw new ArgumentNullException(nameof(inviteRepository));
+            _userRepository = userRepository
+                ?? throw new ArgumentNullException(nameof(userRepository));
         }
         public async Task AutoDeclineExpiredInvitesAsync()
         {

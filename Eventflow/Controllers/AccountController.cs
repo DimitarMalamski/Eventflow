@@ -51,6 +51,10 @@ namespace Eventflow.Controllers
                 TempData["BanMessage"] = ex.Message;
                 return RedirectToAction("Banned");
             }
+            catch (InvalidLoginInputException ex) {
+                ModelState.AddModelError("Password", ex.Message);
+                return View(model);
+            } 
         }
 
         [HttpGet]

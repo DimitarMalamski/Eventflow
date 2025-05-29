@@ -19,10 +19,14 @@ namespace Eventflow.Application.Services
             IUserRepository userRepository,
             IInviteRepository inviteRepository)
         {
-            _personalEventRepository = personalEventRepository;
-            _categoryRepository = categoryRepository;
-            _userRepository = userRepository;
-            _inviteRepository = inviteRepository;
+            _personalEventRepository = personalEventRepository
+                ?? throw new ArgumentNullException(nameof(personalEventRepository));
+            _categoryRepository = categoryRepository
+                ?? throw new ArgumentNullException(nameof(categoryRepository));
+            _userRepository = userRepository
+                ?? throw new ArgumentNullException(nameof(userRepository));
+            _inviteRepository = inviteRepository
+                ?? throw new ArgumentNullException(nameof(inviteRepository));
         }
         public async Task CreateAsync(PersonalEvent personalEvent)
             => await _personalEventRepository.CreateEventAsync(personalEvent);
@@ -37,17 +41,23 @@ namespace Eventflow.Application.Services
             var categories = await _categoryRepository.GetAllCategoriesAsync();
             var categoryMap = categories.ToDictionary(c => c.Id, c => c.Name);
 
+            var creatorTasks = filteredEvents.ToDictionary(e => e.Id, e => _userRepository.GetUserByIdAsync(e.UserId));
+            var participantsTasks = filteredEvents.ToDictionary(e => e.Id, e => _userRepository.GetUsernamesByEventIdAsync(e.Id));
+
+            await Task.WhenAll(creatorTasks.Values);
+            await Task.WhenAll(participantsTasks.Values);
+
             var dtoList = new List<PersonalEventWithCategoryNameDto>();
 
             foreach (var e in filteredEvents)
             {
-                var creator = await _userRepository.GetUserByIdAsync(e.UserId);
+                var creator = creatorTasks[e.Id].Result;
 
                 if (creator == null || creator.IsDeleted) {
                     continue;
                 }
 
-                var participantUsernames = await _userRepository.GetUsernamesByEventIdAsync(e.Id);
+                var participantUsernames = participantsTasks[e.Id].Result;
 
                 dtoList.Add(new PersonalEventWithCategoryNameDto
                 {
@@ -75,24 +85,31 @@ namespace Eventflow.Application.Services
             => await _personalEventRepository.GetPersonalEventByIdAsync(id);
         public async Task<List<PersonalEventWithCategoryNameDto>> GetEventsWithCategoryNamesAsync(int userId, int year, int month)
         {
-            var personalEvents = (await _personalEventRepository.GetByUserAndMonthAsync(userId, year, month))
+            var rawEvents = await _personalEventRepository.GetByUserAndMonthAsync(userId, year, month);
+            var personalEvents = (rawEvents ?? new List<PersonalEvent>())
                 .Where(e => e.Date.Date >= DateTime.Today)
                 .ToList();
 
             var categories = await _categoryRepository.GetAllCategoriesAsync();
             var categoryMap = categories.ToDictionary(c => c.Id, c => c.Name);
 
+            var creatorTasks = personalEvents.ToDictionary(e => e.Id, e => _userRepository.GetUserByIdAsync(e.UserId));
+            var participantsTasks = personalEvents.ToDictionary(e => e.Id, e => _userRepository.GetUsernamesByEventIdAsync(e.Id));
+
+            await Task.WhenAll(creatorTasks.Values);
+            await Task.WhenAll(participantsTasks.Values);
+
             var personalEventsWithCategoryName = new List<PersonalEventWithCategoryNameDto>();
 
             foreach (var pe in personalEvents)
             {
-                var creator = await _userRepository.GetUserByIdAsync(pe.UserId);
+                var creator = creatorTasks[pe.Id].Result;
 
                 if (creator == null || creator.IsDeleted) {
                     continue;
                 }
 
-                var perticipantsUsernames = await _userRepository.GetUsernamesByEventIdAsync(pe.Id);
+                var perticipantsUsernames = participantsTasks[pe.Id].Result;
 
                 personalEventsWithCategoryName.Add(new PersonalEventWithCategoryNameDto
                 {
@@ -109,7 +126,8 @@ namespace Eventflow.Application.Services
                     IsInvited = false,
                     IsCreator = pe.UserId == userId,
                     IsGlobal = pe.IsGlobal,
-                    ParticipantUsernames = perticipantsUsernames
+                    ParticipantUsernames = perticipantsUsernames,
+                    CreatorUsername = creator?.Username ?? "Unknown"
                 });
             }
 
@@ -252,7 +270,7 @@ namespace Eventflow.Application.Services
             var categories = await _categoryRepository.GetAllCategoriesAsync();
             var users = await _userRepository.GetAllUsersAsync();
 
-            return entities.Select(pe => {
+            return (entities ?? new List<PersonalEvent>()).Select(pe => {
                 var category =  categories.FirstOrDefault(c => c.Id == pe.CategoryId);
                 var user = users.FirstOrDefault(u => u.Id == pe.UserId);
 
@@ -262,9 +280,9 @@ namespace Eventflow.Application.Services
                     Description = pe.Description,
                     Date = pe.Date,
                     CategoryId = pe.CategoryId,
-                    CategoryName = category?.Name,
+                    CategoryName = category?.Name ?? "Uncategorized",
                     UserId = pe.UserId,
-                    CreatorUsername = user?.Username,
+                    CreatorUsername = user?.Username ?? "Unknown",
                     IsCompleted = pe.IsCompleted,
                     IsGlobal = pe.IsGlobal,
                     IsInvited = false,

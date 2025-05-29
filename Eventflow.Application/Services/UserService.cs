@@ -42,11 +42,13 @@ namespace Eventflow.Application.Services
         {
             var users = await _userRepository.GetAllUsersAsync();
 
+            var rolesMap = await _roleRepository.GetRoleIdToNameMapAsync();
+
             return users.Select(u => new AdminUserDto {
                 Id = u.Id,
                 Username = u.Username,
                 Email = u.Email,
-                RoleName = u.RoleId == (int)Role.Admin ? "Admin" : "User",
+                RoleName = rolesMap.ContainsKey(u.RoleId) ? rolesMap[u.RoleId] : "Unknown",
                 Status = u.IsBanned ? "Banned" : "Active"
             })
             .ToList();
@@ -176,6 +178,10 @@ namespace Eventflow.Application.Services
         }
         public async Task<bool> UpdateUserAsync(UserEditDto dto)
         {
+            if (dto == null) {
+                throw new ArgumentNullException(nameof(dto));
+            }
+
             var user = new User {
                 Id = dto.Id,
                 Username = dto.Username,

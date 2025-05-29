@@ -2,6 +2,7 @@
 using Eventflow.Domain.Exceptions;
 using Eventflow.Domain.Interfaces.Repositories;
 using Eventflow.Domain.Models.Entities;
+using Eventflow.DTOs.DTOs;
 using Moq;
 using static Eventflow.Application.Security.PasswordHasher;
 using static Eventflow.Domain.Common.ValidationConstants.User;
@@ -14,6 +15,7 @@ namespace Eventflow.Tests.Services
     {
         private Mock<IUserRepository> _mockUserRepository;
         private Mock<IInviteRepository> _mockInviteRepository;
+        private Mock<IRoleRepository> _mockRoleRepository;
         private UserService _userService;
 
         [TestInitialize]
@@ -21,7 +23,10 @@ namespace Eventflow.Tests.Services
         {
             _mockUserRepository = new Mock<IUserRepository>();
             _mockInviteRepository = new Mock<IInviteRepository>();
-            _userService = new UserService( _mockUserRepository.Object, _mockInviteRepository.Object );
+            _mockRoleRepository = new Mock<IRoleRepository>();
+            _userService = new UserService( _mockUserRepository.Object, 
+                _mockInviteRepository.Object,
+                _mockRoleRepository.Object );
         }
 
         [TestMethod]
@@ -29,10 +34,11 @@ namespace Eventflow.Tests.Services
         public void Constructor_ShouldThrowException_WhenUserRepositoryIsNull()
         {
             // Arrange
-            var mockUserRepository = new Mock<IUserRepository>();
+            var mockInviteRepository = new Mock<IInviteRepository>();
+            var mockRoleRepository = new Mock<IRoleRepository>();
 
             // Act
-            var service = new UserService( mockUserRepository.Object, null! );
+            var service = new UserService(null!, mockInviteRepository.Object, mockRoleRepository.Object );
         }
 
         [TestMethod]
@@ -40,10 +46,23 @@ namespace Eventflow.Tests.Services
         public void Constructor_ShouldThrowException_WhenInviteRepositoryIsNull()
         {
             // Arrange
+            var mockUserRepository = new Mock<IUserRepository>();
+            var mockRoleRepository = new Mock<IRoleRepository>();
+
+            // Act
+            var service = new UserService( mockUserRepository.Object, null!, mockRoleRepository.Object );
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Constructor_ShouldThrowException_WhenRoleRepositoryIsNull()
+        {
+            // Arrange
+            var mockUserRepository = new Mock<IUserRepository>();
             var mockInviteRepository = new Mock<IInviteRepository>();
 
             // Act
-            var service = new UserService(null!, mockInviteRepository.Object );
+            var service = new UserService( mockUserRepository.Object, mockInviteRepository.Object, null! );
         }
 
 
@@ -641,5 +660,155 @@ namespace Eventflow.Tests.Services
             // Act
             await _userService.GetUserByUsernameAsync("");
         }
+
+        [TestMethod]
+        public async Task SoftDeleteUserAsync_ShouldCallAutoDecline_WhenDeletionSucceeds() {
+            // Arrange
+            _mockUserRepository.Setup(repo => repo.SoftDeleteUserAsync(1))
+                .ReturnsAsync(true);
+            _mockInviteRepository.Setup(repo => repo.AutoDeclineInvitesOfDeletedUsersAsync())
+                .Returns(Task.CompletedTask);
+            
+            // Act
+            var result = await _userService.SoftDeleteUserAsync(1);
+
+            // Assert
+            Assert.IsTrue(result);
+            _mockInviteRepository.Verify(repo => repo.AutoDeclineInvitesOfDeletedUsersAsync(),
+                 Times.Once);
+        }
+
+        [TestMethod]
+        public async Task SoftDeleteUserAsync_ShouldNotCallAutoDecline_WhenDeletionFails() {
+            // Arrange
+            _mockUserRepository.Setup(repo => repo.SoftDeleteUserAsync(1))
+                .ReturnsAsync(false);
+
+            // Act
+            var result = await _userService.SoftDeleteUserAsync(1);
+
+            // Assert
+            Assert.IsFalse(result);
+            _mockInviteRepository.Verify(repo => repo.AutoDeclineInvitesOfDeletedUsersAsync(), 
+                Times.Never);
+        }
+
+        [TestMethod]
+        public async Task GetAllUsersAsync_ShouldReturnMappedDtos() {
+            // Arrnage
+            _mockUserRepository.Setup(repo => repo.GetAllUsersAsync())
+                .ReturnsAsync(new List<User> {
+                    new User { Id = 1, Username = "mitko", Email = "m@e.com", RoleId = (int)Role.User, IsBanned = false },
+                    new User { Id = 2, Username = "admin", Email = "a@e.com", RoleId = (int)Role.Admin, IsBanned = true },
+            });
+
+            _mockRoleRepository.Setup(repo => repo.GetRoleIdToNameMapAsync())
+                .ReturnsAsync(new Dictionary<int, string> {
+                    { (int)Role.User, "User" },
+                    { (int)Role.Admin, "Admin" }
+            });
+
+            // Act
+            var result = await _userService.GetAllUsersAsync();
+
+            // Assert
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("User", result[0].RoleName);
+            Assert.AreEqual("Admin", result[1].RoleName);
+            Assert.AreEqual("Banned", result[1].Status);
+        }
+
+        [TestMethod]
+        public async Task GetRecentUsersAsync_ShouldReturnRecentDtos() {
+            // Arrange
+            _mockUserRepository.Setup(repo => repo.GetRecentUsersAsync(2))
+                .ReturnsAsync(new List<User> {
+                    new User { Username = "a", Email = "a@e.com" },
+                    new User { Username = "b", Email = "b@e.com" }
+            });
+
+            // Act
+            var result = await _userService.GetRecentUsersAsync(2);
+
+            // Assert
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("a", result[0].Username);
+            Assert.AreEqual("b", result[1].Username);
+        }
+
+        [TestMethod]
+        public async Task GetUserCountAsync_ShouldReturnCorrectCount() {
+            // Arrange
+            _mockUserRepository.Setup(repo => repo.GetUserCountAsync())
+                .ReturnsAsync(42);
+            
+            // Act
+            int count = await _userService.GetUserCountAsync();
+
+            // Assert
+            Assert.IsNotNull(count);
+            Assert.AreEqual(42, count);
+        }
+
+        [TestMethod]
+        public async Task UpdateUserAsync_ShouldPassCorrectUserToRepository() {
+            // Arrange
+            var dto = new UserEditDto {
+                Id = 1,
+                Username = "mitko",
+                Email = "mitko@gmail.com",
+                Role = "User",
+                Status = "Banned"
+            };
+
+            _mockUserRepository.Setup(repo => repo.UpdateAsync(It.IsAny<User>(), "User"))
+                .ReturnsAsync(true);
+
+            // Act
+            var result = await _userService.UpdateUserAsync(dto);
+
+            // Assert
+            Assert.IsTrue(result);
+            _mockUserRepository.Verify(repo => repo.UpdateAsync(It.Is<User>(u => 
+                u.Id == dto.Id && u.IsBanned), "User"));
+        }
+
+        [TestMethod]
+        public async Task UpdateUserBanStatusAsync_ShouldCallRepositoryWithCorrectValues() {
+            // Arrange
+            _mockUserRepository.Setup(repo => repo.UpdateUserBanStatusAsync(1, true))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            await _userService.UpdateUserBanStatusAsync(1, true);
+
+            // Assert
+            _mockUserRepository.Verify(repo => repo.UpdateUserBanStatusAsync(1, true),
+                Times.Once);
+        }
+
+        [TestMethod]
+        public async Task GetFilteredAdminUsersAsync_ShouldReturnCorrectlyFilteredUsers() {
+            // Arrange
+            _mockUserRepository.Setup(repo => repo.GetAllUsersAsync())
+                .ReturnsAsync(new List<User> {
+                    new User { Id = 1, Username = "mitko", Email = "m@e.com", RoleId = 1, IsBanned = false },
+                    new User { Id = 2, Username = "admin", Email = "a@e.com", RoleId = 2, IsBanned = true },
+            });
+
+            _mockRoleRepository.Setup(repo => repo.GetRoleIdToNameMapAsync())
+                .ReturnsAsync(new Dictionary<int, string> {
+                    { 1, "User" },
+                    { 2, "Admin" }
+            });
+
+            // Act
+            var result = await _userService.GetFilteredAdminUsersAsync("mi", "User", "Active");
+
+            // Assert
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("mitko", result[0].Username);
+        }
+
     }
 }
