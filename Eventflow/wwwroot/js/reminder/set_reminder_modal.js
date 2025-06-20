@@ -46,7 +46,7 @@ async function handleReminderFormSubmit(e) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "RequestVerificationToken": document.querySelector("input[name='__RequestVerificationToken']").value
+            //    "RequestVerificationToken": document.querySelector("input[name='__RequestVerificationToken']").value
             },
             body: JSON.stringify(reminder)
         });
