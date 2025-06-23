@@ -12,7 +12,6 @@
             "All clear for now, you rock!",
             "Just breeze through your day, nothing pending!",
             "Nothing here... maybe time for a break?",
-            "Ebi si maikata!"
         ];
 
         const today = new Date().getDate();

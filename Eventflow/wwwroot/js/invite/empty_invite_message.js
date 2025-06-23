@@ -11,9 +11,7 @@ export function showDailyEmptyMessage() {
            "No reminders today — enjoy the peace.",
            "All clear for now, you rock!",
            "Just breeze through your day, nothing pending!",
-           "Nothing here... maybe time for a break?",
-           "Ebi si maikata!",
-           "Tun Tun Tun Sahur!!"
+           "Nothing here... maybe time for a break?"
        ];
 
        const today = new Date().getDate();
