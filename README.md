@@ -68,7 +68,7 @@ The project is built with ASP.NET Core (C#) for the backend and vanilla JavaScri
 ## 📸 Screenshots
 
 ### Index page
-![Index page](Eventflow-Documentation/Screenshots/Eventflow_Inbox_page.png)
+![Index page](Eventflow - Documentation/Screenshots/Eventflow_Index_page.png)
 
 ### Login page
 ![Login page](Eventflow-Documentation/Screenshots/Eventflow_Login_page.png)
