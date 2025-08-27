@@ -68,28 +68,28 @@ The project is built with ASP.NET Core (C#) for the backend and vanilla JavaScri
 ## 📸 Screenshots
 
 ### Index page
-![Index page](Eventflow - Documentation/Screenshots/Eventflow_Index_page.png)
+![Index page](Eventflow%20-%20Documentation/Screenshots/Eventflow_Index_page.png)
 
 ### Login page
-![Login page](Eventflow-Documentation/Screenshots/Eventflow_Login_page.png)
+![Login page](Eventflow%20-%20Documentation/Screenshots/Eventflow_Login_page.png)
 
 ### Register page
-![Login page](Eventflow-Documentation/Screenshots/Eventflow_Register_page.png)
+![Login page](Eventflow%20-%20Documentation/Screenshots/Eventflow_Register_page.png)
 
 ### Calendar page
-![Login page](Eventflow-Documentation/Screenshots/Eventflow_Calendar_page.png)
+![Login page](Eventflow%20-%20Documentation/Screenshots/Eventflow_Calendar_page.png)
 
 ### Personal Calendar page
-![Login page](Eventflow-Documentation/Screenshots/Eventflow_Personal_Calendar_page.png)
+![Login page](Eventflow%20-%20Documentation/Screenshots/Eventflow_Personal_Calendar_page.png)
 
 ### Create Event page
-![Login page](Eventflow-Documentation/Screenshots/Eventflow_Create_Event_page.png)
+![Login page](Eventflow%20-%20Documentation/Screenshots/Eventflow_Create_Event_page.png)
 
 ### Inbox page
-![Login page](Eventflow-Documentation/Screenshots/Eventflow_Inbox_page.png)
+![Login page](Eventflow%20-%20Documentation/Screenshots/Eventflow_Inbox_page.png)
 
 ### Reminders page
-![Login page](Eventflow-Documentation/Screenshots/Eventflow_Reminders_page.png)
+![Login page](Eventflow%20-%20Documentation/Screenshots/Eventflow_Reminders_page.png)
 
 ---
 ## Roadmap / Future Improvements
